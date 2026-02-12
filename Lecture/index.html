@@ -1,1 +1,376 @@
-1
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кирилл Мяги · Лекция 2 · Тест-кейсы и баг-репорты</title>
+    <!-- Google Fonts & Font Awesome 6 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Боковая навигация (якоря) -->
+    <nav class="slide-nav">
+        <a href="#hero" class="nav-dot" aria-label="Вступление"></a>
+        <a href="#problem" class="nav-dot" aria-label="Хаотичное тестирование"></a>
+        <a href="#checklist-vs-testcase" class="nav-dot" aria-label="Чек-лист vs Тест-кейс"></a>
+        <a href="#testcase-anatomy" class="nav-dot" aria-label="Анатомия тест-кейса"></a>
+        <a href="#design-techniques" class="nav-dot" aria-label="Техники тест-дизайна"></a>
+        <a href="#bugreport" class="nav-dot" aria-label="Баг-репорт"></a>
+        <a href="#homework" class="nav-dot" aria-label="ДЗ и итоги"></a>
+        <a href="#outro" class="nav-dot" aria-label="Вопросы"></a>
+    </nav>
+
+    <main>
+        <!-- ГЕРОЙ: тема лекции -->
+        <section id="hero" class="section hero">
+            <div class="container">
+                <div class="hero-content">
+                    <span class="badge">Лекция 2 · Тест-дизайн</span>
+                    <h1>Сценарии, варианты,<br> <span class="gradient-text">отчёты</span></h1>
+                    <h2>Превращаем требования в проверки</h2>
+                    <div class="lector">
+                        <div class="avatar">
+                            <i class="fas fa-vial"></i>
+                        </div>
+                        <div class="lector-info">
+                            <p class="lector-name">Мяги Кирилл Александрович</p>
+                            <p class="lector-desc">Чек-листы, тест-кейсы, баг-репорты — сердце профессии</p>
+                        </div>
+                    </div>
+                    <blockquote class="hero-quote">
+                        «Профессиональное тестирование начинается не с кликов, а с документа. <span style="color: var(--accent);">Материализуйте мысли</span>»
+                    </blockquote>
+                    <div class="scroll-hint">
+                        <span>Листайте к инструментам</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-grid"></div>
+        </section>
+
+        <!-- ПРОБЛЕМА: ХАОТИЧНОЕ ТЕСТИРОВАНИЕ -->
+        <section id="problem" class="section problem">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Почему «просто кликать» — плохо</span>
+                    <h2>Исследовательское ≠ системное</h2>
+                    <p class="section-description">Через час вы не вспомните, что проверили. Неповторяемость, пробелы, субъективность.</p>
+                </div>
+                <div class="problem-grid">
+                    <div class="problem-card bad">
+                        <i class="fas fa-random"></i>
+                        <h3>Хаотичные клики</h3>
+                        <ul>
+                            <li><i class="fas fa-times-circle"></i> Нет плана</li>
+                            <li><i class="fas fa-times-circle"></i> Пропуск граничных случаев</li>
+                            <li><i class="fas fa-times-circle"></i> Нельзя повторить</li>
+                            <li><i class="fas fa-times-circle"></i> Зависит от памяти</li>
+                        </ul>
+                    </div>
+                    <div class="problem-card good">
+                        <i class="fas fa-clipboard-list"></i>
+                        <h3>Документированный подход</h3>
+                        <ul>
+                            <li><i class="fas fa-check-circle"></i> Полное покрытие</li>
+                            <li><i class="fas fa-check-circle"></i> Воспроизводимость</li>
+                            <li><i class="fas fa-check-circle"></i> Прозрачность для команды</li>
+                            <li><i class="fas fa-check-circle"></i> Базис для автоматизации</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="problem-note">
+                    <i class="fas fa-flask"></i>
+                    <p>Исследовательское тестирование полезно, но как основной метод — катастрофа.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ЧЕК-ЛИСТ VS ТЕСТ-КЕЙС -->
+        <section id="checklist-vs-testcase" class="section checklist-vs">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Два формата тестовой документации</span>
+                    <h2>Чек-лист vs Тест-кейс</h2>
+                </div>
+                <div class="vs-grid">
+                    <div class="vs-card checklist">
+                        <div class="vs-header">
+                            <i class="fas fa-check-double"></i>
+                            <h3>Чек-лист</h3>
+                            <span class="vs-badge">Быстро, сжато</span>
+                        </div>
+                        <div class="vs-example">
+                            <span class="example-label">Пример:</span>
+                            <ul>
+                                <li>✔ Авторизация — неверный пароль</li>
+                                <li>✔ Корзина — удаление товара</li>
+                                <li>✔ Оплата — отмена транзакции</li>
+                            </ul>
+                        </div>
+                        <div class="vs-props">
+                            <p><i class="fas fa-plus-circle"></i> Шпаргалка для опытного</p>
+                            <p><i class="fas fa-minus-circle"></i> Допускает разночтения</p>
+                        </div>
+                    </div>
+                    <div class="vs-divider">
+                        <span>VS</span>
+                    </div>
+                    <div class="vs-card testcase">
+                        <div class="vs-header">
+                            <i class="fas fa-file-alt"></i>
+                            <h3>Тест-кейс</h3>
+                            <span class="vs-badge">Формально, точно</span>
+                        </div>
+                        <div class="vs-example">
+                            <span class="example-label">Пример:</span>
+                            <div class="mini-testcase">
+                                <p><strong>ID:</strong> TC-AUTH-001</p>
+                                <p><strong>Заголовок:</strong> Проверка регистрации с паролем из цифр</p>
+                                <p><strong>Предусловия:</strong> Пользователь не авторизован</p>
+                                <p><strong>Шаги:</strong> 1. Открыть страницу регистрации …</p>
+                                <p><strong>ОР:</strong> Сообщение об успехе</p>
+                            </div>
+                        </div>
+                        <div class="vs-props">
+                            <p><i class="fas fa-plus-circle"></i> Однозначность, повторяемость</p>
+                            <p><i class="fas fa-minus-circle"></i> Больше времени на подготовку</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- АНАТОМИЯ ТЕСТ-КЕЙСА -->
+        <section id="testcase-anatomy" class="section anatomy">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Из чего состоит тест-кейс</span>
+                    <h2>Анатомия: 5 обязательных частей</h2>
+                </div>
+                <div class="anatomy-card">
+                    <div class="anatomy-item">
+                        <span class="anatomy-tag">1</span>
+                        <div class="anatomy-content">
+                            <h4>ID</h4>
+                            <p>Уникальный идентификатор, например <code>TC-AUTH-001</code>. Нужен для ссылок в багах и отчётах.</p>
+                        </div>
+                    </div>
+                    <div class="anatomy-item">
+                        <span class="anatomy-tag">2</span>
+                        <div class="anatomy-content">
+                            <h4>Заголовок</h4>
+                            <p>Краткая суть проверки. <span class="example">Плохо:</span> «Проверка пароля». <span class="example">Хорошо:</span> «Регистрация с паролем, содержащим только цифры».</p>
+                        </div>
+                    </div>
+                    <div class="anatomy-item">
+                        <span class="anatomy-tag">3</span>
+                        <div class="anatomy-content">
+                            <h4>Предусловия</h4>
+                            <p>Что должно быть готово до начала теста: состояние системы, данные, настройки.</p>
+                        </div>
+                    </div>
+                    <div class="anatomy-item">
+                        <span class="anatomy-tag">4</span>
+                        <div class="anatomy-content">
+                            <h4>Шаги воспроизведения</h4>
+                            <p>Пошаговая инструкция в повелительном наклонении. Один шаг = одно действие.</p>
+                        </div>
+                    </div>
+                    <div class="anatomy-item">
+                        <span class="anatomy-tag">5</span>
+                        <div class="anatomy-content">
+                            <h4>Ожидаемый результат</h4>
+                            <p>Что должно произойти после последнего шага. Конкретно и проверяемо.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="anatomy-quote">
+                    <i class="fas fa-quote-right"></i> Невозможно проверить всё. Мастерство — в выборе критических проверок.
+                </div>
+            </div>
+        </section>
+
+        <!-- ТЕХНИКИ ТЕСТ-ДИЗАЙНА: Классы эквивалентности и граничные значения -->
+        <section id="design-techniques" class="section techniques">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Минимум тестов — максимум качества</span>
+                    <h2>Классы эквивалентности & границы</h2>
+                </div>
+                <div class="technique-showcase">
+                    <div class="technique-desc">
+                        <p>Валидные значения внутри диапазона ведут себя одинаково. Ошибки живут на границах.</p>
+                    </div>
+                    <div class="example-block">
+                        <h3>Поле «Возраст» (18–60 лет)</h3>
+                        <div class="range-visual">
+                            <div class="range-invalid">17</div>
+                            <div class="range-valid highlight">18</div>
+                            <div class="range-valid">25</div>
+                            <div class="range-valid">...</div>
+                            <div class="range-valid highlight">60</div>
+                            <div class="range-invalid">61</div>
+                        </div>
+                        <p class="range-note">5 тестов вместо 43! Экономия времени и фокус на уязвимые места.</p>
+                    </div>
+                    <div class="example-block">
+                        <h3>Количество товаров (1–99)</h3>
+                        <div class="testcases-mini">
+                            <span class="testcase-tag">0 (невалид)</span>
+                            <span class="testcase-tag">1 (мин)</span>
+                            <span class="testcase-tag">50 (середина)</span>
+                            <span class="testcase-tag">99 (макс)</span>
+                            <span class="testcase-tag">100 (сверх)</span>
+                        </div>
+                        <p>Пять тест-кейсов — полная уверенность в поле.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ИСКУССТВО БАГ-РЕПОРТА -->
+        <section id="bugreport" class="section bugreport">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Главный документ тестировщика</span>
+                    <h2>Идеальный баг-репорт</h2>
+                </div>
+                <div class="bugreport-grid">
+                    <div class="bugreport-example">
+                        <div class="bug-header">
+                            <span class="bug-id">BUG-PAY-042</span>
+                            <span class="bug-severity">Severity: Critical</span>
+                        </div>
+                        <div class="bug-title">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <strong>Заголовок:</strong> При переводе суммы 100 001 рубль при суточном лимите 100 000 рублей возникает ошибка 500 вместо сообщения о превышении лимита
+                        </div>
+                        <div class="bug-details">
+                            <div class="bug-detail-item">
+                                <span class="bug-detail-label">Предусловия:</span> 1. Пользователь авторизован. 2. На счету ≥100 001 руб. 3. Лимит = 100 000 руб.
+                            </div>
+                            <div class="bug-detail-item">
+                                <span class="bug-detail-label">Шаги:</span> 1. Открыть «Платежи и переводы». 2. Выбрать счёт списания. 3. Ввести счёт получателя 1234567890. 4. В поле «Сумма» ввести 100001. 5. Нажать «Перевести».
+                            </div>
+                            <div class="bug-detail-item">
+                                <span class="bug-detail-label">Факт:</span> Белая страница, текст «Server Error (500)».
+                            </div>
+                            <div class="bug-detail-item">
+                                <span class="bug-detail-label">Ожидание:</span> Модальное окно: «Превышен суточный лимит переводов. Максимальная сумма — 100 000 рублей».
+                            </div>
+                        </div>
+                    </div>
+                    <div class="severity-priority">
+                        <h3>Серьёзность (Severity) vs Приоритет (Priority)</h3>
+                        <div class="sp-table">
+                            <div class="sp-row header">
+                                <span>Severity</span>
+                                <span>Влияние на систему</span>
+                                <span>Пример</span>
+                            </div>
+                            <div class="sp-row">
+                                <span>Blocker</span>
+                                <span>Система не стартует, нет доступа</span>
+                                <span>500 на главной</span>
+                            </div>
+                            <div class="sp-row">
+                                <span>Critical</span>
+                                <span>Функция не работает, обхода нет</span>
+                                <span>Перевод не проходит</span>
+                            </div>
+                            <div class="sp-row">
+                                <span>Major</span>
+                                <span>Работает с ограничениями, есть обход</span>
+                                <span>Не грузятся аватарки</span>
+                            </div>
+                            <div class="sp-row">
+                                <span>Minor</span>
+                                <span>Незначительная проблема UI</span>
+                                <span>Съехавшая кнопка</span>
+                            </div>
+                            <div class="sp-row">
+                                <span>Trivial</span>
+                                <span>Опечатка, не влияет</span>
+                                <span>Ошибка в комментарии</span>
+                            </div>
+                            <div class="sp-row">
+                                <span>Enhancement</span>
+                                <span>Пожелание, не баг</span>
+                                <span>Улучшение интерфейса</span>
+                            </div>
+                        </div>
+                        <div class="priority-note">
+                            <p><strong>Приоритет</strong> (High/Mid/Low) — назначает менеджер, отражает срочность исправления.</p>
+                            <p class="example">Trivial-баг (опечатка) может иметь High-приоритет перед демо.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ПРИМЕНЕНИЕ В КУРСЕ И ДОМАШНЕЕ ЗАДАНИЕ -->
+        <section id="homework" class="section homework">
+            <div class="container">
+                <div class="homework-box">
+                    <span class="badge">Лабораторная работа #1</span>
+                    <h2>Проектируйте тесты</h2>
+                    <div class="homework-content">
+                        <div class="homework-text">
+                            <p><i class="fas fa-tasks"></i> <strong>Задание:</strong> проанализировать требования к модулю «Авторизация и регистрация» и написать <strong>10 тест-кейсов</strong> (5 позитивных, 5 негативных) с применением техники граничных значений.</p>
+                            <p><i class="fas fa-table"></i> <strong>Формат:</strong> таблица (Google Docs / Excel) с чёткими шагами и ожидаемыми результатами.</p>
+                            <p><i class="fas fa-flag"></i> <strong>Результат:</strong> первый артефакт в ваше портфолио QA.</p>
+                        </div>
+                        <div class="homework-reminder">
+                            <p>На следующей практике — выполним тест-кейсы на реальном приложении и заведём первые баг-репорты в трекинговой системе.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ЗАКЛЮЧЕНИЕ И ВОПРОСЫ -->
+        <section id="outro" class="section outro">
+            <div class="container">
+                <div class="outro-box">
+                    <h2>Резюме лекции</h2>
+                    <div class="outro-grid">
+                        <div class="outro-item">
+                            <i class="fas fa-check-double"></i>
+                            <span>Чек-лист vs Тест-кейс</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-layer-group"></i>
+                            <span>Анатомия тест-кейса</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Классы эквивалентности, границы</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-bug"></i>
+                            <span>Баг-репорт: структура, Severity/Priority</span>
+                        </div>
+                    </div>
+                    <p class="outro-message">Тестирование — не разовая акция, а непрерывный процесс поддержки качества. Поддержка тестовой документации так же важна, как и её создание.</p>
+                    <div class="questions">
+                        <i class="fas fa-question-circle"></i>
+                        <h3>Вопросы?</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Курс «Профессиональное тестирование ПО» · Кирилл Мяги · Лекция 2</p>
+            <p class="footer-small">Тест-дизайн, документация, баг-репорты</p>
+        </div>
+    </footer>
+</body>
+</html>
