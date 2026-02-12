@@ -1,1 +1,289 @@
-1
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кирилл Мяги · Лекция 1 · Профессия тестировщик</title>
+    <!-- Google Fonts & Font Awesome 6 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Боковая навигация (якоря) -->
+    <nav class="slide-nav">
+        <a href="#hero" class="nav-dot" aria-label="Вступление"></a>
+        <a href="#team" class="nav-dot" aria-label="Команда"></a>
+        <a href="#bug-lifecycle" class="nav-dot" aria-label="Жизненный цикл бага"></a>
+        <a href="#agile" class="nav-dot" aria-label="Agile и Scrum"></a>
+        <a href="#git" class="nav-dot" aria-label="Git"></a>
+        <a href="#shift-left" class="nav-dot" aria-label="Shift Left"></a>
+        <a href="#outro" class="nav-dot" aria-label="Финал"></a>
+    </nav>
+
+    <main>
+        <!-- ГЛАВНЫЙ ЭКРАН / ВСТУПЛЕНИЕ -->
+        <section id="hero" class="section hero">
+            <div class="container">
+                <div class="hero-content">
+                    <span class="badge">Первая лекция · Осень 2026</span>
+                    <h1>Профессия <span class="gradient-text">тестировщик</span></h1>
+                    <h2>Системное мышление. Глубина. Качество.</h2>
+                    <div class="lector">
+                        <div class="avatar">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <div class="lector-info">
+                            <p class="lector-name">Мяги Кирилл Александрович</p>
+                            <p class="lector-desc">Самарский университет · Компьютерная безопасность</p>
+                            <p class="lector-desc">5+ лет в защите информации, веб‑разработка, QA</p>
+                        </div>
+                    </div>
+                    <blockquote class="hero-quote">
+                        «Тестирование — это не про "поломать". Это про умение предвидеть нестандартные ситуации. Вопрос — <span style="color: var(--accent)">А что, если?</span>»
+                    </blockquote>
+                    <div class="scroll-hint">
+                        <span>Листайте вниз</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-grid"></div>
+        </section>
+
+        <!-- КОМАНДА РАЗРАБОТКИ: строительство дома -->
+        <section id="team" class="section team">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Кто мы в команде</span>
+                    <h2>Не просто программисты</h2>
+                    <p class="section-description">IT‑отдел — как стройка дома. У каждой роли своя задача и ответственность.</p>
+                </div>
+                <div class="team-grid">
+                    <div class="role-card">
+                        <div class="role-icon"><i class="fas fa-drafting-compass"></i></div>
+                        <h3>Бизнес‑аналитик</h3>
+                        <p>Архитектор. Общается с заказчиком, собирает требования, рисует чертежи‑спецификации.</p>
+                    </div>
+                    <div class="role-card">
+                        <div class="role-icon"><i class="fas fa-sitemap"></i></div>
+                        <h3>Системный аналитик</h3>
+                        <p>Прораб. Выбирает материалы, проектирует внутренние коммуникации.</p>
+                    </div>
+                    <div class="role-card">
+                        <div class="role-icon"><i class="fas fa-code"></i></div>
+                        <h3>Разработчик</h3>
+                        <p>Каменщик. Пишет код, кладёт «кирпичи» функциональности.</p>
+                    </div>
+                    <div class="role-card highlight">
+                        <div class="role-icon"><i class="fas fa-clipboard-check"></i></div>
+                        <h3>Тестировщик</h3>
+                        <p>Контролёр качества. Проверяет стены, розетки, краны. Не враг, а равный партнёр.</p>
+                    </div>
+                    <div class="role-card">
+                        <div class="role-icon"><i class="fas fa-tasks"></i></div>
+                        <h3>Project Manager</h3>
+                        <p>Следит за сроками, бюджетом, договаривается с заказчиком.</p>
+                    </div>
+                    <div class="role-card">
+                        <div class="role-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                        <h3>DevOps</h3>
+                        <p>Налаживает стройку: автоматизация, сервера, CI/CD, чтобы код быстро попадал к пользователям.</p>
+                    </div>
+                </div>
+                <div class="team-footer">
+                    <p><strong>Тестировщик — носитель самой полной информации</strong> о том, как система ведёт себя в сотне сценариев.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ЖИЗНЕННЫЙ ЦИКЛ БАГА -->
+        <section id="bug-lifecycle" class="section bug-lifecycle">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">От обнаружения до закрытия</span>
+                    <h2>Жизнь одного бага</h2>
+                </div>
+                <div class="lifecycle-track">
+                    <div class="lifecycle-item">
+                        <div class="status-badge new">NEW</div>
+                        <i class="fas fa-bug"></i>
+                        <span>Обнаружен, заведена задача</span>
+                    </div>
+                    <div class="arrow"><i class="fas fa-arrow-right"></i></div>
+                    <div class="lifecycle-item">
+                        <div class="status-badge assigned">ASSIGNED</div>
+                        <i class="fas fa-user-check"></i>
+                        <span>Взяли в работу</span>
+                    </div>
+                    <div class="arrow"><i class="fas fa-arrow-right"></i></div>
+                    <div class="lifecycle-item">
+                        <div class="status-badge fixed">FIXED</div>
+                        <i class="fas fa-check-circle"></i>
+                        <span>Код исправлен</span>
+                    </div>
+                    <div class="arrow"><i class="fas fa-arrow-right"></i></div>
+                    <div class="lifecycle-item">
+                        <div class="status-badge verified">VERIFIED</div>
+                        <i class="fas fa-vial"></i>
+                        <span>Тестировщик проверил</span>
+                    </div>
+                    <div class="arrow"><i class="fas fa-arrow-right"></i></div>
+                    <div class="lifecycle-item">
+                        <div class="status-badge closed">CLOSED</div>
+                        <i class="fas fa-archive"></i>
+                        <span>Баг закрыт</span>
+                    </div>
+                </div>
+                <div class="reopened">
+                    <div class="reopened-line">
+                        <span>Если ошибка осталась →</span>
+                        <div class="status-badge reopened">REOPENED</div>
+                        <span>← цикл заново</span>
+                    </div>
+                </div>
+                <p class="lifecycle-note">Без статусов в команде из 10+ человек — хаос. Прозрачность технического долга и гарантия фикса.</p>
+            </div>
+        </section>
+
+        <!-- AGILE / SCRUM -->
+        <section id="agile" class="section agile">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Гибкая методология</span>
+                    <h2>Строим этажами, а не ждём 2 года</h2>
+                </div>
+                <div class="agile-grid">
+                    <div class="agile-card">
+                        <i class="fas fa-sync-alt"></i>
+                        <h3>Спринт (1–4 недели)</h3>
+                        <p>Итерация, в конце — готовый кусочек продукта. В нашем курсе спринт = учебная неделя.</p>
+                    </div>
+                    <div class="agile-card">
+                        <i class="fas fa-list-ul"></i>
+                        <h3>Бэклог</h3>
+                        <p>Огромный список хотелок и требований. На планировании берём верхние задачи.</p>
+                    </div>
+                    <div class="agile-card">
+                        <i class="fas fa-users"></i>
+                        <h3>Daily meeting</h3>
+                        <p>15 минут. Что сделал? Что буду делать? Препятствия? Синхронизация тестировщика и команды.</p>
+                    </div>
+                    <div class="agile-card">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        <h3>Review & Retro</h3>
+                        <p>Показываем результат заказчику. Анализируем, что улучшить в процессах.</p>
+                    </div>
+                </div>
+                <div class="qa-agile-role">
+                    <i class="fas fa-star"></i>
+                    <p><strong>QA в Agile:</strong> участвует в уточнении требований, пишет тест-кейсы параллельно разработке, задаёт правильные вопросы на старте.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- GIT — МАШИНА ВРЕМЕНИ И ПАРАЛЛЕЛЬНЫЕ ВСЕЛЕННЫЕ -->
+        <section id="git" class="section git">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Сердце совместной разработки</span>
+                    <h2>Git: ветки, коммиты, merge request</h2>
+                </div>
+                <div class="git-visual">
+                    <div class="git-branch">
+                        <div class="branch-label main">main</div>
+                        <div class="commit-node main"></div>
+                        <div class="commit-line"></div>
+                        <div class="commit-node main"></div>
+                        <div class="commit-line"></div>
+                        <div class="commit-node main"></div>
+                    </div>
+                    <div class="git-branch feature">
+                        <div class="branch-label feature-label">feature/payment-fix</div>
+                        <div class="commit-node feature"></div>
+                        <div class="commit-line"></div>
+                        <div class="commit-node feature"></div>
+                        <div class="commit-line"></div>
+                        <div class="commit-node feature"></div>
+                        <div class="merge-request">
+                            <span>Pull Request</span> <i class="fas fa-code-branch"></i>
+                        </div>
+                    </div>
+                    <div class="git-branch hotfix">
+                        <div class="branch-label hotfix-label">hotfix/critical</div>
+                        <div class="commit-node hotfix"></div>
+                        <div class="commit-line"></div>
+                        <div class="commit-node hotfix"></div>
+                        <div class="merge-request small">hotfix</div>
+                    </div>
+                </div>
+                <ul class="git-points">
+                    <li><i class="fas fa-check-circle"></i> Коммит — снимок всех файлов с сообщением.</li>
+                    <li><i class="fas fa-check-circle"></i> Ветка — изолированная вселенная. Основная — <code>main</code> или <code>develop</code>.</li>
+                    <li><i class="fas fa-check-circle"></i> Pull Request — запрос на вливание, код‑ревью, обсуждение.</li>
+                    <li><i class="fas fa-check-circle"></i> Тестировщик проверяет фичу в feature‑ветке, а регресс — в release.</li>
+                </ul>
+                <div class="git-quote">
+                    <p>«Когда вы говорите: „Я проверил твою ветку payment-fix, можно мержить“ — вы демонстрируете уровень настоящего профессионала».</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SHIFT LEFT И ФИНАЛ -->
+        <section id="shift-left" class="section shift-left">
+            <div class="container">
+                <div class="shift-content">
+                    <div class="shift-text">
+                        <span class="section-subtitle">Shift Left</span>
+                        <h2>Смещай тестирование влево</h2>
+                        <p>Участвуй в уточнении требований, задавай «А что, если?» аналитику. Пиши тест‑кейсы, пока разработчик пишет код.</p>
+                        <div class="shift-badge">
+                            <i class="fas fa-shield-alt"></i> Тестируемость кода — твоя зона ответственности
+                        </div>
+                    </div>
+                    <div class="shift-arrow">
+                        <i class="fas fa-long-arrow-alt-left"></i> <span>Раньше</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ЗАКЛЮЧЕНИЕ -->
+        <section id="outro" class="section outro">
+            <div class="container">
+                <div class="outro-box">
+                    <h2>Фундамент заложен</h2>
+                    <div class="outro-grid">
+                        <div class="outro-item">
+                            <i class="fas fa-users-cog"></i>
+                            <span>Роли в IT‑команде</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-bug"></i>
+                            <span>Жизненный цикл бага</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-code-branch"></i>
+                            <span>Git Flow</span>
+                        </div>
+                    </div>
+                    <p class="outro-message">Со следующего занятия — практика. Репозитории, Git, техническое задание на проект. Интенсивно, но результат того стоит.</p>
+                    <div class="questions">
+                        <i class="fas fa-question-circle"></i>
+                        <h3>Вопросы?</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Курс «Профессиональное тестирование ПО» · Кирилл Мяги · 2026</p>
+            <p class="footer-small">Первая лекция — одностраничная презентация вместо слайдов</p>
+        </div>
+    </footer>
+</body>
+</html>
