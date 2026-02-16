@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кирилл Мяги · Лекция 4 · Виды тестирования, интеграция, Postman</title>
+    <!-- Google Fonts & Font Awesome 6 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- боковая навигация -->
+    <nav class="slide-nav">
+        <a href="#hero" class="nav-dot" aria-label="Вступление"></a>
+        <a href="#why-classify" class="nav-dot" aria-label="Зачем классификация"></a>
+        <a href="#classification" class="nav-dot" aria-label="Классификация"></a>
+        <a href="#integration" class="nav-dot" aria-label="Интеграционное тестирование"></a>
+        <a href="#api" class="nav-dot" aria-label="API и REST"></a>
+        <a href="#postman" class="nav-dot" aria-label="Postman"></a>
+        <a href="#security-api" class="nav-dot" aria-label="Безопасность API"></a>
+        <a href="#homework" class="nav-dot" aria-label="ДЗ"></a>
+        <a href="#outro" class="nav-dot" aria-label="Финал"></a>
+    </nav>
+
+    <main>
+        <!-- HERO -->
+        <section id="hero" class="section hero">
+            <div class="container">
+                <div class="hero-content">
+                    <span class="badge">Четвертая лекция · 17 февраля 2026</span>
+                    <h1>Интеграция, API, <span class="gradient-text">Postman</span></h1>
+                    <h2>Систематизация знаний и тестирование взаимодействий</h2>
+                    <div class="lector">
+                        <div class="avatar">
+                            <i class="fas fa-project-diagram"></i>
+                        </div>
+                        <div class="lector-info">
+                            <p class="lector-name">Мяги Кирилл Александрович</p>
+                            <p class="lector-desc">Классификация тестирования · Интеграция · Postman</p>
+                        </div>
+                    </div>
+                    <blockquote class="hero-quote">
+                        «Вид тестирования — <span style="color:var(--accent);">что</span> проверяем? Метод — <span style="color:var(--accent);">как</span> проверяем? Говорите с командой на одном языке»
+                    </blockquote>
+                    <div class="scroll-hint">
+                        <span>Листайте к классификации</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-grid"></div>
+        </section>
+
+        <!-- ЗАЧЕМ КЛАССИФИЦИРОВАТЬ? (аналогия с врачом) -->
+        <section id="why-classify" class="section why-classify">
+            <div class="container">
+                <div class="split-layout">
+                    <div class="split-text">
+                        <span class="section-subtitle">Почему не просто «тестирую»?</span>
+                        <h2>Как врач ставит диагноз</h2>
+                        <p>Пациент приходит с болью в животе. Врач не говорит «буду лечить» — он классифицирует: острая/тупая, локализованная/разлитая, связана с едой? От этого зависит метод лечения.</p>
+                        <p class="highlight-text">В тестировании то же самое. Классификация позволяет выбрать инструменты, распределить усилия и говорить с командой на одном профессиональном языке.</p>
+                    </div>
+                    <div class="split-image">
+                        <i class="fas fa-stethoscope"></i>
+                        <i class="fas fa-vial"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- КЛАССИФИКАЦИЯ ТЕСТИРОВАНИЯ (4 среза) -->
+        <section id="classification" class="section classification">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Основные срезы</span>
+                    <h2>Классификация тестирования</h2>
+                </div>
+                <div class="classif-grid">
+                    <!-- по уровням -->
+                    <div class="classif-card">
+                        <i class="fas fa-layer-group"></i>
+                        <h3>По уровням</h3>
+                        <ul>
+                            <li><strong>Модульное</strong> (компонентное) — отдельные кирпичи</li>
+                            <li><strong>Интеграционное</strong> — связи между модулями</li>
+                            <li><strong>Системное</strong> — вся система целиком</li>
+                            <li><strong>Приёмочное</strong> — готовность к эксплуатации</li>
+                        </ul>
+                    </div>
+                    <!-- по запуску кода -->
+                    <div class="classif-card">
+                        <i class="fas fa-play-circle"></i>
+                        <h3>По запуску кода</h3>
+                        <ul>
+                            <li><strong>Статическое</strong> (без выполнения: код-ревью, SonarQube, документация)</li>
+                            <li><strong>Динамическое</strong> (выполнение программы)</li>
+                        </ul>
+                    </div>
+                    <!-- по знанию устройства -->
+                    <div class="classif-card">
+                        <i class="fas fa-eye"></i>
+                        <h3>По знанию устройства</h3>
+                        <ul>
+                            <li><strong>Белый ящик</strong> (видим код — unit-тесты)</li>
+                            <li><strong>Чёрный ящик</strong> (только ввод/вывод — UI-тесты)</li>
+                            <li><strong>Серый ящик</strong> (частичный доступ: БД, логи, API)</li>
+                        </ul>
+                    </div>
+                    <!-- по автоматизации -->
+                    <div class="classif-card">
+                        <i class="fas fa-robot"></i>
+                        <h3>По автоматизации</h3>
+                        <ul>
+                            <li><strong>Ручное</strong> (исследовательское, юзабилити)</li>
+                            <li><strong>Автоматизированное</strong> (регресс, нагрузка, повторяемость)</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- отдельно по целям (функциональное/нефункциональное) -->
+                <div class="goals-block">
+                    <h3>По целям (самое важное)</h3>
+                    <div class="goals-row">
+                        <div class="goal-item functional">
+                            <i class="fas fa-check-double"></i>
+                            <h4>Функциональное</h4>
+                            <p>Проверка функций: регистрация, оплата, добавление товара…</p>
+                        </div>
+                        <div class="goal-item nonfunctional">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <h4>Нефункциональное</h4>
+                            <p>Производительность, безопасность, usability, совместимость, установка…</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ИНТЕГРАЦИОННОЕ ТЕСТИРОВАНИЕ (стратегии, stubs/drivers) -->
+        <section id="integration" class="section integration">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Золотая середина</span>
+                    <h2>Интеграционное тестирование</h2>
+                </div>
+                <div class="integration-desc">
+                    <p>Модули по отдельности работают, а вместе — нет. Ошибки на стыках: форматы данных, последовательность вызовов, права доступа.</p>
+                    <div class="house-analogy">
+                        <i class="fas fa-home"></i>
+                        <span>Кирпичи качественные, но электрики забыли соединить провода — интеграционное тестирование проверяет соединения.</span>
+                    </div>
+                </div>
+                <div class="strategies">
+                    <h3>Стратегии интеграции</h3>
+                    <div class="strategy-cards">
+                        <div class="strategy-card">
+                            <span class="badge-strategy">Big Bang</span>
+                            <p>Собрали всё вместе и тестируем. Минус: сложно локализовать ошибку.</p>
+                        </div>
+                        <div class="strategy-card">
+                            <span class="badge-strategy">Top-Down</span>
+                            <p>Сверху вниз. Для имитации отсутствующих модулей — <strong>стабы (stubs)</strong>.</p>
+                        </div>
+                        <div class="strategy-card">
+                            <span class="badge-strategy">Bottom-Up</span>
+                            <p>Снизу вверх. Для вызова тестируемых модулей — <strong>драйверы (drivers)</strong>.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- АРХИТЕКТУРА И API -->
+        <section id="api" class="section api">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Типовая архитектура</span>
+                    <h2>Фронтенд · Бэкенд · База данных</h2>
+                </div>
+                <div class="arch-diagram">
+                    <div class="arch-layer">
+                        <i class="fas fa-desktop"></i>
+                        <span>Фронтенд</span>
+                    </div>
+                    <div class="arch-arrow"><i class="fas fa-arrow-down"></i></div>
+                    <div class="arch-layer api-layer">
+                        <i class="fas fa-plug"></i>
+                        <span>API (REST)</span>
+                    </div>
+                    <div class="arch-arrow"><i class="fas fa-arrow-down"></i></div>
+                    <div class="arch-layer">
+                        <i class="fas fa-server"></i>
+                        <span>Бэкенд (C#)</span>
+                    </div>
+                    <div class="arch-arrow"><i class="fas fa-arrow-down"></i></div>
+                    <div class="arch-layer">
+                        <i class="fas fa-database"></i>
+                        <span>База данных</span>
+                    </div>
+                </div>
+                <div class="rest-examples">
+                    <h3>Примеры REST API эндпоинтов</h3>
+                    <div class="endpoint-list">
+                        <div class="endpoint"><span class="method get">GET</span> /api/products — список товаров</div>
+                        <div class="endpoint"><span class="method get">GET</span> /api/products/{id} — товар по id</div>
+                        <div class="endpoint"><span class="method post">POST</span> /api/cart — добавить в корзину</div>
+                        <div class="endpoint"><span class="method delete">DELETE</span> /api/cart/{id} — удалить из корзины</div>
+                        <div class="endpoint"><span class="method post">POST</span> /api/orders — оформить заказ</div>
+                    </div>
+                    <p class="status-note">Статус-коды: 200, 201, 400, 401, 404, 500…</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- POSTMAN -->
+        <section id="postman" class="section postman">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Главный инструмент</span>
+                    <h2>Postman: тестирование API</h2>
+                </div>
+                <div class="postman-features">
+                    <div class="feature-card">
+                        <i class="fas fa-paper-plane"></i>
+                        <h4>Отправка запросов</h4>
+                        <p>GET, POST, PUT, DELETE, заголовки, тело (JSON/XML).</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-folder"></i>
+                        <h4>Коллекции</h4>
+                        <p>Организация запросов по модулям.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-flask"></i>
+                        <h4>Автотесты на JS</h4>
+                        <p>Проверка статус-кодов, тела ответа, времени.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-globe"></i>
+                        <h4>Окружения (Environments)</h4>
+                        <p>Переменные для разных серверов: dev, staging, prod.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-terminal"></i>
+                        <h4>Newman</h4>
+                        <p>Запуск коллекций из CLI, интеграция в CI/CD.</p>
+                    </div>
+                </div>
+
+                <!-- Пример тестов Postman -->
+                <div class="postman-example">
+                    <h3>Пример тестов в Postman (вкладка Tests)</h3>
+                    <div class="code-block">
+                        <pre><code>pm.test("Status code is 200", function () {
+    pm.response.to.have.status(200);
+});
+
+pm.test("Response contains products", function () {
+    var jsonData = pm.response.json();
+    pm.expect(jsonData).to.be.an('array');
+    pm.expect(jsonData.length).to.be.greaterThan(0);
+});
+
+pm.test("Response time < 500ms", function () {
+    pm.expect(pm.response.responseTime).to.be.below(500);
+});</code></pre>
+                    </div>
+                </div>
+
+                <!-- Цепочки запросов -->
+                <div class="postman-chaining">
+                    <i class="fas fa-link"></i>
+                    <p><strong>Сценарии:</strong> первый запрос создаёт ресурс → из ответа извлекаем ID → сохраняем в переменную → второй запрос использует ID.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- БЕЗОПАСНОСТЬ API -->
+        <section id="security-api" class="section security-api">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">API — любимая цель атак</span>
+                    <h2>Тестирование безопасности через API</h2>
+                </div>
+                <div class="security-grid">
+                    <div class="security-item">
+                        <i class="fas fa-id-card"></i>
+                        <h4>Нарушение прав доступа</h4>
+                        <p>Попробуйте запросить данные другого пользователя, изменив ID в URL.</p>
+                    </div>
+                    <div class="security-item">
+                        <i class="fas fa-bomb"></i>
+                        <h4>Отсутствие rate limit</h4>
+                        <p>Тысяча запросов в секунду — DoS-уязвимость.</p>
+                    </div>
+                    <div class="security-item">
+                        <i class="fas fa-lock-open"></i>
+                        <h4>Передача данных в открытом виде</h4>
+                        <p>Нет HTTPS / чувствительные поля в открытом тексте.</p>
+                    </div>
+                    <div class="security-item">
+                        <i class="fas fa-input-numbers"></i>
+                        <h4>Негативные сценарии</h4>
+                        <p>Отрицательные цены, буквы вместо цифр, XSS в полях.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- МЕСТО API-ТЕСТИРОВАНИЯ В КЛАССИФИКАЦИИ -->
+        <section class="section api-classification">
+            <div class="container">
+                <div class="classif-summary">
+                    <h3>Где находится API-тестирование в нашей классификации?</h3>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i> <strong>Уровень:</strong> интеграционное (проверка связи клиент-сервер или сервер-БД)</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Знание устройства:</strong> серый ящик (знаем эндпоинты, но не код)</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Автоматизация:</strong> может быть ручным (Postman вручную) и автоматизированным (коллекции + Newman)</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Цели:</strong> чаще функциональное, но также нефункциональное (нагрузка, безопасность)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ДОМАШНЕЕ ЗАДАНИЕ -->
+        <section id="homework" class="section homework">
+            <div class="container">
+                <div class="homework-box">
+                    <span class="badge">ДЗ · Лекция 4</span>
+                    <h2>Ваше первое API-тестирование</h2>
+                    <div class="homework-parts">
+                        <div class="hw-part">
+                            <i class="fas fa-book"></i>
+                            <h3>Теория</h3>
+                            <p>Повторить HTTP-методы, статус-коды, структуру JSON, REST.</p>
+                        </div>
+                        <div class="hw-part">
+                            <i class="fas fa-download"></i>
+                            <h3>Практика</h3>
+                            <p>Установить Postman (desktop). Создать коллекцию с тремя запросами к любому открытому API (GitHub, погода и т.п.). Написать для каждого минимум два теста (статус-код и структура). Прислать скриншот с успешным прогоном.</p>
+                        </div>
+                    </div>
+                    <div class="hw-deadline">
+                        <i class="fas fa-hourglass-half"></i> На следующей неделе работаем с API наших проектов.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ЗАКЛЮЧЕНИЕ -->
+        <section id="outro" class="section outro">
+            <div class="container">
+                <div class="outro-box">
+                    <h2>Сегодня мы разобрали</h2>
+                    <div class="outro-grid">
+                        <div class="outro-item">
+                            <i class="fas fa-sitemap"></i>
+                            <span>Классификацию тестирования</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-puzzle-piece"></i>
+                            <span>Интеграционное тестирование, стратегии</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span>API и REST</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-cog"></i>
+                            <span>Postman: коллекции, тесты, окружения</span>
+                        </div>
+                    </div>
+                    <p class="outro-message">Тестировщик, владеющий Postman, стоит на ступень выше — это must have современного QA.</p>
+                    <div class="questions">
+                        <i class="fas fa-question-circle"></i>
+                        <h3>Вопросы?</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Курс «Тестирование информационных систем» · Кирилл Мяги · Лекция 4</p>
+            <p class="footer-small">Виды тестирования, интеграция, Postman</p>
+        </div>
+    </footer>
+
+    <!-- простой скрипт для переключения (необязательно) – здесь не требуется, оставим на будущее -->
+</body>
+</html>
