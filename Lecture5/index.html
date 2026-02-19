@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кирилл Мяги · Лекция 4 · Функциональное тестирование UI</title>
+    <!-- Google Fonts & Font Awesome 6 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- боковая навигация -->
+    <nav class="slide-nav">
+        <a href="#hero" class="nav-dot" aria-label="Вступление"></a>
+        <a href="#ui-importance" class="nav-dot" aria-label="Важность UI"></a>
+        <a href="#manual-testing" class="nav-dot" aria-label="Ручное тестирование"></a>
+        <a href="#devtools" class="nav-dot" aria-label="DevTools"></a>
+        <a href="#selenium-intro" class="nav-dot" aria-label="Selenium"></a>
+        <a href="#pageobject" class="nav-dot" aria-label="PageObject"></a>
+        <a href="#strategy" class="nav-dot" aria-label="Стратегия автоматизации"></a>
+        <a href="#security" class="nav-dot" aria-label="Безопасность"></a>
+        <a href="#homework" class="nav-dot" aria-label="ДЗ"></a>
+        <a href="#outro" class="nav-dot" aria-label="Финал"></a>
+    </nav>
+
+    <main>
+        <!-- HERO -->
+        <section id="hero" class="section hero">
+            <div class="container">
+                <div class="hero-content">
+                    <span class="badge">Пятая лекция · 19 февраля 2026</span>
+                    <h1>Функциональное тестирование <span class="gradient-text">пользовательского интерфейса</span></h1>
+                    <h2>Ручное, DevTools, Selenium, PageObject</h2>
+                    <div class="lector">
+                        <div class="avatar">
+                            <i class="fas fa-desktop"></i>
+                        </div>
+                        <div class="lector-info">
+                            <p class="lector-name">Мяги Кирилл Александрович</p>
+                            <p class="lector-desc">UI — лицо продукта. От кнопок до автоматизации.</p>
+                        </div>
+                    </div>
+                    <blockquote class="hero-quote">
+                        «Для пользователя интерфейс и есть вся система. <span style="color:var(--accent);">UI-тестирование — защита репутации</span>»
+                    </blockquote>
+                    <div class="scroll-hint">
+                        <span>Листайте к инструментам</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-grid"></div>
+        </section>
+
+        <!-- ВАЖНОСТЬ UI ТЕСТИРОВАНИЯ -->
+        <section id="ui-importance" class="section ui-importance">
+            <div class="container">
+                <div class="split-layout">
+                    <div class="split-text">
+                        <span class="section-subtitle">Что проверяем?</span>
+                        <h2>UI: кнопки, поля, навигация</h2>
+                        <p>Корректность отображения, поведение при взаимодействии, обработка ошибок, отображение данных с бэкенда.</p>
+                        <p class="highlight-text">API может быть идеальным, но если кнопка «Оплатить» не нажимается — продукт мёртв.</p>
+                    </div>
+                    <div class="split-image">
+                        <i class="fas fa-mouse-pointer"></i>
+                        <i class="fas fa-keyboard"></i>
+                    </div>
+                </div>
+                <!-- классификация UI-тестирования -->
+                <div class="classif-mini">
+                    <div class="classif-mini-item"><i class="fas fa-layer-group"></i> Уровень: системное / интеграционное</div>
+                    <div class="classif-mini-item"><i class="fas fa-eye-slash"></i> Метод: чёрный ящик</div>
+                    <div class="classif-mini-item"><i class="fas fa-robot"></i> Автоматизация: ручное / авто</div>
+                    <div class="classif-mini-item"><i class="fas fa-bullseye"></i> Цели: функциональное + нефункциональное</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- РУЧНОЕ ТЕСТИРОВАНИЕ UI -->
+        <section id="manual-testing" class="section manual-testing">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Исследовательское vs формальное</span>
+                    <h2>Ручное тестирование интерфейсов</h2>
+                </div>
+                <div class="manual-grid">
+                    <div class="manual-card exploratory">
+                        <i class="fas fa-compass"></i>
+                        <h3>Исследовательское</h3>
+                        <p>Свободный поиск неочевидных дефектов, опора на опыт и интуицию. Вопросы: «А что, если дважды нажать?», «А если ввести буквы в поле для телефона?»</p>
+                    </div>
+                    <div class="manual-card scripted">
+                        <i class="fas fa-clipboard-list"></i>
+                        <h3>По тест-кейсам</h3>
+                        <p>Чёткие шаги, предусловия, ожидаемые результаты. Пример тест-кейса «Добавление товара в корзину».</p>
+                        <div class="mini-testcase">
+                            <p><strong>Предусловия:</strong> пользователь авторизован, товар в каталоге.</p>
+                            <p><strong>Шаги:</strong> 1. Нажать «В корзину» у товара «Смартфон». 2. Нажать иконку корзины.</p>
+                            <p><strong>ОР:</strong> В корзине отображается товар с правильной ценой.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ИНСТРУМЕНТЫ РАЗРАБОТЧИКА (DEVTOOLS) -->
+        <section id="devtools" class="section devtools">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">F12 — лучший друг тестировщика</span>
+                    <h2>Инструменты разработчика в браузере</h2>
+                </div>
+                <div class="devtools-grid">
+                    <div class="devtool-card">
+                        <i class="fas fa-code"></i>
+                        <h3>Elements</h3>
+                        <p>HTML/CSS структура. Проверка вёрстки, стилей, классов. Точное описание багов.</p>
+                    </div>
+                    <div class="devtool-card">
+                        <i class="fas fa-terminal"></i>
+                        <h3>Console</h3>
+                        <p>Логи JavaScript, ошибки. "Uncaught TypeError" — сразу видно проблему.</p>
+                    </div>
+                    <div class="devtool-card">
+                        <i class="fas fa-network-wired"></i>
+                        <h3>Network</h3>
+                        <p>Все запросы, статусы, время, тело ответа. Связь UI и API.</p>
+                    </div>
+                    <div class="devtool-card">
+                        <i class="fas fa-database"></i>
+                        <h3>Application</h3>
+                        <p>LocalStorage, куки, сессии. Очистка данных для тестов первого входа.</p>
+                    </div>
+                    <div class="devtool-card">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <h3>Performance</h3>
+                        <p>Анализ скорости загрузки, узкие места.</p>
+                    </div>
+                    <div class="devtool-card">
+                        <i class="fas fa-lightbulb"></i>
+                        <h3>Lighthouse</h3>
+                        <p>Аудит производительности, доступности, best practices.</p>
+                    </div>
+                </div>
+                <div class="devtools-quote">
+                    <p>Инструменты разработчика превращают тестировщика в детектива: от «кнопка не работает» к «почему не работает».</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- АВТОМАТИЗАЦИЯ: SELENIUM -->
+        <section id="selenium-intro" class="section selenium-intro">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Первый шаг в автоматизацию</span>
+                    <h2>Selenium WebDriver</h2>
+                </div>
+                <div class="selenium-desc">
+                    <p>Библиотека для управления браузером из кода (C#, Java, Python, JS). Драйверы: ChromeDriver, GeckoDriver, EdgeDriver.</p>
+                </div>
+                <div class="code-example">
+                    <div class="code-tabs">
+                        <span class="code-tab active">Простой тест логина (C#)</span>
+                    </div>
+                    <div class="code-block">
+                        <pre><code><span class="keyword">using</span> OpenQA.Selenium;
+<span class="keyword">using</span> OpenQA.Selenium.Chrome;
+
+IWebDriver driver = <span class="keyword">new</span> ChromeDriver();
+driver.Navigate().GoToUrl(<span class="string">"https://localhost:5001/login"</span>);
+
+IWebElement emailField = driver.FindElement(By.Id(<span class="string">"email"</span>));
+emailField.SendKeys(<span class="string">"test@example.com"</span>);
+
+IWebElement passwordField = driver.FindElement(By.Name(<span class="string">"password"</span>));
+passwordField.SendKeys(<span class="string">"TestPassword123"</span>);
+
+IWebElement loginButton = driver.FindElement(By.CssSelector(<span class="string">"button[type='submit']"</span>));
+loginButton.Click();
+
+System.Threading.Thread.Sleep(<span class="number">2000</span>);
+IWebElement header = driver.FindElement(By.TagName(<span class="string">"h1"</span>));
+
+<span class="keyword">if</span> (header.Text.Contains(<span class="string">"Личный кабинет"</span>))
+    Console.WriteLine(<span class="string">"Тест пройден"</span>);
+<span class="keyword">else</span>
+    Console.WriteLine(<span class="string">"Тест провален"</span>);
+
+driver.Quit();</code></pre>
+                    </div>
+                </div>
+                <div class="problem-box">
+                    <h3>Проблемы "сырого" Selenium:</h3>
+                    <ul>
+                        <li><i class="fas fa-times-circle"></i> Хрупкость (изменился ID — тест упал)</li>
+                        <li><i class="fas fa-times-circle"></i> Читаемость (копипаста)</li>
+                        <li><i class="fas fa-times-circle"></i> Поддерживаемость (править все тесты при изменении страницы)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- PATTERN PAGE OBJECT -->
+        <section id="pageobject" class="section pageobject">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Решение проблем</span>
+                    <h2>Паттерн PageObject</h2>
+                </div>
+                <div class="po-explanation">
+                    <p>Для каждой страницы или значимого блока — отдельный класс, инкапсулирующий элементы и действия.</p>
+                </div>
+                <div class="po-grid">
+                    <div class="po-card">
+                        <h3>LoginPage</h3>
+                        <div class="code-block small">
+                            <pre><code><span class="keyword">public</span> <span class="keyword">class</span> LoginPage
+{
+    <span class="keyword">private</span> IWebDriver driver;
+    <span class="keyword">private</span> By emailField = By.Id(<span class="string">"email"</span>);
+    <span class="keyword">private</span> By passwordField = By.Name(<span class="string">"password"</span>);
+    <span class="keyword">private</span> By loginButton = By.CssSelector(<span class="string">"button[type='submit']"</span>);
+
+    <span class="keyword">public</span> LoginPage(IWebDriver driver) { <span class="keyword">this</span>.driver = driver; }
+
+    <span class="keyword">public</span> <span class="keyword">void</span> EnterEmail(<span class="keyword">string</span> email) =>
+        driver.FindElement(emailField).SendKeys(email);
+
+    <span class="keyword">public</span> <span class="keyword">void</span> EnterPassword(<span class="keyword">string</span> password) =>
+        driver.FindElement(passwordField).SendKeys(password);
+
+    <span class="keyword">public</span> <span class="keyword">void</span> ClickLogin() =>
+        driver.FindElement(loginButton).Click();
+
+    <span class="keyword">public</span> DashboardPage LoginAs(<span class="keyword">string</span> email, <span class="keyword">string</span> password)
+    {
+        EnterEmail(email);
+        EnterPassword(password);
+        ClickLogin();
+        <span class="keyword">return</span> <span class="keyword">new</span> DashboardPage(driver);
+    }
+}</code></pre>
+                        </div>
+                    </div>
+                    <div class="po-card">
+                        <h3>DashboardPage</h3>
+                        <div class="code-block small">
+                            <pre><code><span class="keyword">public</span> <span class="keyword">class</span> DashboardPage
+{
+    <span class="keyword">private</span> IWebDriver driver;
+    <span class="keyword">private</span> By header = By.TagName(<span class="string">"h1"</span>);
+
+    <span class="keyword">public</span> DashboardPage(IWebDriver driver)
+    {
+        <span class="keyword">this</span>.driver = driver;
+    }
+
+    <span class="keyword">public</span> <span class="keyword">string</span> GetHeaderText() =>
+        driver.FindElement(header).Text;
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="po-test">
+                    <h3>Тест с PageObject</h3>
+                    <div class="code-block">
+                        <pre><code>IWebDriver driver = <span class="keyword">new</span> ChromeDriver();
+driver.Navigate().GoToUrl(<span class="string">"https://localhost:5001/login"</span>);
+<span class="keyword">var</span> loginPage = <span class="keyword">new</span> LoginPage(driver);
+<span class="keyword">var</span> dashboardPage = loginPage.LoginAs(<span class="string">"test@example.com"</span>, <span class="string">"TestPassword123"</span>);
+Assert.IsTrue(dashboardPage.GetHeaderText().Contains(<span class="string">"Личный кабинет"</span>));
+driver.Quit();</code></pre>
+                    </div>
+                    <p><i class="fas fa-check-circle" style="color:var(--good);"></i> Читаемость, переиспользование, лёгкость поддержки.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- СТРАТЕГИЯ АВТОМАТИЗАЦИИ -->
+        <section id="strategy" class="section strategy">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Что автоматизировать?</span>
+                    <h2>Стратегия: Smoke, регресс, CI/CD</h2>
+                </div>
+                <div class="strategy-content">
+                    <div class="strategy-text">
+                        <ul>
+                            <li><i class="fas fa-fire"></i> <strong>Smoke-тесты</strong> — критический функционал (логин, оплата)</li>
+                            <li><i class="fas fa-redo-alt"></i> <strong>Регресс</strong> — повторяющиеся проверки</li>
+                            <li><i class="fas fa-code-branch"></i> <strong>CI/CD</strong> — запуск автотестов при каждом коммите (Jenkins, GitHub Actions)</li>
+                            <li><i class="fas fa-eye-slash"></i> <strong>Headless-режим</strong> — без графического интерфейса, для серверов</li>
+                            <li><i class="fas fa-th"></i> <strong>Selenium Grid</strong> — параллельный запуск в разных браузерах</li>
+                        </ul>
+                    </div>
+                    <div class="strategy-note">
+                        <p>Автоматизация имеет стоимость написания и поддержки. Нестабильные тесты вредят больше, чем помогают.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- БЕЗОПАСНОСТЬ ЧЕРЕЗ UI-АВТОМАТИЗАЦИЮ -->
+        <section id="security" class="section security">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">UI и безопасность</span>
+                    <h2>Автоматизация поиска уязвимостей</h2>
+                </div>
+                <div class="security-ui-grid">
+                    <div class="security-ui-item">
+                        <i class="fas fa-code"></i>
+                        <h4>XSS-инъекции</h4>
+                        <p>Автотест вводит <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code> во все поля и проверяет выполнение.</p>
+                    </div>
+                    <div class="security-ui-item">
+                        <i class="fas fa-fingerprint"></i>
+                        <h4>Brute force</h4>
+                        <p>Тест проверяет блокировку после N неудачных попыток входа.</p>
+                    </div>
+                    <div class="security-ui-item">
+                        <i class="fas fa-undo-alt"></i>
+                        <h4>Back after logout</h4>
+                        <p>Проверка, что кнопка «Назад» не возвращает в личный кабинет после выхода.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ДОМАШНЕЕ ЗАДАНИЕ -->
+        <section id="homework" class="section homework">
+            <div class="container">
+                <div class="homework-box">
+                    <span class="badge">ДЗ · Лекция 5</span>
+                    <h2>Первый UI-автотест с PageObject</h2>
+                    <div class="homework-parts">
+                        <div class="hw-part">
+                            <i class="fas fa-book"></i>
+                            <h3>Теория</h3>
+                            <p>Изучить документацию Selenium WebDriver и паттерн PageObject.</p>
+                        </div>
+                        <div class="hw-part">
+                            <i class="fas fa-laptop-code"></i>
+                            <h3>Практика</h3>
+                            <p>Написать PageObject для страницы логина вашего учебного приложения. Реализовать один автоматизированный тест, который выполняет успешный вход и проверяет наличие элемента в личном кабинете. Закоммитить код в репозиторий.</p>
+                        </div>
+                    </div>
+                    <div class="hw-deadline">
+                        <i class="fas fa-hourglass-half"></i> На следующей неделе разбираем ваши решения и пишем более сложные сценарии (корзина, посты, переводы).
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ЗАКЛЮЧЕНИЕ -->
+        <section id="outro" class="section outro">
+            <div class="container">
+                <div class="outro-box">
+                    <h2>Сегодня мы разобрали</h2>
+                    <div class="outro-grid">
+                        <div class="outro-item">
+                            <i class="fas fa-paint-brush"></i>
+                            <span>Ручное тестирование UI</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-tools"></i>
+                            <span>Инструменты разработчика (F12)</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-spider"></i>
+                            <span>Selenium WebDriver</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-object-group"></i>
+                            <span>PageObject</span>
+                        </div>
+                    </div>
+                    <p class="outro-message">Автоматизация UI открывает двери в высокооплачиваемую часть профессии. Даже если вы остаётесь в ручном тестировании — понимание автотестов делает вас ценнее.</p>
+                    <div class="questions">
+                        <i class="fas fa-question-circle"></i>
+                        <h3>Вопросы?</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Курс «Тестирование информационных систем» · Кирилл Мяги · Лекция 5</p>
+            <p class="footer-small">Функциональное тестирование пользовательского интерфейса</p>
+        </div>
+    </footer>
+</body>
+</html>
