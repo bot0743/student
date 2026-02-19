@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кирилл Мяги · Лекция 6 · Исключения и SQL</title>
+    <!-- Google Fonts & Font Awesome 6 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- боковая навигация -->
+    <nav class="slide-nav">
+        <a href="#hero" class="nav-dot" aria-label="Вступление"></a>
+        <a href="#exceptions" class="nav-dot" aria-label="Исключения"></a>
+        <a href="#sql-basics" class="nav-dot" aria-label="Базы данных и SQL"></a>
+        <a href="#sql-injection" class="nav-dot" aria-label="SQL-инъекции"></a>
+        <a href="#integration" class="nav-dot" aria-label="Связь тем"></a>
+        <a href="#lab" class="nav-dot" aria-label="Лабораторная"></a>
+        <a href="#homework" class="nav-dot" aria-label="ДЗ"></a>
+        <a href="#outro" class="nav-dot" aria-label="Финал"></a>
+    </nav>
+
+    <main>
+        <!-- HERO -->
+        <section id="hero" class="section hero">
+            <div class="container">
+                <div class="hero-content">
+                    <span class="badge">Шестая лекция · 19 февраля 2026</span>
+                    <h1>Обработка ошибок, базы данных, <span class="gradient-text">безопасность</span></h1>
+                    <h2>Исключения, SQL, инъекции — стык качества и защиты</h2>
+                    <div class="lector">
+                        <div class="avatar">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="lector-info">
+                            <p class="lector-name">Мяги Кирилл Александрович</p>
+                            <p class="lector-desc">Компьютерная безопасность · Тестирование</p>
+                        </div>
+                    </div>
+                    <blockquote class="hero-quote">
+                        «Исключения неизбежны. SQL повсюду. На стыке рождаются уязвимости. <span style="color:var(--accent);">Тестировщик — защитник данных</span>»
+                    </blockquote>
+                    <div class="scroll-hint">
+                        <span>Листайте к исключениям</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-grid"></div>
+        </section>
+
+        <!-- ИСКЛЮЧЕНИЯ -->
+        <section id="exceptions" class="section exceptions">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Когда идёт не по плану</span>
+                    <h2>Исключительные ситуации (exceptions)</h2>
+                    <p class="section-description">События, нарушающие нормальный ход программы: файл не найден, БД недоступна, некорректный ввод.</p>
+                </div>
+                <div class="exception-grid">
+                    <div class="exception-card">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Источники</h3>
+                        <ul>
+                            <li>Некорректный ввод пользователя</li>
+                            <li>Сбои внешних ресурсов (БД, API, сеть)</li>
+                            <li>Ошибки логики (NullReference, деление на ноль)</li>
+                        </ul>
+                    </div>
+                    <div class="exception-card">
+                        <i class="fas fa-code"></i>
+                        <h3>try-catch-finally</h3>
+                        <div class="code-block small">
+                            <pre><code><span class="keyword">try</span>
+{
+    <span class="comment">// код, который может выбросить исключение</span>
+}
+<span class="keyword">catch</span> (SpecificException ex)
+{
+    <span class="comment">// обработка (лог, сообщение пользователю)</span>
+}
+<span class="keyword">finally</span>
+{
+    <span class="comment">// освобождение ресурсов (всегда)</span>
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="exception-role">
+                    <h3>Роль тестировщика</h3>
+                    <div class="role-items">
+                        <div class="role-item">
+                            <i class="fas fa-vial"></i>
+                            <span>Проектировать негативные тесты (имитировать сбои)</span>
+                        </div>
+                        <div class="role-item">
+                            <i class="fas fa-scroll"></i>
+                            <span>Анализировать stack trace в логах</span>
+                        </div>
+                        <div class="role-item">
+                            <i class="fas fa-shield"></i>
+                            <span>Проверять, что детали исключений не утекают пользователю</span>
+                        </div>
+                        <div class="role-item">
+                            <i class="fas fa-dumpster-fire"></i>
+                            <span>Искать «проглоченные» исключения (пустой catch)</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="stacktrace-example">
+                    <h4>Пример stack trace</h4>
+                    <div class="code-block">
+                        <pre><code>NullReferenceException: Object reference not set to an instance of an object
+   at Shop.Cart.CalculateTotal() in Cart.cs:line 42
+   at Shop.Pages.CartPage.Page_Load() in CartPage.cs:line 25</code></pre>
+                    </div>
+                    <p>Сразу видно: метод CalculateTotal, строка 42, забыли проверить объект на null.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- БАЗЫ ДАННЫХ И SQL -->
+        <section id="sql-basics" class="section sql-basics">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Сердце данных</span>
+                    <h2>SQL и базы данных</h2>
+                </div>
+                <div class="sql-why">
+                    <p><i class="fas fa-database"></i> Почти каждое приложение хранит данные в БД. Тестировщик, знающий SQL, проверяет, что данные сохраняются корректно, целостность не нарушена, запросы работают.</p>
+                </div>
+                <div class="sql-problems">
+                    <h3>Типичные проблемы с БД</h3>
+                    <div class="problem-grid">
+                        <div class="problem-item">
+                            <i class="fas fa-plug"></i>
+                            <h4>Соединение</h4>
+                            <p>Приложение не держит пул, теряет соединение, не закрывает ресурсы.</p>
+                        </div>
+                        <div class="problem-item">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <h4>Производительность</h4>
+                            <p>Медленные запросы при большой нагрузке.</p>
+                        </div>
+                        <div class="problem-item">
+                            <i class="fas fa-link"></i>
+                            <h4>Целостность</h4>
+                            <p>Заказ без пользователя, отрицательный баланс.</p>
+                        </div>
+                        <div class="problem-item">
+                            <i class="fas fa-exchange-alt"></i>
+                            <h4>Транзакции</h4>
+                            <p>Сбой посередине операции — данные должны остаться согласованными.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="sql-examples">
+                    <h3>Примеры запросов для проверки</h3>
+                    <div class="code-block">
+                        <pre><code><span class="comment">-- Проверить, что пользователь создался</span>
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> email = 'test@example.com';
+
+<span class="comment">-- Проверить, что заказ сохранился</span>
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> orders <span class="keyword">WHERE</span> user_id = 5;
+
+<span class="comment">-- Проверить, что товар списался со склада</span>
+<span class="keyword">SELECT</span> quantity <span class="keyword">FROM</span> products <span class="keyword">WHERE</span> id = 10;</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SQL-ИНЪЕКЦИИ -->
+        <section id="sql-injection" class="section sql-injection">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Критическая уязвимость</span>
+                    <h2>SQL-инъекции</h2>
+                </div>
+                <div class="injection-desc">
+                    <p>Внедрение произвольного SQL-кода через пользовательский ввод. Возникает, когда разработчик склеивает строки, а не использует параметризованные запросы.</p>
+                </div>
+                <div class="injection-example">
+                    <h3>Уязвимый код</h3>
+                    <div class="code-block">
+                        <pre><code><span class="comment">// ОПАСНО! Не делайте так!</span>
+<span class="keyword">string</span> query = <span class="string">"SELECT * FROM users WHERE login = '"</span> + login + <span class="string">"' AND password = '"</span> + password + <span class="string">"'"</span>;</code></pre>
+                    </div>
+                    <h3>Ввод злоумышленника</h3>
+                    <div class="code-block">
+                        <pre><code>login = admin' --
+password = anything</code></pre>
+                    </div>
+                    <h3>Результирующий запрос</h3>
+                    <div class="code-block">
+                        <pre><code><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> login = 'admin' --' AND password = 'anything'</code></pre>
+                    </div>
+                    <p class="injection-note">Комментарий <code>--</code> отсекает проверку пароля. Злоумышленник входит как admin без пароля.</p>
+                </div>
+                <div class="injection-testing">
+                    <h3>Как тестировать</h3>
+                    <ul>
+                        <li><i class="fas fa-quote-right"></i> Вводить одинарную кавычку <code>'</code> — если возникает ошибка БД, возможно, есть инъекция.</li>
+                        <li><i class="fas fa-code"></i> Пробовать типовые строки: <code>' OR '1'='1</code>, <code>' OR 1=1 --</code>.</li>
+                        <li><i class="fas fa-skull"></i> Использовать автоматические сканеры (OWASP ZAP, SQLmap) <strong>только в тестовых средах</strong>.</li>
+                    </ul>
+                </div>
+                <div class="injection-protection">
+                    <h3>Защита: параметризованные запросы</h3>
+                    <div class="code-block">
+                        <pre><code><span class="keyword">using</span> (SqlCommand cmd = <span class="keyword">new</span> SqlCommand(<span class="string">"SELECT * FROM users WHERE login = @login AND password = @password"</span>, connection))
+{
+    cmd.Parameters.AddWithValue(<span class="string">"@login"</span>, login);
+    cmd.Parameters.AddWithValue(<span class="string">"@password"</span>, password);
+    <span class="comment">// Данные никогда не интерпретируются как код</span>
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- СВЯЗЬ ИСКЛЮЧЕНИЙ И SQL-ИНЪЕКЦИЙ -->
+        <section id="integration" class="section integration">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Две стороны одной медали</span>
+                    <h2>Исключения + инъекции = опасный коктейль</h2>
+                </div>
+                <div class="integration-text">
+                    <p>Некорректная обработка исключений может облегчить атаку: если приложение показывает детали ошибки (stack trace, SQL-запрос), злоумышленник узнает структуру БД и подбирает инъекцию точнее. А если исключение «проглочено», атака может остаться незамеченной.</p>
+                    <div class="scenario">
+                        <i class="fas fa-bug"></i>
+                        <p><strong>Сценарий:</strong> пользователь вводит кавычку, возникает SQL-ошибка, приложение показывает пользователю <code>System.Data.SqlClient.SqlException: Incorrect syntax near...</code> — злоумышленник понимает, что перед ним SQL Server, и уточняет атаку.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ЛАБОРАТОРНАЯ РАБОТА -->
+        <section id="lab" class="section lab">
+            <div class="container">
+                <div class="lab-box">
+                    <span class="badge">Лабораторная работа</span>
+                    <h2>Анализ исключений и тестирование БД</h2>
+                    <div class="lab-content">
+                        <p>Вы получите учебное приложение со специально заложенными проблемами:</p>
+                        <ul>
+                            <li>❌ Отсутствие валидации</li>
+                            <li>❌ Уязвимость к SQL-инъекциям</li>
+                            <li>❌ Некорректная обработка исключений (утечка stack trace, пустые catch)</li>
+                        </ul>
+                        <p><strong>Задачи:</strong></p>
+                        <ol>
+                            <li>Найти проблемы и оформить баг-репорты.</li>
+                            <li>Подключиться к базе данных через SSMS/pgAdmin.</li>
+                            <li>Проверить целостность данных после операций.</li>
+                            <li>Проанализировать логи, найти stack trace.</li>
+                        </ol>
+                        <p><i class="fas fa-wrench"></i> Инструменты: SQL Server Management Studio, лог-файлы приложения, OWASP ZAP (по желанию).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ДОМАШНЕЕ ЗАДАНИЕ -->
+        <section id="homework" class="section homework">
+            <div class="container">
+                <div class="homework-box">
+                    <span class="badge">ДЗ · Лекция 6</span>
+                    <h2>Теория и первые запросы</h2>
+                    <div class="homework-parts">
+                        <div class="hw-part">
+                            <i class="fas fa-book"></i>
+                            <h3>Теория</h3>
+                            <p>Изучить типы исключений в C#/Java, основные виды SQL-запросов (SELECT, INSERT, UPDATE, DELETE).</p>
+                        </div>
+                        <div class="hw-part">
+                            <i class="fas fa-laptop-code"></i>
+                            <h3>Практика</h3>
+                            <p>Подключиться к учебной БД (инструкции в репозитории). Выполнить простые запросы для проверки данных. Написать отчёт с примерами.</p>
+                        </div>
+                    </div>
+                    <div class="hw-deadline">
+                        <i class="fas fa-hourglass-half"></i> На следующей неделе — поиск уязвимостей в приложении.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ЗАКЛЮЧЕНИЕ -->
+        <section id="outro" class="section outro">
+            <div class="container">
+                <div class="outro-box">
+                    <h2>Сегодня мы разобрали</h2>
+                    <div class="outro-grid">
+                        <div class="outro-item">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>Исключения и их обработка</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-database"></i>
+                            <span>SQL и базы данных</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-biohazard"></i>
+                            <span>SQL-инъекции</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-link"></i>
+                            <span>Связь исключений и безопасности</span>
+                        </div>
+                    </div>
+                    <p class="outro-message">Понимание этих тем превращает тестировщика в настоящего защитника данных. Вы сможете находить уязвимости, которые другим не видны.</p>
+                    <div class="questions">
+                        <i class="fas fa-question-circle"></i>
+                        <h3>Вопросы?</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Курс «Тестирование информационных систем» · Кирилл Мяги · Лекция 6</p>
+            <p class="footer-small">Исключения, SQL, безопасность</p>
+        </div>
+    </footer>
+</body>
+</html>
