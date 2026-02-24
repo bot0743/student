@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кирилл Мяги · Лекция 7 · Конфигурационное тестирование</title>
+    <!-- Google Fonts & Font Awesome 6 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- боковая навигация -->
+    <nav class="slide-nav">
+        <a href="#hero" class="nav-dot" aria-label="Вступление"></a>
+        <a href="#importance" class="nav-dot" aria-label="Важность"></a>
+        <a href="#factors" class="nav-dot" aria-label="Факторы конфигурации"></a>
+        <a href="#combinatorial" class="nav-dot" aria-label="Комбинаторный взрыв"></a>
+        <a href="#strategies" class="nav-dot" aria-label="Стратегии выбора"></a>
+        <a href="#howto" class="nav-dot" aria-label="Как проводить"></a>
+        <a href="#browsers" class="nav-dot" aria-label="Браузеры и ОС"></a>
+        <a href="#regional" class="nav-dot" aria-label="Региональные и сеть"></a>
+        <a href="#security" class="nav-dot" aria-label="Безопасность"></a>
+        <a href="#lab" class="nav-dot" aria-label="Лабораторная"></a>
+        <a href="#homework" class="nav-dot" aria-label="ДЗ"></a>
+        <a href="#outro" class="nav-dot" aria-label="Финал"></a>
+    </nav>
+
+    <main>
+        <!-- HERO -->
+        <section id="hero" class="section hero">
+            <div class="container">
+                <div class="hero-content">
+                    <span class="badge">Седьмая лекция · 24 февраля 2026</span>
+                    <h1>Разные окружения — <span class="gradient-text">разные проблемы</span></h1>
+                    <h2>Браузеры, ОС, региональные настройки, сеть</h2>
+                    <div class="lector">
+                        <div class="avatar">
+                            <i class="fas fa-sliders-h"></i>
+                        </div>
+                        <div class="lector-info">
+                            <p class="lector-name">Мяги Кирилл Александрович</p>
+                            <p class="lector-desc">Конфигурационное тестирование · Совместимость</p>
+                        </div>
+                    </div>
+                    <blockquote class="hero-quote">
+                        «У разработчика всё работает, у пользователя — нет. <span style="color:var(--accent);">Конфигурационное тестирование закрывает эту пропасть</span>»
+                    </blockquote>
+                    <div class="scroll-hint">
+                        <span>Листайте к факторам</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-grid"></div>
+        </section>
+
+        <!-- ВАЖНОСТЬ (пример с браузерами) -->
+        <section id="importance" class="section importance">
+            <div class="container">
+                <div class="split-layout">
+                    <div class="split-text">
+                        <span class="section-subtitle">Жизненный пример</span>
+                        <h2>Всё работает, но не у всех</h2>
+                        <p>Разработчики на Windows 11 + Chrome. Пользователи жалуются: у кого-то не открывается корзина, у кого-то съезжают кнопки. Выясняется: Windows 7 + IE11, macOS + Safari, медленный интернет.</p>
+                        <p class="highlight-text">Окружение разное — поведение разное. Задача тестировщика — выявить проблемы до продакшена.</p>
+                    </div>
+                    <div class="split-image">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <i class="fas fa-bug"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ЧТО ТАКОЕ КОНФИГУРАЦИЯ (факторы) -->
+        <section id="factors" class="section factors">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Что влияет на работу ПО?</span>
+                    <h2>Факторы конфигурации</h2>
+                </div>
+                <div class="factors-grid">
+                    <div class="factor-card">
+                        <i class="fas fa-microchip"></i>
+                        <h3>Аппаратное обеспечение</h3>
+                        <p>Процессор, ОЗУ, видеокарта, модель устройства (ПК, мобильное).</p>
+                    </div>
+                    <div class="factor-card">
+                        <i class="fas fa-windows"></i>
+                        <h3>Операционные системы</h3>
+                        <p>Windows, macOS, Linux, Android, iOS, версии, сервис-паки.</p>
+                    </div>
+                    <div class="factor-card">
+                        <i class="fas fa-globe"></i>
+                        <h3>Браузеры</h3>
+                        <p>Chrome, Firefox, Safari, Edge, версии, движки рендеринга.</p>
+                    </div>
+                    <div class="factor-card">
+                        <i class="fas fa-database"></i>
+                        <h3>Стороннее ПО</h3>
+                        <p>СУБД, веб-серверы, библиотеки, зависимости.</p>
+                    </div>
+                    <div class="factor-card">
+                        <i class="fas fa-wifi"></i>
+                        <h3>Сеть</h3>
+                        <p>Скорость, задержки, тип подключения (Wi-Fi, мобильный), прокси, файрволы.</p>
+                    </div>
+                    <div class="factor-card">
+                        <i class="fas fa-language"></i>
+                        <h3>Региональные настройки</h3>
+                        <p>Язык, форматы даты/времени, валюта, часовой пояс.</p>
+                    </div>
+                    <div class="factor-card">
+                        <i class="fas fa-cogs"></i>
+                        <h3>Настройки приложения</h3>
+                        <p>Конфигурационные файлы, флаги функциональности, параметры.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- КОМБИНАТОРНЫЙ ВЗРЫВ -->
+        <section id="combinatorial" class="section combinatorial">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Проблема</span>
+                    <h2>Комбинаторный взрыв</h2>
+                </div>
+                <div class="explosion-demo">
+                    <p>5 ОС × 3 браузера × 2 версии БД × 2 аппаратных конфигурации = <strong>60 комбинаций</strong>. Добавьте региональные настройки — и получите тысячи.</p>
+                    <div class="math-block">
+                        <span class="math-item">5</span> <i class="fas fa-times"></i>
+                        <span class="math-item">3</span> <i class="fas fa-times"></i>
+                        <span class="math-item">2</span> <i class="fas fa-times"></i>
+                        <span class="math-item">2</span> <i class="fas fa-equals"></i>
+                        <span class="math-item highlight">60</span>
+                    </div>
+                    <p class="explosion-note">Тестировать всё невозможно — нужно выбирать.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- СТРАТЕГИИ ВЫБОРА КОНФИГУРАЦИЙ -->
+        <section id="strategies" class="section strategies">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Как не утонуть</span>
+                    <h2>Стратегии выбора конфигураций</h2>
+                </div>
+                <div class="strategies-grid">
+                    <div class="strategy-card">
+                        <i class="fas fa-users"></i>
+                        <h3>Анализ целевой аудитории</h3>
+                        <p>Кто наши пользователи? Статистика браузеров, ОС, регионов. Тестируем самые популярные конфигурации.</p>
+                    </div>
+                    <div class="strategy-card">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <h3>Анализ рисков</h3>
+                        <p>Какие конфигурации наиболее проблемны? Старые версии, экзотические устройства, ограниченные ресурсы.</p>
+                    </div>
+                    <div class="strategy-card">
+                        <i class="fas fa-random"></i>
+                        <h3>Попарное тестирование (Pairwise)</h3>
+                        <p>Покрываем все пары значений параметров. Большинство дефектов вызывается взаимодействием двух параметров.</p>
+                        <div class="code-tool">
+                            <span class="tool-name">PICT (Microsoft)</span>
+                        </div>
+                    </div>
+                    <div class="strategy-card">
+                        <i class="fas fa-bullseye"></i>
+                        <h3>Критичные для заказчика</h3>
+                        <p>Конфигурации, которые точно будут на продуктиве, тестируем максимально тщательно.</p>
+                    </div>
+                </div>
+                <div class="pairwise-example">
+                    <h3>Пример попарного набора</h3>
+                    <p>Параметры: ОС (Win10, Win11, macOS), Браузер (Chrome, Firefox, Safari), Разрядность (x86, x64). Полное покрытие всех пар даёт ~9 тестов вместо 3×3×2=18.</p>
+                    <table class="pairwise-table">
+                        <tr><th>ОС</th><th>Браузер</th><th>Разрядность</th></tr>
+                        <tr><td>Win10</td><td>Chrome</td><td>x86</td></tr>
+                        <tr><td>Win10</td><td>Firefox</td><td>x64</td></tr>
+                        <tr><td>Win11</td><td>Chrome</td><td>x64</td></tr>
+                        <tr><td>Win11</td><td>Safari</td><td>x86</td></tr>
+                        <tr><td>macOS</td><td>Firefox</td><td>x86</td></tr>
+                        <tr><td>macOS</td><td>Safari</td><td>x64</td></tr>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- КАК ПРОВОДИТЬ КОНФИГУРАЦИОННОЕ ТЕСТИРОВАНИЕ (этапы) -->
+        <section id="howto" class="section howto">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Практика</span>
+                    <h2>Этапы проведения</h2>
+                </div>
+                <div class="steps">
+                    <div class="step">
+                        <span class="step-number">1</span>
+                        <i class="fas fa-clipboard-list"></i>
+                        <h4>Планирование</h4>
+                        <p>Определить параметры, выбрать значения (тестовые конфигурации).</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">2</span>
+                        <i class="fas fa-server"></i>
+                        <h4>Подготовка среды</h4>
+                        <p>Виртуальные машины, облака, докер, реальные устройства.</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">3</span>
+                        <i class="fas fa-vial"></i>
+                        <h4>Выполнение тестов</h4>
+                        <p>Ручные или автоматизированные прогоны на каждой конфигурации.</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">4</span>
+                        <i class="fas fa-chart-bar"></i>
+                        <h4>Анализ результатов</h4>
+                        <p>Сравнение поведения, фиксация дефектов, связанных с конфигурацией.</p>
+                    </div>
+                </div>
+                <div class="tools">
+                    <p><i class="fas fa-tools"></i> Инструменты: VirtualBox, VMware, Docker, BrowserStack, Sauce Labs, Selenium Grid, Charles Proxy.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- БРАУЗЕРЫ И ОС -->
+        <section id="browsers" class="section browsers">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Совместимость</span>
+                    <h2>Браузеры и операционные системы</h2>
+                </div>
+                <div class="browser-grid">
+                    <div class="browser-card">
+                        <i class="fab fa-chrome"></i>
+                        <h3>Chrome / Edge (Blink)</h3>
+                        <p>Наиболее популярны, но версии отличаются. Автообновление — плюс, но старые версии ещё в ходу.</p>
+                    </div>
+                    <div class="browser-card">
+                        <i class="fab fa-firefox"></i>
+                        <h3>Firefox (Gecko)</h3>
+                        <p>Свой движок, свои особенности CSS/JS. Может работать там, где Chromium ошибается.</p>
+                    </div>
+                    <div class="browser-card">
+                        <i class="fab fa-safari"></i>
+                        <h3>Safari (WebKit)</h3>
+                        <p>Основной браузер на macOS/iOS. Строгие политики безопасности, отличия в рендеринге.</p>
+                    </div>
+                </div>
+                <p class="browser-note">Различия в поддержке CSS Grid, Flexbox, API, обработке событий — нужно тестировать!</p>
+            </div>
+        </section>
+
+        <!-- РЕГИОНАЛЬНЫЕ НАСТРОЙКИ И СЕТЬ -->
+        <section id="regional" class="section regional">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Не только код</span>
+                    <h2>Региональные форматы и сеть</h2>
+                </div>
+                <div class="regional-grid">
+                    <div class="regional-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <h4>Дата и время</h4>
+                        <p>ДД.ММ.ГГГГ vs MM/DD/YYYY — ошибки валидации, неправильное отображение.</p>
+                    </div>
+                    <div class="regional-item">
+                        <i class="fas fa-dollar-sign"></i>
+                        <h4>Валюта и числа</h4>
+                        <p>Разделители тысяч и десятичной части: 1.234,56 vs 1,234.56.</p>
+                    </div>
+                    <div class="regional-item">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <h4>Скорость сети</h4>
+                        <p>Имитация 2G/3G/4G, высокие задержки — проверка таймаутов, индикаторов загрузки.</p>
+                    </div>
+                    <div class="regional-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <h4>Прокси и файрволы</h4>
+                        <p>Приложение должно корректно работать через корпоративные прокси.</p>
+                    </div>
+                </div>
+                <div class="network-tools">
+                    <p><i class="fas fa-wrench"></i> Инструменты: Chrome DevTools (Throttling), Charles Proxy, Fiddler.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- СВЯЗЬ С БЕЗОПАСНОСТЬЮ -->
+        <section id="security" class="section security">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Безопасность ≠ константа</span>
+                    <h2>Конфигурация и безопасность</h2>
+                </div>
+                <div class="security-list">
+                    <div class="security-item">
+                        <i class="fas fa-lock"></i>
+                        <p>Настройки безопасности браузера могут блокировать скрипты, куки, iframe.</p>
+                    </div>
+                    <div class="security-item">
+                        <i class="fas fa-file-shield"></i>
+                        <p>Права доступа в разных ОС — приложение может не иметь прав на запись в папку.</p>
+                    </div>
+                    <div class="security-item">
+                        <i class="fas fa-bug"></i>
+                        <p>Разные версии библиотек имеют разные известные уязвимости.</p>
+                    </div>
+                    <div class="security-item">
+                        <i class="fas fa-network-wired"></i>
+                        <p>Корпоративные сети с прокси и строгими политиками могут нарушить работу API.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ЛАБОРАТОРНАЯ РАБОТА -->
+        <section id="lab" class="section lab">
+            <div class="container">
+                <div class="lab-box">
+                    <span class="badge">Лабораторная работа</span>
+                    <h2>Конфигурационное тестирование</h2>
+                    <div class="lab-content">
+                        <p><strong>Задание:</strong> Проверить работоспособность учебного приложения в разных браузерах (Chrome, Firefox, Edge), с разными региональными настройками и в условиях медленной сети.</p>
+                        <ul>
+                            <li>Прогнать ключевые тест-кейсы (авторизация, добавление товара, оформление заказа).</li>
+                            <li>Изменить региональные форматы (дата, число) в ОС и проверить отображение.</li>
+                            <li>Использовать DevTools для имитации медленной сети (3G).</li>
+                            <li>Зафиксировать расхождения, оформить баг-репорты.</li>
+                        </ul>
+                        <p><i class="fas fa-laptop"></i> Оборудование: ПК с Windows 10, установленные браузеры.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ДОМАШНЕЕ ЗАДАНИЕ -->
+        <section id="homework" class="section homework">
+            <div class="container">
+                <div class="homework-box">
+                    <span class="badge">ДЗ · Лекция 7</span>
+                    <h2>Матрица и отчёт</h2>
+                    <div class="homework-parts">
+                        <div class="hw-part">
+                            <i class="fas fa-table"></i>
+                            <h3>Теоретическая часть</h3>
+                            <p>Составить матрицу поддерживаемых конфигураций для своего учебного проекта, обосновать выбор приоритетных.</p>
+                        </div>
+                        <div class="hw-part">
+                            <i class="fas fa-clipboard-check"></i>
+                            <h3>Практическая часть</h3>
+                            <p>Выполнить прогон основных тест-кейсов в двух разных браузерах, составить отчёт о расхождениях (если есть).</p>
+                        </div>
+                    </div>
+                    <div class="hw-deadline">
+                        <i class="fas fa-hourglass-half"></i> На следующей неделе — обсуждение результатов и тестирование региональных настроек.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ЗАКЛЮЧЕНИЕ -->
+        <section id="outro" class="section outro">
+            <div class="container">
+                <div class="outro-box">
+                    <h2>Сегодня мы разобрали</h2>
+                    <div class="outro-grid">
+                        <div class="outro-item">
+                            <i class="fas fa-cog"></i>
+                            <span>Что такое конфигурация</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-explosion"></i>
+                            <span>Комбинаторный взрыв</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-balance-scale"></i>
+                            <span>Стратегии выбора</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-chrome"></i>
+                            <span>Браузеры, ОС, регионы</span>
+                        </div>
+                    </div>
+                    <p class="outro-message">Конфигурационное тестирование — залог того, что приложение будет работать у реальных пользователей, а не только на машине разработчика.</p>
+                    <div class="questions">
+                        <i class="fas fa-question-circle"></i>
+                        <h3>Вопросы?</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Курс «Тестирование информационных систем» · Кирилл Мяги · Лекция 7</p>
+            <p class="footer-small">Конфигурационное тестирование</p>
+        </div>
+    </footer>
+</body>
+</html>
