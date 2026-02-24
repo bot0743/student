@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кирилл Мяги · Курс тестирования</title>
+    <!-- Google Fonts & Font Awesome 6 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- декоративная боковая навигация (не функциональна, но для стиля) -->
+    <nav class="slide-nav">
+        <a href="#hero" class="nav-dot" aria-label="Вступление"></a>
+        <a href="#lectures" class="nav-dot" aria-label="Лекции"></a>
+    </nav>
+
+    <main>
+        <!-- ГЕРОЙ -->
+        <section id="hero" class="section hero">
+            <div class="container">
+                <div class="hero-content">
+                    <span class="badge">Тестирование информационных систем</span>
+                    <h1>Профессия <span class="gradient-text">тестировщик</span></h1>
+                    <h2>17 лекций · от новичка до практика</h2>
+                    <div class="lector">
+                        <div class="avatar">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <div class="lector-info">
+                            <p class="lector-name">Мяги Кирилл Александрович</p>
+                            <p class="lector-desc">Самарский университет · Компьютерная безопасность</p>
+                            <p class="lector-desc">5+ лет в защите информации, веб‑разработка, QA</p>
+                        </div>
+                    </div>
+                    <blockquote class="hero-quote">
+                        «Тестирование — это не про "поломать". Это про умение предвидеть нестандартные ситуации. <span style="color: var(--accent);">А что, если?</span>»
+                    </blockquote>
+                    <div class="scroll-hint">
+                        <span>К списку лекций</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-grid"></div>
+        </section>
+
+        <!-- СПИСОК ЛЕКЦИЙ -->
+        <section id="lectures" class="section lectures">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">17 шагов к мастерству</span>
+                    <h2>Все лекции курса</h2>
+                    <p class="section-description">Выберите тему и погружайтесь в мир тестирования</p>
+                </div>
+
+                <div class="lecture-grid">
+                    <!-- Лекция 1 -->
+                    <a href="Lecture1/" class="lecture-card">
+                        <div class="lecture-number">1</div>
+                        <i class="fas fa-users"></i>
+                        <h3>Введение, роли, Git</h3>
+                        <p>Команда, жизненный цикл бага, Agile, Shift‑Left</p>
+                        <span class="card-link">Перейти <i class="fas fa-arrow-right"></i></span>
+                    </a>
+                    <!-- Лекция 2 -->
+                    <a href="Lecture2/" class="lecture-card">
+                        <div class="lecture-number">2</div>
+                        <i class="fas fa-vial"></i>
+                        <h3>Тест‑кейсы и баг‑репорты</h3>
+                        <p>Чек‑листы, тест‑дизайн, severity / priority</p>
+                        <span class="card-link">Перейти <i class="fas fa-arrow-right"></i></span>
+                    </a>
+                    <!-- Лекция 3 -->
+                    <a href="Lecture3/" class="lecture-card">
+                        <div class="lecture-number">3</div>
+                        <i class="fas fa-code-branch"></i>
+                        <h3>Инструменты анализа качества</h3>
+                        <p>Unit‑тесты, SonarQube, цикломатическая сложность</p>
+                        <span class="card-link">Перейти <i class="fas fa-arrow-right"></i></span>
+                    </a>
+                    <!-- Лекция 4 -->
+                    <a href="Lecture4/" class="lecture-card">
+                        <div class="lecture-number">4</div>
+                        <i class="fas fa-project-diagram"></i>
+                        <h3>Интеграция, API, Postman</h3>
+                        <p>Классификация тестирования, REST, безопасность API</p>
+                        <span class="card-link">Перейти <i class="fas fa-arrow-right"></i></span>
+                    </a>
+                    <!-- Лекция 5 -->
+                    <a href="Lecture5/" class="lecture-card">
+                        <div class="lecture-number">5</div>
+                        <i class="fas fa-desktop"></i>
+                        <h3>Функциональное тестирование UI</h3>
+                        <p>Ручное, DevTools, Selenium, PageObject</p>
+                        <span class="card-link">Перейти <i class="fas fa-arrow-right"></i></span>
+                    </a>
+                    <!-- Лекция 6 -->
+                    <a href="Lecture6/" class="lecture-card">
+                        <div class="lecture-number">6</div>
+                        <i class="fas fa-shield-alt"></i>
+                        <h3>Исключения и SQL</h3>
+                        <p>Обработка ошибок, SQL‑инъекции, безопасность данных</p>
+                        <span class="card-link">Перейти <i class="fas fa-arrow-right"></i></span>
+                    </a>
+                    <!-- Лекция 7 -->
+                    <a href="Lecture7/" class="lecture-card">
+                        <div class="lecture-number">7</div>
+                        <i class="fas fa-sliders-h"></i>
+                        <h3>Конфигурационное тестирование</h3>
+                        <p>Браузеры, ОС, региональные настройки, pairwise</p>
+                        <span class="card-link">Перейти <i class="fas fa-arrow-right"></i></span>
+                    </a>
+                    <!-- Лекция 8 -->
+                    <a href="Lecture8/" class="lecture-card">
+                        <div class="lecture-number">8</div>
+                        <i class="fas fa-shield-halved"></i>
+                        <h3>Тестирование безопасности</h3>
+                        <p>OWASP Top 10, ZAP, этичный хакинг</p>
+                        <span class="card-link">Перейти <i class="fas fa-arrow-right"></i></span>
+                    </a>
+                    <!-- Лекция 9 -->
+                    <a href="Lecture9/" class="lecture-card">
+                        <div class="lecture-number">9</div>
+                        <i class="fas fa-tachometer-alt"></i>
+                        <h3>Нагрузочное тестирование</h3>
+                        <p>JMeter, Gatling, метрики производительности</p>
+                        <span class="card-link">Перейти <i class="fas fa-arrow-right"></i></span>
+                    </a>
+                    <!-- Лекция 10 -->
+                    <a href="Lecture10/" class="lecture-card">
+                        <div class="lecture-number">10</div>
+                        <i class="fas fa-mobile-alt"></i>
+                        <h3>Тестирование мобильных приложений</h3>
+                        <p>Android, iOS, эмуляторы, жесты, прерывания</p>
+                        <span class="card-link">Перейти <i class="fas fa-arrow-right"></i></span>
+                    </a>
+                    <!-- Лекция 11 -->
+                    <a href="Lecture11/" class="lecture-card">
+                        <div class="lecture-number">11</div>
+                        <i class="fas fa-universal-access"></i>
+                        <h3>Юзабилити и доступность</h3>
+                        <p>WCAG, пользовательские сценарии, UX‑тестирование</p>
+                        <span class="card-link">Перейти <i class="fas fa-arrow-right"></i></span>
+                    </a>
+                    <!-- Лекция 12 -->
+                    <a href="Lecture12/" class="lecture-card">
+                        <div class="lecture-number">12</div>
+                        <i class="fas fa-chart-pie"></i>
+                        <h3>Тест‑менеджмент и метрики</h3>
+                        <p>Планирование, отчёты, оценка качества</p>
+                        <span class="card-link">Перейти <i class="fas fa-arrow-right"></i></span>
+                    </a>
+                    <!-- Лекция 13 -->
+                    <a href="Lecture13/" class="lecture-card">
+                        <div class="lecture-number">13</div>
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <h3>CI/CD для тестировщика</h3>
+                        <p>GitHub Actions, Jenkins, автотесты в конвейере</p>
+                        <span class="card-link">Перейти <i class="fas fa-arrow-right"></i></span>
+                    </a>
+                    <!-- Лекция 14 -->
+                    <a href="Lecture14/" class="lecture-card">
+                        <div class="lecture-number">14</div>
+                        <i class="fas fa-cubes"></i>
+                        <h3>Тестирование микросервисов</h3>
+                        <p>Контрактное тестирование, изоляция, моки</p>
+                        <span class="card-link">Перейти <i class="fas fa-arrow-right"></i></span>
+                    </a>
+                    <!-- Лекция 15 -->
+                    <a href="Lecture15/" class="lecture-card">
+                        <div class="lecture-number">15</div>
+                        <i class="fas fa-scroll"></i>
+                        <h3>Работа с логами и трассировкой</h3>
+                        <p>ELK, логи, распределённая трассировка</p>
+                        <span class="card-link">Перейти <i class="fas fa-arrow-right"></i></span>
+                    </a>
+                    <!-- Лекция 16 -->
+                    <a href="Lecture16/" class="lecture-card">
+                        <div class="lecture-number">16</div>
+                        <i class="fas fa-user-tie"></i>
+                        <h3>Подготовка к собеседованию</h3>
+                        <p>Вопросы, резюме, тестовые задания</p>
+                        <span class="card-link">Перейти <i class="fas fa-arrow-right"></i></span>
+                    </a>
+                    <!-- Лекция 17 -->
+                    <a href="Lecture17/" class="lecture-card">
+                        <div class="lecture-number">17</div>
+                        <i class="fas fa-flag-checkered"></i>
+                        <h3>Финальный проект</h3>
+                        <p>Комплексное тестирование, защита работы</p>
+                        <span class="card-link">Перейти <i class="fas fa-arrow-right"></i></span>
+                    </a>
+                </div>
+
+                <!-- дополнительная информация -->
+                <div class="info-box">
+                    <p><i class="fas fa-info-circle"></i> Все лекции содержат конспекты, схемы и примеры кода. Материалы обновляются в течение курса.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ЗАКЛЮЧИТЕЛЬНЫЙ БЛОК (как в лекциях) -->
+        <section class="section outro">
+            <div class="container">
+                <div class="outro-box">
+                    <h2>Стартуйте прямо сейчас</h2>
+                    <p class="outro-message">Курс построен так, чтобы вы последовательно освоили все аспекты тестирования — от базовых понятий до продвинутых инструментов.</p>
+                    <div class="questions">
+                        <i class="fas fa-question-circle"></i>
+                        <h3>Вопросы? Пишите в чат</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Курс «Тестирование информационных систем» · Кирилл Мяги</p>
+            <p class="footer-small">17 лекций · практика · открытые материалы</p>
+        </div>
+    </footer>
+</body>
+</html>
