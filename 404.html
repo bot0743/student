@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 · Страница не найдена · Курс тестирования</title>
+    <!-- Google Fonts & Font Awesome 6 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- мини-навигация (не обязательна, но для стиля оставим одну точку домой) -->
+    <nav class="slide-nav">
+        <a href="#main" class="nav-dot" aria-label="К списку лекций"></a>
+    </nav>
+
+    <main id="main">
+        <!-- ГЛАВНЫЙ БЛОК 404 -->
+        <section class="section error-section">
+            <div class="container">
+                <div class="error-content">
+                    <span class="badge">HTTP 404</span>
+                    <h1>Страница не <span class="gradient-text">найдена</span></h1>
+                    <div class="error-icon">
+                        <i class="fas fa-map-signs"></i>
+                    </div>
+                    <p class="error-description">
+                        Возможно, ссылка устарела, или вы перешли к лекции, которой ещё нет.<br>
+                        Но у нас есть целых 17 лекций — выберите нужную ниже.
+                    </p>
+
+                    <!-- СПИСОК ЛЕКЦИЙ (ССЫЛКИ) -->
+                    <div class="lecture-header">
+                        <h2>Все лекции курса</h2>
+                        <p class="section-description">Нажмите на номер, чтобы перейти к слайдам</p>
+                    </div>
+                    <div class="lecture-grid">
+                        <!-- генерируем ссылки с 1 по 17 -->
+                        <a href="https://bot0743.github.io/student/Lecture1/" class="lecture-card" target="_blank" rel="noopener noreferrer">
+                            <span class="lecture-number">1</span>
+                            <span class="lecture-title">Введение, роли, Git</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="https://bot0743.github.io/student/Lecture2/" class="lecture-card" target="_blank" rel="noopener noreferrer">
+                            <span class="lecture-number">2</span>
+                            <span class="lecture-title">Тест-кейсы и баг-репорты</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="https://bot0743.github.io/student/Lecture3/" class="lecture-card" target="_blank" rel="noopener noreferrer">
+                            <span class="lecture-number">3</span>
+                            <span class="lecture-title">Инструменты анализа качества</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="https://bot0743.github.io/student/Lecture4/" class="lecture-card" target="_blank" rel="noopener noreferrer">
+                            <span class="lecture-number">4</span>
+                            <span class="lecture-title">Интеграция, API, Postman</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="https://bot0743.github.io/student/Lecture5/" class="lecture-card" target="_blank" rel="noopener noreferrer">
+                            <span class="lecture-number">5</span>
+                            <span class="lecture-title">Функциональное тестирование UI</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="https://bot0743.github.io/student/Lecture6/" class="lecture-card" target="_blank" rel="noopener noreferrer">
+                            <span class="lecture-number">6</span>
+                            <span class="lecture-title">Исключения и SQL</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="https://bot0743.github.io/student/Lecture7/" class="lecture-card" target="_blank" rel="noopener noreferrer">
+                            <span class="lecture-number">7</span>
+                            <span class="lecture-title">Конфигурационное тестирование</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="https://bot0743.github.io/student/Lecture8/" class="lecture-card" target="_blank" rel="noopener noreferrer">
+                            <span class="lecture-number">8</span>
+                            <span class="lecture-title">Тестирование безопасности</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="https://bot0743.github.io/student/Lecture9/" class="lecture-card" target="_blank" rel="noopener noreferrer">
+                            <span class="lecture-number">9</span>
+                            <span class="lecture-title">Нагрузочное тестирование</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="https://bot0743.github.io/student/Lecture10/" class="lecture-card" target="_blank" rel="noopener noreferrer">
+                            <span class="lecture-number">10</span>
+                            <span class="lecture-title">Тестирование мобильных приложений</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="https://bot0743.github.io/student/Lecture11/" class="lecture-card" target="_blank" rel="noopener noreferrer">
+                            <span class="lecture-number">11</span>
+                            <span class="lecture-title">Юзабилити и доступность</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="https://bot0743.github.io/student/Lecture12/" class="lecture-card" target="_blank" rel="noopener noreferrer">
+                            <span class="lecture-number">12</span>
+                            <span class="lecture-title">Тест-менеджмент и метрики</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="https://bot0743.github.io/student/Lecture13/" class="lecture-card" target="_blank" rel="noopener noreferrer">
+                            <span class="lecture-number">13</span>
+                            <span class="lecture-title">CI/CD для тестировщика</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="https://bot0743.github.io/student/Lecture14/" class="lecture-card" target="_blank" rel="noopener noreferrer">
+                            <span class="lecture-number">14</span>
+                            <span class="lecture-title">Тестирование микросервисов</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="https://bot0743.github.io/student/Lecture15/" class="lecture-card" target="_blank" rel="noopener noreferrer">
+                            <span class="lecture-number">15</span>
+                            <span class="lecture-title">Работа с логами и трассировкой</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="https://bot0743.github.io/student/Lecture16/" class="lecture-card" target="_blank" rel="noopener noreferrer">
+                            <span class="lecture-number">16</span>
+                            <span class="lecture-title">Подготовка к собеседованию</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="https://bot0743.github.io/student/Lecture17/" class="lecture-card" target="_blank" rel="noopener noreferrer">
+                            <span class="lecture-number">17</span>
+                            <span class="lecture-title">Финальный проект</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+
+                    <!-- ДОПОЛНИТЕЛЬНАЯ ССЫЛКА НА ГЛАВНУЮ КУРСА (если есть) -->
+                    <div class="back-home">
+                        <a href="https://bot0743.github.io/student/" class="btn-home">
+                            <i class="fas fa-home"></i> На главную курса
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-grid"></div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Курс «Тестирование информационных систем» · Кирилл Мяги</p>
+            <p class="footer-small">Лекции 1–17 · 404 — страница не найдена, но путь к знаниям открыт</p>
+        </div>
+    </footer>
+</body>
+</html>
