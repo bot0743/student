@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кирилл Мяги · Лекция 8 · Тестирование безопасности</title>
+    <!-- Google Fonts & Font Awesome 6 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- боковая навигация -->
+    <nav class="slide-nav">
+        <a href="#hero" class="nav-dot" aria-label="Вступление"></a>
+        <a href="#why-security" class="nav-dot" aria-label="Зачем безопасность"></a>
+        <a href="#terms" class="nav-dot" aria-label="Основные понятия"></a>
+        <a href="#owasp" class="nav-dot" aria-label="OWASP Top 10"></a>
+        <a href="#approaches" class="nav-dot" aria-label="Подходы и инструменты"></a>
+        <a href="#zap" class="nav-dot" aria-label="OWASP ZAP"></a>
+        <a href="#checks" class="nav-dot" aria-label="Типовые проверки"></a>
+        <a href="#process" class="nav-dot" aria-label="Процесс в команде"></a>
+        <a href="#practice" class="nav-dot" aria-label="Практика"></a>
+        <a href="#homework" class="nav-dot" aria-label="ДЗ"></a>
+        <a href="#outro" class="nav-dot" aria-label="Финал"></a>
+    </nav>
+
+    <main>
+        <!-- HERO -->
+        <section id="hero" class="section hero">
+            <div class="container">
+                <div class="hero-content">
+                    <span class="badge">Восьмая лекция · 24 февраля 2026</span>
+                    <h1>Этичный хакинг, <span class="gradient-text">OWASP, ZAP</span></h1>
+                    <h2>Уязвимости, угрозы, риски и защита</h2>
+                    <div class="lector">
+                        <div class="avatar">
+                            <i class="fas fa-shield-halved"></i>
+                        </div>
+                        <div class="lector-info">
+                            <p class="lector-name">Мяги Кирилл Александрович</p>
+                            <p class="lector-desc">Компьютерная безопасность · Этичный хакинг</p>
+                        </div>
+                    </div>
+                    <blockquote class="hero-quote">
+                        «Функциональное тестирование проверяет, работает ли система как задумано. Тестирование безопасности — может ли она делать то, что <span style="color:var(--accent);">не задумано</span>»
+                    </blockquote>
+                    <div class="scroll-hint">
+                        <span>Листайте к уязвимостям</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-grid"></div>
+        </section>
+
+        <!-- ЗАЧЕМ ТЕСТИРОВАНИЕ БЕЗОПАСНОСТИ -->
+        <section id="why-security" class="section why-security">
+            <div class="container">
+                <div class="split-layout">
+                    <div class="split-text">
+                        <span class="section-subtitle">Отличие от функционального</span>
+                        <h2>Функциональное vs Безопасность</h2>
+                        <p>Функциональный тестировщик проверяет, что пользователь может успешно авторизоваться. Тестировщик безопасности проверяет, может ли злоумышленник авторизоваться <strong>без пароля</strong>, получить доступ к чужому аккаунту, украсть данные или положить систему.</p>
+                        <p class="highlight-text">Последствия уязвимостей: утечка данных, кража денег, репутационные потери, штрафы.</p>
+                    </div>
+                    <div class="split-image">
+                        <i class="fas fa-user-check"></i>
+                        <i class="fas fa-skull"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ОСНОВНЫЕ ПОНЯТИЯ -->
+        <section id="terms" class="section terms">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Словарь</span>
+                    <h2>Уязвимость, угроза, риск, вектор атаки</h2>
+                </div>
+                <div class="terms-grid">
+                    <div class="term-card">
+                        <i class="fas fa-bug"></i>
+                        <h3>Уязвимость</h3>
+                        <p>Слабое место в системе (например, отсутствие проверки прав, SQL-инъекция).</p>
+                    </div>
+                    <div class="term-card">
+                        <i class="fas fa-dragon"></i>
+                        <h3>Угроза</h3>
+                        <p>Потенциальная возможность реализации уязвимости злоумышленником.</p>
+                    </div>
+                    <div class="term-card">
+                        <i class="fas fa-scale-balanced"></i>
+                        <h3>Риск</h3>
+                        <p>Вероятность реализации угрозы × размер ущерба.</p>
+                    </div>
+                    <div class="term-card">
+                        <i class="fas fa-arrow-trend-up"></i>
+                        <h3>Вектор атаки</h3>
+                        <p>Путь использования уязвимости (HTTP-запрос, вредоносный скрипт и т.д.).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- OWASP TOP 10 -->
+        <section id="owasp" class="section owasp">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Золотой стандарт</span>
+                    <h2>OWASP Top 10 (кратко)</h2>
+                    <p class="section-description">10 наиболее критичных рисков для веб-приложений</p>
+                </div>
+                <div class="owasp-grid">
+                    <div class="owasp-item">1. Инъекции (SQL, OS, LDAP)</div>
+                    <div class="owasp-item">2. Нарушение контроля доступа</div>
+                    <div class="owasp-item">3. Криптографические ошибки</div>
+                    <div class="owasp-item">4. Небезопасная конфигурация</div>
+                    <div class="owasp-item">5. Уязвимые и устаревшие компоненты</div>
+                    <div class="owasp-item">6. Ошибки идентификации и аутентификации</div>
+                    <div class="owasp-item">7. Нецелостность данных и ПО</div>
+                    <div class="owasp-item">8. Недостаточность логирования и мониторинга</div>
+                    <div class="owasp-item">9. SSRF (подделка запросов на стороне сервера)</div>
+                    <div class="owasp-item">10. XSS (межсайтовый скриптинг) — в некоторых версиях в топе</div>
+                </div>
+                <div class="owasp-note">
+                    <p><i class="fas fa-info-circle"></i> Подробнее — на сайте <a href="https://owasp.org" target="_blank" style="color: var(--accent);">owasp.org</a></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ПОДХОДЫ И ИНСТРУМЕНТЫ -->
+        <section id="approaches" class="section approaches">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Как искать уязвимости</span>
+                    <h2>Ручной пентест, сканеры, анализ кода</h2>
+                </div>
+                <div class="approaches-grid">
+                    <div class="approach-card">
+                        <i class="fas fa-user-ninja"></i>
+                        <h3>Ручное тестирование</h3>
+                        <p>Исследование приложения как злоумышленник, знание протоколов и типовых уязвимостей.</p>
+                    </div>
+                    <div class="approach-card">
+                        <i class="fas fa-robot"></i>
+                        <h3>Автоматические сканеры</h3>
+                        <p>OWASP ZAP, Burp Suite, Nikto, SQLmap — перебор известных уязвимостей.</p>
+                    </div>
+                    <div class="approach-card">
+                        <i class="fas fa-file-code"></i>
+                        <h3>Анализ кода (SAST/DAST)</h3>
+                        <p>Статический анализ исходного кода или динамический анализ работающего приложения.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- OWASP ZAP (подробно) -->
+        <section id="zap" class="section zap">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Главный бесплатный инструмент</span>
+                    <h2>OWASP ZAP (Zed Attack Proxy)</h2>
+                </div>
+                <div class="zap-content">
+                    <div class="zap-desc">
+                        <i class="fas fa-plug" style="font-size: 4rem; color: var(--accent);"></i>
+                        <p>Перехватывающий прокси-сервер. Встраивается между браузером и приложением, позволяет перехватывать, анализировать и модифицировать HTTP-запросы/ответы.</p>
+                        <ul>
+                            <li><i class="fas fa-check-circle"></i> Пассивное сканирование (анализ трафика)</li>
+                            <li><i class="fas fa-check-circle"></i> Активное сканирование (атака приложения)</li>
+                            <li><i class="fas fa-check-circle"></i> Перехват и модификация запросов на лету</li>
+                            <li><i class="fas fa-check-circle"></i> Автоматизация через API</li>
+                        </ul>
+                    </div>
+                    <div class="zap-example">
+                        <h4>Пример перехваченного запроса</h4>
+                        <div class="code-block">
+                            <pre><code>POST /login HTTP/1.1
+Host: example.com
+Content-Type: application/x-www-form-urlencoded
+
+username=admin&password=12345</code></pre>
+                        </div>
+                        <p>Можно изменить данные перед отправкой (например, добавить SQL-инъекцию).</p>
+                    </div>
+                </div>
+                <div class="other-tools">
+                    <p><strong>Другие инструменты:</strong> Burp Suite Community, Nikto, SQLmap, WPScan, OWASP WebGoat (учебное приложение).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ТИПОВЫЕ ПРОВЕРКИ -->
+        <section id="checks" class="section checks">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Что ищем</span>
+                    <h2>Основные проверки безопасности</h2>
+                </div>
+                <div class="checks-grid">
+                    <div class="check-card">
+                        <i class="fas fa-fingerprint"></i>
+                        <h3>IDOR / нарушение доступа</h3>
+                        <p>Изменение id в URL (profile?id=123 -> 124) — должен быть отказ.</p>
+                        <div class="check-example">site.com/profile?id=124</div>
+                    </div>
+                    <div class="check-card">
+                        <i class="fas fa-code"></i>
+                        <h3>XSS (межсайтовый скриптинг)</h3>
+                        <p>Ввод <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code> в поля. Если скрипт выполняется — уязвимость.</p>
+                    </div>
+                    <div class="check-card">
+                        <i class="fas fa-database"></i>
+                        <h3>SQL-инъекции</h3>
+                        <p>Кавычка <code>'</code> или <code>' OR '1'='1</code> — ошибка БД или неверная авторизация.</p>
+                    </div>
+                    <div class="check-card">
+                        <i class="fas fa-cookie"></i>
+                        <h3>Сессии и куки</h3>
+                        <p>Флаги HttpOnly, Secure, SameSite; истечение сессии; защита от кражи.</p>
+                    </div>
+                    <div class="check-card">
+                        <i class="fas fa-crop-alt"></i>
+                        <h3>CSRF</h3>
+                        <p>Проверка наличия anti-CSRF токенов в формах и их валидации.</p>
+                    </div>
+                    <div class="check-card">
+                        <i class="fas fa-shield"></i>
+                        <h3>Конфигурация</h3>
+                        <p>Стандартные пароли, открытые порты, отладочные режимы, подробные ошибки.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ПРОЦЕСС В КОМАНДЕ -->
+        <section id="process" class="section process">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">DevSecOps</span>
+                    <h2>Тестирование безопасности в жизненном цикле</h2>
+                </div>
+                <div class="process-steps">
+                    <div class="proc-step">
+                        <span class="step-number">1</span>
+                        <h4>Требования</h4>
+                        <p>Анализ требований к безопасности, стандарты, регуляторы.</p>
+                    </div>
+                    <div class="proc-step">
+                        <span class="step-number">2</span>
+                        <h4>Проектирование</h4>
+                        <p>Threat modeling (моделирование угроз), закладка защиты в архитектуру.</p>
+                    </div>
+                    <div class="proc-step">
+                        <span class="step-number">3</span>
+                        <h4>Разработка</h4>
+                        <p>Безопасные практики кодирования, статические анализаторы (SAST).</p>
+                    </div>
+                    <div class="proc-step">
+                        <span class="step-number">4</span>
+                        <h4>Тестирование</h4>
+                        <p>Динамическое тестирование (DAST) — ZAP, Burp; ручной пентест.</p>
+                    </div>
+                    <div class="proc-step">
+                        <span class="step-number">5</span>
+                        <h4>Эксплуатация</h4>
+                        <p>Мониторинг, реагирование на инциденты, сканирование уязвимостей.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ПРАКТИКА: МЕЖГРУППОВОЕ ТЕСТИРОВАНИЕ -->
+        <section id="practice" class="section practice">
+            <div class="container">
+                <div class="practice-box">
+                    <span class="badge">Практика · Охота на баги</span>
+                    <h2>Перекрёстное тестирование проектов</h2>
+                    <div class="practice-content">
+                        <p>Каждая группа получает приложение другой группы и ищет уязвимости:</p>
+                        <ul>
+                            <li><i class="fas fa-bug"></i> SQL-инъекции</li>
+                            <li><i class="fas fa-bug"></i> XSS</li>
+                            <li><i class="fas fa-bug"></i> Нарушения доступа (IDOR)</li>
+                            <li><i class="fas fa-bug"></i> Ошибки конфигурации</li>
+                            <li><i class="fas fa-bug"></i> Проблемы сессий</li>
+                        </ul>
+                        <p>Найденные уязвимости оформляются как security-баг-репорты с шагами воспроизведения, влиянием и рекомендациями.</p>
+                        <p class="ethics"><i class="fas fa-heart"></i> Этика: тестируем только то, на что получено разрешение, в изолированной среде, не наносим реального ущерба.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ДОМАШНЕЕ ЗАДАНИЕ -->
+        <section id="homework" class="section homework">
+            <div class="container">
+                <div class="homework-box">
+                    <span class="badge">ДЗ · Лекция 8</span>
+                    <h2>Подготовка к охоте</h2>
+                    <div class="homework-parts">
+                        <div class="hw-part">
+                            <i class="fas fa-book"></i>
+                            <h3>Теория</h3>
+                            <p>Изучить OWASP Top 10, документацию по OWASP ZAP.</p>
+                        </div>
+                        <div class="hw-part">
+                            <i class="fas fa-laptop-code"></i>
+                            <h3>Практика</h3>
+                            <p>Установить OWASP ZAP, настроить браузер на прокси (localhost:8080). Перехватить и модифицировать любой запрос к своему учебному приложению или к OWASP WebGoat.</p>
+                        </div>
+                    </div>
+                    <div class="hw-deadline">
+                        <i class="fas fa-hourglass-half"></i> На следующей практике — перекрёстное тестирование проектов.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ЗАКЛЮЧЕНИЕ -->
+        <section id="outro" class="section outro">
+            <div class="container">
+                <div class="outro-box">
+                    <h2>Сегодня мы разобрали</h2>
+                    <div class="outro-grid">
+                        <div class="outro-item">
+                            <i class="fas fa-shield"></i>
+                            <span>Зачем нужно тестирование безопасности</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-list"></i>
+                            <span>OWASP Top 10</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-plug"></i>
+                            <span>OWASP ZAP</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-search"></i>
+                            <span>Типовые уязвимости</span>
+                        </div>
+                    </div>
+                    <p class="outro-message">Тестировщик, знающий безопасность, — настоящий защитник компании. На практике вы сможете применить все знания и, возможно, открыть в себе талант к поиску уязвимостей.</p>
+                    <div class="questions">
+                        <i class="fas fa-question-circle"></i>
+                        <h3>Вопросы?</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Курс «Тестирование информационных систем» · Кирилл Мяги · Лекция 8</p>
+            <p class="footer-small">Тестирование безопасности</p>
+        </div>
+    </footer>
+</body>
+</html>
