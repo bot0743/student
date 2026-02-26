@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кирилл Мяги · Лекция 9 · Нагрузочное тестирование</title>
+    <!-- Google Fonts & Font Awesome 6 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- боковая навигация -->
+    <nav class="slide-nav">
+        <a href="#hero" class="nav-dot" aria-label="Вступление"></a>
+        <a href="#types" class="nav-dot" aria-label="Виды тестирования"></a>
+        <a href="#metrics" class="nav-dot" aria-label="Метрики"></a>
+        <a href="#tools" class="nav-dot" aria-label="Инструменты"></a>
+        <a href="#process" class="nav-dot" aria-label="Процесс"></a>
+        <a href="#security" class="nav-dot" aria-label="Безопасность"></a>
+        <a href="#lab" class="nav-dot" aria-label="Лабораторная"></a>
+        <a href="#homework" class="nav-dot" aria-label="ДЗ"></a>
+        <a href="#outro" class="nav-dot" aria-label="Финал"></a>
+    </nav>
+
+    <main>
+        <!-- HERO -->
+        <section id="hero" class="section hero">
+            <div class="container">
+                <div class="hero-content">
+                    <span class="badge">Девятая лекция · 26 февраля 2026</span>
+                    <h1>Производительность, стабильность, <span class="gradient-text">масштабирование</span></h1>
+                    <h2>Нагрузка, стресс, объём, длительность</h2>
+                    <div class="lector">
+                        <div class="avatar">
+                            <i class="fas fa-gauge-high"></i>
+                        </div>
+                        <div class="lector-info">
+                            <p class="lector-name">Мяги Кирилл Александрович</p>
+                            <p class="lector-desc">Нагрузочное тестирование · JMeter</p>
+                        </div>
+                    </div>
+                    <blockquote class="hero-quote">
+                        «Выдержит ли сайт 5000 покупателей в чёрную пятницу? <span style="color:var(--accent);">Нагрузочное тестирование даст ответ</span>»
+                    </blockquote>
+                    <div class="scroll-hint">
+                        <span>Листайте к видам</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-grid"></div>
+        </section>
+
+        <!-- ВИДЫ ТЕСТИРОВАНИЯ ПРОИЗВОДИТЕЛЬНОСТИ -->
+        <section id="types" class="section types">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Классификация</span>
+                    <h2>Нагрузочное, стрессовое, объёмное, стабильность</h2>
+                </div>
+                <div class="types-grid">
+                    <div class="type-card">
+                        <i class="fas fa-weight-hanging"></i>
+                        <h3>Нагрузочное</h3>
+                        <p>Поведение под ожидаемой нормальной и пиковой нагрузкой (100, 500, 1000 пользователей).</p>
+                    </div>
+                    <div class="type-card">
+                        <i class="fas fa-bolt"></i>
+                        <h3>Стрессовое</h3>
+                        <p>За пределами ожидаемой нагрузки — до отказа. Поиск предела прочности и поведения при сбоях.</p>
+                    </div>
+                    <div class="type-card">
+                        <i class="fas fa-database"></i>
+                        <h3>Объёмное</h3>
+                        <p>Работа с большими объёмами данных (миллион товаров, поиск, отчёты).</p>
+                    </div>
+                    <div class="type-card">
+                        <i class="fas fa-clock"></i>
+                        <h3>Стабильность (soak)</h3>
+                        <p>Длительная нагрузка (сутки/неделя) — выявление утечек памяти, деградации.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- КЛЮЧЕВЫЕ МЕТРИКИ -->
+        <section id="metrics" class="section metrics">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Что измеряем</span>
+                    <h2>Метрики производительности</h2>
+                </div>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <i class="fas fa-hourglass-half"></i>
+                        <h3>Время отклика (response time)</h3>
+                        <p>Среднее, 95-й процентиль, 99-й. Критично для UX.</p>
+                    </div>
+                    <div class="metric-card">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <h3>Пропускная способность (throughput)</h3>
+                        <p>RPS (requests per second), TPS (transactions per second).</p>
+                    </div>
+                    <div class="metric-card">
+                        <i class="fas fa-users"></i>
+                        <h3>Одновременные пользователи</h3>
+                        <p>Активные сессии, моделирование реального поведения.</p>
+                    </div>
+                    <div class="metric-card">
+                        <i class="fas fa-microchip"></i>
+                        <h3>Загрузка ресурсов</h3>
+                        <p>CPU, RAM, I/O, сеть — поиск узких мест.</p>
+                    </div>
+                    <div class="metric-card">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Количество ошибок</h3>
+                        <p>Таймауты, 5xx, сбои соединения.</p>
+                    </div>
+                    <div class="metric-card">
+                        <i class="fas fa-stopwatch"></i>
+                        <h3>TTFB / полная загрузка</h3>
+                        <p>Время до первого байта, загрузка всех ресурсов.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ИНСТРУМЕНТЫ -->
+        <section id="tools" class="section tools">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Генераторы нагрузки</span>
+                    <h2>Apache JMeter, Yandex Tank, мониторинг</h2>
+                </div>
+                <div class="tools-showcase">
+                    <div class="tool-main">
+                        <i class="fas fa-leaf" style="font-size: 3rem; color: var(--accent);"></i>
+                        <h3>Apache JMeter</h3>
+                        <p>Настольное приложение на Java. Позволяет создавать тестовые планы, настраивать количество потоков, сценарии, таймеры, собирать результаты.</p>
+                        <ul>
+                            <li><i class="fas fa-check-circle"></i> HTTP, JDBC, FTP, SOAP и др.</li>
+                            <li><i class="fas fa-check-circle"></i> Группы потоков (Thread Group)</li>
+                            <li><i class="fas fa-check-circle"></i> Слушатели (Listeners) — графики, таблицы</li>
+                            <li><i class="fas fa-check-circle"></i> Распределённое тестирование</li>
+                        </ul>
+                    </div>
+                    <div class="tool-extra">
+                        <h4>Другие инструменты</h4>
+                        <p><i class="fas fa-cog"></i> Yandex Tank — автоматизация, интеграция с мониторингом.</p>
+                        <p><i class="fas fa-chart-line"></i> Мониторинг сервера: PerfMon (Windows), top/htop/iostat (Linux).</p>
+                    </div>
+                </div>
+                <div class="jmeter-example">
+                    <h4>Пример структуры тест-плана JMeter</h4>
+                    <div class="code-block">
+                        <pre><code>Тест-план
+└── Группа потоков (100 пользователей, ramp-up 60 с)
+    ├── HTTP-запрос (главная страница)
+    ├── Таймер (пауза 2-5 с)
+    ├── HTTP-запрос (каталог)
+    ├── Таймер (пауза 3-7 с)
+    ├── HTTP-запрос (добавление в корзину)
+    └── Слушатель (таблица результатов, график)</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ПРОЦЕСС ПРОВЕДЕНИЯ -->
+        <section id="process" class="section process">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Как проводить</span>
+                    <h2>Этапы нагрузочного тестирования</h2>
+                </div>
+                <div class="process-steps">
+                    <div class="proc-step">
+                        <span class="step-number">1</span>
+                        <i class="fas fa-clipboard-list"></i>
+                        <h4>Планирование</h4>
+                        <p>Цели, сценарии, нагрузка, критерии приёмки (SLA).</p>
+                    </div>
+                    <div class="proc-step">
+                        <span class="step-number">2</span>
+                        <i class="fas fa-server"></i>
+                        <h4>Подготовка среды</h4>
+                        <p>Стенд, аналогичный продакшену, тестовые данные.</p>
+                    </div>
+                    <div class="proc-step">
+                        <span class="step-number">3</span>
+                        <i class="fas fa-code"></i>
+                        <h4>Создание скриптов</h4>
+                        <p>Запись или ручное создание сценариев, параметризация.</p>
+                    </div>
+                    <div class="proc-step">
+                        <span class="step-number">4</span>
+                        <i class="fas fa-play"></i>
+                        <h4>Выполнение</h4>
+                        <p>Постепенное увеличение нагрузки, сбор метрик.</p>
+                    </div>
+                    <div class="proc-step">
+                        <span class="step-number">5</span>
+                        <i class="fas fa-chart-pie"></i>
+                        <h4>Анализ</h4>
+                        <p>Поиск узких мест, ошибок, интерпретация графиков.</p>
+                    </div>
+                    <div class="proc-step">
+                        <span class="step-number">6</span>
+                        <i class="fas fa-sync-alt"></i>
+                        <h4>Оптимизация и повтор</h4>
+                        <p>Исправления, повторные прогоны.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- СВЯЗЬ С БЕЗОПАСНОСТЬЮ -->
+        <section id="security" class="section security">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Защита от атак</span>
+                    <h2>DoS/DDoS, rate limiting, resource exhaustion</h2>
+                </div>
+                <div class="security-grid">
+                    <div class="sec-item">
+                        <i class="fas fa-skull"></i>
+                        <h3>DoS / DDoS</h3>
+                        <p>Стресс-тест показывает, при какой нагрузке система падает. Помогает настроить защиту.</p>
+                    </div>
+                    <div class="sec-item">
+                        <i class="fas fa-gavel"></i>
+                        <h3>Rate limiting</h3>
+                        <p>Ограничение числа запросов с одного IP — проверяется нагрузочным тестированием.</p>
+                    </div>
+                    <div class="sec-item">
+                        <i class="fas fa-drain"></i>
+                        <h3>Resource exhaustion</h3>
+                        <p>Уязвимости, вызывающие аномальное потребление ресурсов (например, тяжёлый поиск).</p>
+                    </div>
+                </div>
+                <p class="sec-note">Нагрузочное тестирование помогает выявить «узкие места», которые могут быть использованы злоумышленниками.</p>
+            </div>
+        </section>
+
+        <!-- ЛАБОРАТОРНАЯ РАБОТА -->
+        <section id="lab" class="section lab">
+            <div class="container">
+                <div class="lab-box">
+                    <span class="badge">Лабораторная работа</span>
+                    <h2>JMeter: создаём нагрузку на учебное приложение</h2>
+                    <div class="lab-content">
+                        <p>Разделимся на группы: одна группа генерирует нагрузку на приложение другой группы.</p>
+                        <ul>
+                            <li><i class="fas fa-users"></i> Сценарии: главная страница, поиск, добавление в корзину.</li>
+                            <li><i class="fas fa-chart-line"></i> Измеряем время отклика, пропускную способность, ошибки.</li>
+                            <li><i class="fas fa-skull-crossbones"></i> Стресс-тест: увеличиваем нагрузку до отказа, фиксируем предел.</li>
+                            <li><i class="fas fa-tachometer-alt"></i> Мониторинг сервера (CPU, RAM) во время теста.</li>
+                        </ul>
+                        <p class="ethics"><i class="fas fa-shield"></i> Проводится в изолированной среде, локально, с возможностью перезапуска.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ДОМАШНЕЕ ЗАДАНИЕ -->
+        <section id="homework" class="section homework">
+            <div class="container">
+                <div class="homework-box">
+                    <span class="badge">ДЗ · Лекция 9</span>
+                    <h2>Первый тест в JMeter</h2>
+                    <div class="homework-parts">
+                        <div class="hw-part">
+                            <i class="fas fa-book"></i>
+                            <h3>Теория</h3>
+                            <p>Изучить понятия нагрузочного тестирования, метрики, виды тестов.</p>
+                        </div>
+                        <div class="hw-part">
+                            <i class="fas fa-laptop-code"></i>
+                            <h3>Практика</h3>
+                            <p>Установить JMeter. Создать тестовый план для своего учебного приложения: 10 пользователей, сценарий: открыть главную → каталог → карточка товара. Запустить, сделать скриншоты результатов (график времени отклика, таблица).</p>
+                        </div>
+                    </div>
+                    <div class="hw-deadline">
+                        <i class="fas fa-hourglass-half"></i> На следующей практике — разбор результатов и сложные сценарии.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ЗАКЛЮЧЕНИЕ -->
+        <section id="outro" class="section outro">
+            <div class="container">
+                <div class="outro-box">
+                    <h2>Сегодня мы разобрали</h2>
+                    <div class="outro-grid">
+                        <div class="outro-item">
+                            <i class="fas fa-weight-scale"></i>
+                            <span>Виды нагрузочного тестирования</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-ruler"></i>
+                            <span>Метрики: время отклика, throughput, ошибки</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-tools"></i>
+                            <span>Apache JMeter</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-shield"></i>
+                            <span>Связь с безопасностью (DoS/DDoS)</span>
+                        </div>
+                    </div>
+                    <p class="outro-message">Нагрузочное тестирование — залог того, что система выдержит реальных пользователей и не ляжет в ответственный момент.</p>
+                    <div class="questions">
+                        <i class="fas fa-question-circle"></i>
+                        <h3>Вопросы?</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Курс «Тестирование информационных систем» · Кирилл Мяги · Лекция 9</p>
+            <p class="footer-small">Нагрузочное тестирование</p>
+        </div>
+    </footer>
+</body>
+</html>
