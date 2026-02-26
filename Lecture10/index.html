@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кирилл Мяги · Лекция 10 · Тестирование установки и миграций</title>
+    <!-- Google Fonts & Font Awesome 6 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- боковая навигация -->
+    <nav class="slide-nav">
+        <a href="#hero" class="nav-dot" aria-label="Вступление"></a>
+        <a href="#importance" class="nav-dot" aria-label="Важность"></a>
+        <a href="#installer-types" class="nav-dot" aria-label="Типы инсталляторов"></a>
+        <a href="#directions" class="nav-dot" aria-label="Направления тестирования"></a>
+        <a href="#migration" class="nav-dot" aria-label="Миграции данных"></a>
+        <a href="#security" class="nav-dot" aria-label="Безопасность установки"></a>
+        <a href="#lab" class="nav-dot" aria-label="Лабораторная"></a>
+        <a href="#homework" class="nav-dot" aria-label="ДЗ"></a>
+        <a href="#outro" class="nav-dot" aria-label="Финал"></a>
+    </nav>
+
+    <main>
+        <!-- HERO -->
+        <section id="hero" class="section hero">
+            <div class="container">
+                <div class="hero-content">
+                    <span class="badge">Десятая лекция · 26 февраля 2026</span>
+                    <h1>Установка, обновление, удаление, <span class="gradient-text">миграция данных</span></h1>
+                    <h2>Первое впечатление и сохранность данных</h2>
+                    <div class="lector">
+                        <div class="avatar">
+                            <i class="fas fa-download"></i>
+                        </div>
+                        <div class="lector-info">
+                            <p class="lector-name">Мяги Кирилл Александрович</p>
+                            <p class="lector-desc">Тестирование установки · Миграции · Безопасность</p>
+                        </div>
+                    </div>
+                    <blockquote class="hero-quote">
+                        «Пользователь, который не может установить приложение или теряет данные при обновлении, <span style="color:var(--accent);">никогда не станет лояльным клиентом</span>»
+                    </blockquote>
+                    <div class="scroll-hint">
+                        <span>Листайте к видам</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-grid"></div>
+        </section>
+
+        <!-- ВАЖНОСТЬ И ОПРЕДЕЛЕНИЕ -->
+        <section id="importance" class="section importance">
+            <div class="container">
+                <div class="split-layout">
+                    <div class="split-text">
+                        <span class="section-subtitle">Почему это важно</span>
+                        <h2>Первое взаимодействие с продуктом</h2>
+                        <p>Установка — это первое, с чем сталкивается пользователь. Если она проходит гладко — положительные эмоции. Если падает, требует неизвестных библиотек или удаляет файлы — доверие потеряно.</p>
+                        <p class="highlight-text">Тестирование установки (installation testing) проверяет успешность установки, настройки, обновления и удаления в целевой среде.</p>
+                    </div>
+                    <div class="split-image">
+                        <i class="fas fa-box-open"></i>
+                        <i class="fas fa-arrow-down"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ТИПЫ ИНСТАЛЛЯТОРОВ -->
+        <section id="installer-types" class="section installer-types">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Технологии создания</span>
+                    <h2>Типы инсталляторов</h2>
+                </div>
+                <div class="types-grid">
+                    <div class="type-card">
+                        <i class="fas fa-box"></i>
+                        <h3>Portable</h3>
+                        <p>Простое копирование файлов, без записи в реестр и системные каталоги.</p>
+                    </div>
+                    <div class="type-card">
+                        <i class="fas fa-cubes"></i>
+                        <h3>InstallShield / WiX</h3>
+                        <p>Профессиональные инструменты, создают setup.exe или MSI-пакеты.</p>
+                    </div>
+                    <div class="type-card">
+                        <i class="fas fa-gear"></i>
+                        <h3>Inno Setup / NSIS</h3>
+                        <p>Бесплатные, гибкие скриптовые инсталляторы.</p>
+                    </div>
+                    <div class="type-card">
+                        <i class="fas fa-windows"></i>
+                        <h3>MSI (Microsoft Installer)</h3>
+                        <p>Поддержка транзакционности, отката при сбое, централизованное управление.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- НАПРАВЛЕНИЯ ТЕСТИРОВАНИЯ УСТАНОВКИ -->
+        <section id="directions" class="section directions">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Что проверяем</span>
+                    <h2>Направления тестирования установки</h2>
+                </div>
+                <div class="directions-grid">
+                    <div class="dir-card">
+                        <i class="fas fa-broom"></i>
+                        <h3>Чистая установка</h3>
+                        <p>На чистую ОС: запуск, экраны мастера, создание файлов/реестра, запуск приложения.</p>
+                    </div>
+                    <div class="dir-card">
+                        <i class="fas fa-rotate"></i>
+                        <h3>Обновление (upgrade)</h3>
+                        <p>Поверх предыдущей версии, сохранение данных и настроек, миграция.</p>
+                    </div>
+                    <div class="dir-card">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Нестандартные условия</h3>
+                        <p>Мало места, нет прав, нестандартный путь, национальные символы, другой язык ОС.</p>
+                    </div>
+                    <div class="dir-card">
+                        <i class="fas fa-trash-alt"></i>
+                        <h3>Удаление</h3>
+                        <p>Через панель управления, удаление всех файлов/записей (без мусора), сохранение пользовательских данных.</p>
+                    </div>
+                    <div class="dir-card">
+                        <i class="fas fa-recycle"></i>
+                        <h3>Восстановление после сбоя</h3>
+                        <p>Имитация сбоя (отключение питания, убийство процесса) — проверка отката.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- МИГРАЦИИ ДАННЫХ -->
+        <section id="migration" class="section migration">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Данные — самое ценное</span>
+                    <h2>Тестирование миграций</h2>
+                </div>
+                <div class="migration-grid">
+                    <div class="mig-card">
+                        <i class="fas fa-database"></i>
+                        <h3>Миграция схемы БД</h3>
+                        <p>Изменение структуры таблиц, преобразование данных, проверка целостности.</p>
+                    </div>
+                    <div class="mig-card">
+                        <i class="fas fa-file-alt"></i>
+                        <h3>Миграция конфигураций</h3>
+                        <p>Перенос настроек пользователя в новый формат.</p>
+                    </div>
+                    <div class="mig-card">
+                        <i class="fas fa-folder-open"></i>
+                        <h3>Миграция пользовательских файлов</h3>
+                        <p>Перенос документов, изображений в новую структуру папок.</p>
+                    </div>
+                </div>
+                <div class="migration-note">
+                    <p><i class="fas fa-flask"></i> Как тестировать: копия продакшен‑базы (обезличенная), накат миграции, проверка всех функций и данных. Проверка идемпотентности, прерывания, восстановления.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- БЕЗОПАСНОСТЬ УСТАНОВКИ -->
+        <section id="security" class="section security">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Вектор атаки</span>
+                    <h2>Безопасность установки и обновлений</h2>
+                </div>
+                <div class="sec-grid">
+                    <div class="sec-item">
+                        <i class="fas fa-file-signature"></i>
+                        <h3>Цифровая подпись</h3>
+                        <p>Инсталлятор должен быть подписан, подпись действительна. Неподписанный вызывает предупреждения.</p>
+                    </div>
+                    <div class="sec-item">
+                        <i class="fas fa-lock"></i>
+                        <h3>Права доступа</h3>
+                        <p>После установки файлы и папки должны иметь минимально необходимые права (не давать на запись всем).</p>
+                    </div>
+                    <div class="sec-item">
+                        <i class="fas fa-shield"></i>
+                        <h3>Безопасность обновлений</h3>
+                        <p>Автообновление по HTTPS, проверка целостности, защита от подмены (MITM).</p>
+                    </div>
+                    <div class="sec-item">
+                        <i class="fas fa-bug"></i>
+                        <h3>Сброс настроек безопасности</h3>
+                        <p>Обновление не должно откатывать патчи безопасности или ослаблять политики.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ЛАБОРАТОРНАЯ РАБОТА -->
+        <section id="lab" class="section lab">
+            <div class="container">
+                <div class="lab-box">
+                    <span class="badge">Лабораторная работа</span>
+                    <h2>Тестирование установки учебного приложения</h2>
+                    <div class="lab-content">
+                        <ul>
+                            <li><i class="fas fa-check-circle"></i> Чистая установка на чистую ВМ/компьютер.</li>
+                            <li><i class="fas fa-check-circle"></i> Проверка создания файлов, записей реестра.</li>
+                            <li><i class="fas fa-check-circle"></i> Установка в нестандартную папку, на диск с малым местом, под пользователем без прав.</li>
+                            <li><i class="fas fa-check-circle"></i> Тестирование удаления (остался ли мусор).</li>
+                            <li><i class="fas fa-check-circle"></i> Если есть обновление — проверка сохранности данных.</li>
+                            <li><i class="fas fa-check-circle"></i> Проверка подписи инсталлятора, прав доступа к файлам.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ДОМАШНЕЕ ЗАДАНИЕ -->
+        <section id="homework" class="section homework">
+            <div class="container">
+                <div class="homework-box">
+                    <span class="badge">ДЗ · Лекция 10</span>
+                    <h2>Чек-лист и тестирование</h2>
+                    <div class="homework-parts">
+                        <div class="hw-part">
+                            <i class="fas fa-clipboard-list"></i>
+                            <h3>Теория</h3>
+                            <p>Составить чек-лист для тестирования установки (не менее 20 пунктов: чистая, обновление, удаление, негативные, безопасность).</p>
+                        </div>
+                        <div class="hw-part">
+                            <i class="fas fa-vial"></i>
+                            <h3>Практика</h3>
+                            <p>Выполнить чек-лист на своём учебном приложении, задокументировать результаты (скриншоты, описание проблем).</p>
+                        </div>
+                    </div>
+                    <div class="hw-deadline">
+                        <i class="fas fa-hourglass-half"></i> На следующей неделе обсуждаем итоги курса.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ЗАКЛЮЧЕНИЕ -->
+        <section id="outro" class="section outro">
+            <div class="container">
+                <div class="outro-box">
+                    <h2>Сегодня мы разобрали</h2>
+                    <div class="outro-grid">
+                        <div class="outro-item">
+                            <i class="fas fa-download"></i>
+                            <span>Тестирование установки</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-rotate"></i>
+                            <span>Обновление и миграции</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-shield"></i>
+                            <span>Безопасность инсталляции</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-clipboard-check"></i>
+                            <span>Чек-листы и лабораторная</span>
+                        </div>
+                    </div>
+                    <p class="outro-message">Даже идеально работающее приложение не принесёт пользы, если его нельзя установить или при обновлении теряются данные. Спасибо за курс!</p>
+                    <div class="questions">
+                        <i class="fas fa-question-circle"></i>
+                        <h3>Вопросы?</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Курс «Тестирование информационных систем» · Кирилл Мяги · Лекция 10</p>
+            <p class="footer-small">Тестирование установки и миграций</p>
+        </div>
+    </footer>
+</body>
+</html>
