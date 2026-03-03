@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кирилл Мяги · Лекция 11 · Метрики в тестировании</title>
+    <!-- Google Fonts & Font Awesome 6 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- боковая навигация -->
+    <nav class="slide-nav">
+        <a href="#hero" class="nav-dot" aria-label="Вступление"></a>
+        <a href="#definition" class="nav-dot" aria-label="Определение"></a>
+        <a href="#groups" class="nav-dot" aria-label="Группы метрик"></a>
+        <a href="#defect-metrics" class="nav-dot" aria-label="Метрики дефектов"></a>
+        <a href="#coverage-metrics" class="nav-dot" aria-label="Метрики покрытия"></a>
+        <a href="#process-metrics" class="nav-dot" aria-label="Метрики процесса"></a>
+        <a href="#release-metrics" class="nav-dot" aria-label="Готовность к релизу"></a>
+        <a href="#security-metrics" class="nav-dot" aria-label="Безопасность"></a>
+        <a href="#decision" class="nav-dot" aria-label="Принятие решений"></a>
+        <a href="#lab" class="nav-dot" aria-label="Практика"></a>
+        <a href="#homework" class="nav-dot" aria-label="ДЗ"></a>
+        <a href="#outro" class="nav-dot" aria-label="Финал"></a>
+    </nav>
+
+    <main>
+        <!-- HERO -->
+        <section id="hero" class="section hero">
+            <div class="container">
+                <div class="hero-content">
+                    <span class="badge">Одиннадцатая лекция · 03 марта 2026</span>
+                    <h1>Измеряем качество, управляем <span class="gradient-text">релизами</span></h1>
+                    <h2>Дефекты, покрытие, процесс, готовность</h2>
+                    <div class="lector">
+                        <div class="avatar">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <div class="lector-info">
+                            <p class="lector-name">Мяги Кирилл Александрович</p>
+                            <p class="lector-desc">Метрики и принятие решений</p>
+                        </div>
+                    </div>
+                    <blockquote class="hero-quote">
+                        «Без метрик вы гадаете. С метриками вы управляете. <span style="color:var(--accent);">Переведите качество в числа</span>»
+                    </blockquote>
+                    <div class="scroll-hint">
+                        <span>Листайте к группам метрик</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-grid"></div>
+        </section>
+
+        <!-- ОПРЕДЕЛЕНИЕ -->
+        <section id="definition" class="section definition">
+            <div class="container">
+                <div class="split-layout">
+                    <div class="split-text">
+                        <span class="section-subtitle">Что такое метрика?</span>
+                        <h2>Количественная мера качества</h2>
+                        <p>Метрика в тестировании — это число, которое позволяет оценить аспект процесса или продукта. Например: количество дефектов, процент пройденных тестов, среднее время закрытия бага.</p>
+                        <p class="highlight-text">Метрики нужны, чтобы принимать обоснованные решения, а не гадать на кофейной гуще.</p>
+                    </div>
+                    <div class="split-image">
+                        <i class="fas fa-ruler"></i>
+                        <i class="fas fa-chart-simple"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ГРУППЫ МЕТРИК (общий обзор) -->
+        <section id="groups" class="section groups">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Классификация</span>
+                    <h2>Четыре основные группы</h2>
+                </div>
+                <div class="groups-grid">
+                    <div class="group-card">
+                        <i class="fas fa-bug"></i>
+                        <h3>Дефекты</h3>
+                        <p>Количество, плотность, серьёзность, время жизни.</p>
+                    </div>
+                    <div class="group-card">
+                        <i class="fas fa-check-double"></i>
+                        <h3>Покрытие</h3>
+                        <p>Требований, кода, критических сценариев.</p>
+                    </div>
+                    <div class="group-card">
+                        <i class="fas fa-clock"></i>
+                        <h3>Процесс</h3>
+                        <p>Выполнено тестов, затраты времени, производительность.</p>
+                    </div>
+                    <div class="group-card">
+                        <i class="fas fa-rocket"></i>
+                        <h3>Готовность к релизу</h3>
+                        <p>Критерии входа/выхода, тенденции, риски.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- МЕТРИКИ ДЕФЕКТОВ (подробно) -->
+        <section id="defect-metrics" class="section defect-metrics">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Дефекты</span>
+                    <h2>Количество, плотность, динамика, время жизни</h2>
+                </div>
+                <div class="defect-grid">
+                    <div class="defect-item">
+                        <i class="fas fa-chart-line"></i>
+                        <h4>График обнаружения</h4>
+                        <p>В начале тестирования дефектов много, к концу — снижение. Хороший признак.</p>
+                        <div class="mini-chart up"></div>
+                    </div>
+                    <div class="defect-item">
+                        <i class="fas fa-weight-scale"></i>
+                        <h4>Плотность дефектов</h4>
+                        <p>Количество дефектов на 1000 строк кода или на модуль. Сравнение модулей.</p>
+                        <div class="density-bars">
+                            <span>Каталог</span><div style="width:30%;">3</div>
+                            <span>Оплата</span><div style="width:80%;">8</div>
+                            <span>Профиль</span><div style="width:40%;">4</div>
+                        </div>
+                    </div>
+                    <div class="defect-item">
+                        <i class="fas fa-gauge"></i>
+                        <h4>Распределение по серьёзности</h4>
+                        <p>Блокирующие, критические, незначительные.</p>
+                        <div class="pie-sample">
+                            <span style="background:#ff6b6b;">🔴 Blocker</span>
+                            <span style="background:#ffd43b;">🟡 Critical</span>
+                            <span style="background:#51cf66;">🟢 Minor</span>
+                        </div>
+                    </div>
+                    <div class="defect-item">
+                        <i class="fas fa-hourglass-half"></i>
+                        <h4>Среднее время жизни</h4>
+                        <p>От обнаружения до закрытия. Важно для критических дефектов.</p>
+                        <div class="timer">⏱️ 2.5 дня</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- МЕТРИКИ ПОКРЫТИЯ -->
+        <section id="coverage-metrics" class="section coverage-metrics">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Покрытие</span>
+                    <h2>Требования, код, критические сценарии</h2>
+                </div>
+                <div class="coverage-cards">
+                    <div class="coverage-card">
+                        <h3>Покрытие требований</h3>
+                        <p>Процент требований, покрытых тестами. Цель: 100% для критических.</p>
+                        <div class="progress"><span style="width:95%;">95%</span></div>
+                    </div>
+                    <div class="coverage-card">
+                        <h3>Покрытие кода</h3>
+                        <p>Строки, ветвления, условия. Для модульных тестов.</p>
+                        <div class="progress"><span style="width:82%;">82%</span></div>
+                    </div>
+                    <div class="coverage-card">
+                        <h3>Критические сценарии (smoke)</h3>
+                        <p>Автоматизация ключевых путей пользователя.</p>
+                        <div class="progress"><span style="width:100%;">100%</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- МЕТРИКИ ПРОЦЕССА -->
+        <section id="process-metrics" class="section process-metrics">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Процесс</span>
+                    <h2>Выполнение, эффективность, затраты</h2>
+                </div>
+                <div class="process-grid">
+                    <div class="process-item">
+                        <i class="fas fa-percent"></i>
+                        <h4>% выполненных тест-кейсов</h4>
+                        <p>Если до релиза 2 дня, а выполнено 50% — тревога.</p>
+                        <div class="progress"><span style="width:70%;">70%</span></div>
+                    </div>
+                    <div class="process-item">
+                        <i class="fas fa-check-circle"></i>
+                        <h4>% пройденных (passed rate)</h4>
+                        <p>Доля успешных проверок. Падение — проблемы.</p>
+                        <div class="progress"><span style="width:92%;">92%</span></div>
+                    </div>
+                    <div class="process-item">
+                        <i class="fas fa-stopwatch"></i>
+                        <h4>Тестов в час/день</h4>
+                        <p>Производительность (с учётом сложности).</p>
+                        <div class="timer">⚡ 25 тестов/день</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ГОТОВНОСТЬ К РЕЛИЗУ -->
+        <section id="release-metrics" class="section release-metrics">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Релиз или нет?</span>
+                    <h2>Критерии входа/выхода, тенденции</h2>
+                </div>
+                <div class="release-grid">
+                    <div class="release-card">
+                        <i class="fas fa-door-open"></i>
+                        <h3>Критерии входа</h3>
+                        <ul>
+                            <li>✅ Модульное тестирование завершено</li>
+                            <li>✅ Все критические дефекты закрыты</li>
+                            <li>✅ Тестовая среда готова</li>
+                        </ul>
+                    </div>
+                    <div class="release-card">
+                        <i class="fas fa-door-closed"></i>
+                        <h3>Критерии выхода</h3>
+                        <ul>
+                            <li>✅ Все запланированные тесты выполнены</li>
+                            <li>✅ Нет открытых Blocker/Critical</li>
+                            <li>✅ Производительность в норме</li>
+                        </ul>
+                    </div>
+                    <div class="release-card">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Тенденция дефектов</h3>
+                        <p>График должен выходить на плато. Если всплеск в конце — релиз откладывается.</p>
+                        <div class="trend-ok">📈 хорошая тенденция</div>
+                        <div class="trend-bad">📉 всплеск — плохо</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- МЕТРИКИ БЕЗОПАСНОСТИ -->
+        <section id="security-metrics" class="section security-metrics">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Безопасность</span>
+                    <h2>Уязвимости, CVSS, time to patch</h2>
+                </div>
+                <div class="security-grid">
+                    <div class="sec-item">
+                        <i class="fas fa-shield"></i>
+                        <h4>Количество уязвимостей</h4>
+                        <p>За период, по критичности (CVSS).</p>
+                    </div>
+                    <div class="sec-item">
+                        <i class="fas fa-clock"></i>
+                        <h4>Time to patch</h4>
+                        <p>Время устранения критических уязвимостей.</p>
+                    </div>
+                    <div class="sec-item">
+                        <i class="fas fa-chart-pie"></i>
+                        <h4>Security coverage</h4>
+                        <p>Процент компонентов, проверяемых в CI/CD.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ПРИНЯТИЕ РЕШЕНИЙ НА ОСНОВЕ МЕТРИК -->
+        <section id="decision" class="section decision">
+            <div class="container">
+                <div class="decision-box">
+                    <span class="badge">Дашборд</span>
+                    <h2>Пример: готов ли продукт?</h2>
+                    <div class="dashboard">
+                        <div class="dashboard-item">
+                            <span>Тесты выполнены</span> <strong>100%</strong> ✅
+                        </div>
+                        <div class="dashboard-item">
+                            <span>Пройдено тестов</span> <strong>98%</strong> ✅
+                        </div>
+                        <div class="dashboard-item">
+                            <span>Blocker/Critical</span> <strong>0</strong> ✅
+                        </div>
+                        <div class="dashboard-item">
+                            <span>Плотность дефектов (новые модули)</span> <strong>2.1/kloc</strong> ✅
+                        </div>
+                        <div class="dashboard-item">
+                            <span>Нагрузка (пик +30%)</span> <strong>выдержала</strong> ✅
+                        </div>
+                        <div class="dashboard-item">
+                            <span>Уязвимости критические</span> <strong>0</strong> ✅
+                        </div>
+                    </div>
+                    <p class="decision-result">👉 Решение: <strong>РЕЛИЗ</strong></p>
+                    <p class="decision-caution">* Если бы хоть один пункт был красным — решение было бы иным.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ЗАКЛЮЧИТЕЛЬНАЯ ПРАКТИЧЕСКАЯ РАБОТА -->
+        <section id="lab" class="section lab">
+            <div class="container">
+                <div class="lab-box">
+                    <span class="badge">Практика · Финальный аккорд</span>
+                    <h2>Оценка готовности своего проекта</h2>
+                    <div class="lab-content">
+                        <ul>
+                            <li><i class="fas fa-database"></i> Собрать данные о дефектах (из баг-трекера / таблицы).</li>
+                            <li><i class="fas fa-chart-line"></i> Построить график обнаружения дефектов по дням.</li>
+                            <li><i class="fas fa-chart-pie"></i> Диаграмма распределения по серьёзности.</li>
+                            <li><i class="fas fa-check-square"></i> Оценить покрытие требований тестами (процент).</li>
+                            <li><i class="fas fa-file-alt"></i> Написать заключение: готов ли проект к релизу? Почему?</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ДОМАШНЕЕ ЗАДАНИЕ -->
+        <section id="homework" class="section homework">
+            <div class="container">
+                <div class="homework-box">
+                    <span class="badge">ДЗ · Лекция 11</span>
+                    <h2>Метрики и выводы</h2>
+                    <div class="homework-parts">
+                        <div class="hw-part">
+                            <i class="fas fa-book"></i>
+                            <h3>Теория</h3>
+                            <p>Изучить материалы по метрикам в тестировании (OWASP Metrics, дополнительные источники).</p>
+                        </div>
+                        <div class="hw-part">
+                            <i class="fas fa-chart-bar"></i>
+                            <h3>Практика</h3>
+                            <p>Для своего учебного проекта выполнить анализ по плану из практической работы. Представить графики и заключение о готовности к релизу.</p>
+                        </div>
+                    </div>
+                    <div class="hw-deadline">
+                        <i class="fas fa-hourglass-half"></i> Финальное обсуждение на следующей неделе.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ЗАКЛЮЧЕНИЕ -->
+        <section id="outro" class="section outro">
+            <div class="container">
+                <div class="outro-box">
+                    <h2>Сегодня мы разобрали</h2>
+                    <div class="outro-grid">
+                        <div class="outro-item">
+                            <i class="fas fa-bug"></i>
+                            <span>Метрики дефектов</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-check-double"></i>
+                            <span>Метрики покрытия</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-clock"></i>
+                            <span>Метрики процесса</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-rocket"></i>
+                            <span>Готовность к релизу</span>
+                        </div>
+                    </div>
+                    <p class="outro-message">Метрики — это язык общения с менеджментом. Переведите качество в числа и управляйте релизами осознанно. Спасибо за курс!</p>
+                    <div class="questions">
+                        <i class="fas fa-question-circle"></i>
+                        <h3>Вопросы?</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Курс «Тестирование информационных систем» · Кирилл Мяги · Лекция 11</p>
+            <p class="footer-small">Метрики в тестировании</p>
+        </div>
+    </footer>
+</body>
+</html>
