@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кирилл Мяги · Лекция 12 · Реинжиниринг и автоматизация</title>
+    <!-- Google Fonts & Font Awesome 6 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- боковая навигация -->
+    <nav class="slide-nav">
+        <a href="#hero" class="nav-dot" aria-label="Вступление"></a>
+        <a href="#reengineering" class="nav-dot" aria-label="Реинжиниринг"></a>
+        <a href="#why-auto" class="nav-dot" aria-label="Зачем автоматизация"></a>
+        <a href="#pyramid" class="nav-dot" aria-label="Пирамида тестирования"></a>
+        <a href="#roi" class="nav-dot" aria-label="ROI"></a>
+        <a href="#cicd" class="nav-dot" aria-label="CI/CD"></a>
+        <a href="#devsecops" class="nav-dot" aria-label="DevSecOps"></a>
+        <a href="#problems" class="nav-dot" aria-label="Проблемы автоматизации"></a>
+        <a href="#practice" class="nav-dot" aria-label="Практика"></a>
+        <a href="#homework" class="nav-dot" aria-label="ДЗ"></a>
+        <a href="#outro" class="nav-dot" aria-label="Финал"></a>
+    </nav>
+
+    <main>
+        <!-- HERO -->
+        <section id="hero" class="section hero">
+            <div class="container">
+                <div class="hero-content">
+                    <span class="badge">Двенадцатая лекция · 03 марта 2026</span>
+                    <h1>Бизнес-процессы, CI/CD, <span class="gradient-text">DevSecOps</span></h1>
+                    <h2>Как автоматизация становится необходимостью</h2>
+                    <div class="lector">
+                        <div class="avatar">
+                            <i class="fas fa-arrow-trend-up"></i>
+                        </div>
+                        <div class="lector-info">
+                            <p class="lector-name">Мяги Кирилл Александрович</p>
+                            <p class="lector-desc">Реинжиниринг · Автоматизация · Ценность</p>
+                        </div>
+                    </div>
+                    <blockquote class="hero-quote">
+                        «Скорость стала конкурентным преимуществом. <span style="color:var(--accent);">Автоматизация — единственный способ совместить быстроту и качество</span>»
+                    </blockquote>
+                    <div class="scroll-hint">
+                        <span>Листайте к трансформации</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-grid"></div>
+        </section>
+
+        <!-- РЕИНЖИНИРИНГ БИЗНЕС-ПРОЦЕССОВ -->
+        <section id="reengineering" class="section reengineering">
+            <div class="container">
+                <div class="split-layout">
+                    <div class="split-text">
+                        <span class="section-subtitle">Business Process Reengineering</span>
+                        <h2>Фундаментальное переосмысление</h2>
+                        <p>Реинжиниринг — это не «улучшим то, что есть», а отказ от старого и создание процессов заново, с использованием современных технологий. В разработке ПО это переход от «водопада» к гибким методологиям и непрерывной поставке.</p>
+                        <p class="highlight-text">Цель: радикальное улучшение стоимости, качества, скорости и обслуживания.</p>
+                    </div>
+                    <div class="split-image">
+                        <i class="fas fa-sync"></i>
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ПОЧЕМУ АВТОМАТИЗАЦИЯ НЕОБХОДИМА -->
+        <section id="why-auto" class="section why-auto">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Скорость vs Качество</span>
+                    <h2>Раньше и сейчас</h2>
+                </div>
+                <div class="compare-grid">
+                    <div class="compare-card old">
+                        <i class="fas fa-calendar-alt"></i>
+                        <h3>Раньше</h3>
+                        <p>Релиз раз в полгода. Длительное ручное тестирование. Успевали проверить всё вручную.</p>
+                    </div>
+                    <div class="compare-card new">
+                        <i class="fas fa-rocket"></i>
+                        <h3>Сейчас</h3>
+                        <p>Релизы каждую неделю или день. Ручной регресс займёт недели. Без автоматизации — никак.</p>
+                    </div>
+                </div>
+                <div class="inevitable">
+                    <p><i class="fas fa-exclamation-triangle"></i> Автоматизация перестала быть «плюшкой» — это суровая необходимость для выживания на рынке.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ПИРАМИДА ТЕСТИРОВАНИЯ -->
+        <section id="pyramid" class="section pyramid">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Модель Майкла Коэна</span>
+                    <h2>Пирамида автоматизации</h2>
+                </div>
+                <div class="pyramid-container">
+                    <div class="pyramid-level ui" style="height: 60px;">UI-тесты (мало, дорогие, хрупкие)</div>
+                    <div class="pyramid-level api" style="height: 100px;">API-тесты (быстрые, стабильные)</div>
+                    <div class="pyramid-level integration" style="height: 140px;">Интеграционные тесты</div>
+                    <div class="pyramid-level unit" style="height: 200px;">Модульные тесты (основа, много, дёшево)</div>
+                </div>
+                <div class="pyramid-desc">
+                    <p><i class="fas fa-arrow-up"></i> Чем выше уровень, тем меньше тестов, но они медленнее и дороже.</p>
+                    <p><i class="fas fa-arrow-down"></i> Основа качества — быстрые и надёжные модульные тесты.</p>
+                </div>
+                <div class="common-mistake">
+                    <i class="fas fa-exclamation-circle"></i> Ошибка: начинать автоматизацию с UI. Правильно — идти снизу вверх.
+                </div>
+            </div>
+        </section>
+
+        <!-- ROI АВТОМАТИЗАЦИИ -->
+        <section id="roi" class="section roi">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Окупаемость инвестиций</span>
+                    <h2>Когда автоматизация выгодна?</h2>
+                </div>
+                <div class="roi-grid">
+                    <div class="roi-item">
+                        <i class="fas fa-chart-line"></i>
+                        <h4>Частота прогонов</h4>
+                        <p>Автоматизация окупается, если тесты выполняются многократно (регресс, smoke на каждый билд).</p>
+                    </div>
+                    <div class="roi-item">
+                        <i class="fas fa-clock"></i>
+                        <h4>Время на поддержку</h4>
+                        <p>Тесты — это код. Плохие тесты превращаются в технический долг.</p>
+                    </div>
+                    <div class="roi-item">
+                        <i class="fas fa-calculator"></i>
+                        <h4>Формула</h4>
+                        <p>ROI = (экономия от ручного выполнения × количество прогонов) − (затраты на разработку + поддержку).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CI/CD КОНВЕЙЕР -->
+        <section id="cicd" class="section cicd">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Непрерывная интеграция и доставка</span>
+                    <h2>CI/CD как результат реинжиниринга</h2>
+                </div>
+                <div class="pipeline">
+                    <div class="pipeline-step">commit</div>
+                    <i class="fas fa-arrow-right"></i>
+                    <div class="pipeline-step">unit tests</div>
+                    <i class="fas fa-arrow-right"></i>
+                    <div class="pipeline-step">API tests</div>
+                    <i class="fas fa-arrow-right"></i>
+                    <div class="pipeline-step">UI tests</div>
+                    <i class="fas fa-arrow-right"></i>
+                    <div class="pipeline-step">security scan</div>
+                    <i class="fas fa-arrow-right"></i>
+                    <div class="pipeline-step">deploy</div>
+                </div>
+                <div class="yaml-example">
+                    <h4>Пример .github/workflows/test.yml</h4>
+                    <div class="code-block">
+                        <pre><code>name: CI
+on: [push]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run unit tests
+        run: dotnet test
+      - name: Run API tests (Newman)
+        run: newman run collection.json
+      - name: Run UI tests (Selenium)
+        run: mvn test</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DEVSECOPS И БЕЗОПАСНОСТЬ -->
+        <section id="devsecops" class="section devsecops">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Безопасность встроена</span>
+                    <h2>DevSecOps: безопасность в CI/CD</h2>
+                </div>
+                <div class="secops-grid">
+                    <div class="secops-item">
+                        <i class="fas fa-shield"></i>
+                        <h4>SAST (статический анализ)</h4>
+                        <p>Поиск уязвимостей в коде при каждом коммите.</p>
+                    </div>
+                    <div class="secops-item">
+                        <i class="fas fa-network-wired"></i>
+                        <h4>DAST (динамический анализ)</h4>
+                        <p>Сканирование работающего приложения.</p>
+                    </div>
+                    <div class="secops-item">
+                        <i class="fas fa-sync"></i>
+                        <h4>Автоматизация безопасности</h4>
+                        <p>Позволяет находить уязвимости на ранних этапах, когда их исправление стоит копейки.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ПРОБЛЕМЫ АВТОМАТИЗАЦИИ -->
+        <section id="problems" class="section problems">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Не всё гладко</span>
+                    <h2>Flaky-тесты, поддержка, время</h2>
+                </div>
+                <div class="problems-grid">
+                    <div class="problem-card">
+                        <i class="fas fa-poop"></i>
+                        <h3>Flaky-тесты</h3>
+                        <p>Нестабильные тесты, падающие без причины. Их отключают, и ценность теряется.</p>
+                    </div>
+                    <div class="problem-card">
+                        <i class="fas fa-hourglass"></i>
+                        <h3>Долгое выполнение</h3>
+                        <p>Если тесты идут часы, они замедляют конвейер. Нужно оптимизировать.</p>
+                    </div>
+                    <div class="problem-card">
+                        <i class="fas fa-tools"></i>
+                        <h3>Сложность поддержки</h3>
+                        <p>Тесты — код, требуют рефакторинга, код-ревью, хороших паттернов.</p>
+                    </div>
+                </div>
+                <div class="solutions">
+                    <p><i class="fas fa-check-circle"></i> Стабильные локаторы, разумные ожидания, изоляция, отчёты со скриншотами.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ПРАКТИКА: МИНИ-CI/CD -->
+        <section id="practice" class="section practice">
+            <div class="container">
+                <div class="practice-box">
+                    <span class="badge">Практика · Финальный проект</span>
+                    <h2>Строим конвейер для учебного приложения</h2>
+                    <ul>
+                        <li><i class="fas fa-code-branch"></i> GitHub Actions: при каждом пуше запускаем модульные тесты.</li>
+                        <li><i class="fas fa-plug"></i> Newman: запуск коллекций Postman.</li>
+                        <li><i class="fas fa-eye"></i> UI-тесты (Selenium) на headless-браузере.</li>
+                        <li><i class="fas fa-shield"></i> Статический анализ безопасности (например, OWASP Dependency Check).</li>
+                        <li><i class="fas fa-upload"></i> Автоматический деплой на тестовый стенд при успехе.</li>
+                    </ul>
+                    <p class="ethics"><i class="fas fa-heart"></i> Вы увидите, как автоматизация превращает разработку в единый поток.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ДОМАШНЕЕ ЗАДАНИЕ -->
+        <section id="homework" class="section homework">
+            <div class="container">
+                <div class="homework-box">
+                    <span class="badge">ДЗ · Лекция 12</span>
+                    <h2>Стратегия автоматизации</h2>
+                    <div class="homework-parts">
+                        <div class="hw-part">
+                            <i class="fas fa-pen"></i>
+                            <h3>Анализ</h3>
+                            <p>Для своего учебного проекта определить: какие тесты автоматизировать в первую очередь? Какие оставить ручными? Построить пирамиду.</p>
+                        </div>
+                        <div class="hw-part">
+                            <i class="fas fa-file-alt"></i>
+                            <h3>Документ-предложение</h3>
+                            <p>2-3 страницы с обоснованием: инструменты, пирамида, CI/CD, безопасность. Прислать на почту.</p>
+                        </div>
+                    </div>
+                    <div class="hw-deadline">
+                        <i class="fas fa-hourglass-half"></i> Финальное обсуждение на последней встрече.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ЗАКЛЮЧЕНИЕ -->
+        <section id="outro" class="section outro">
+            <div class="container">
+                <div class="outro-box">
+                    <h2>Курс завершён, но путь продолжается</h2>
+                    <div class="outro-grid">
+                        <div class="outro-item">
+                            <i class="fas fa-sync"></i>
+                            <span>Реинжиниринг процессов</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-chart-simple"></i>
+                            <span>Пирамида тестирования</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-infinity"></i>
+                            <span>CI/CD</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-shield"></i>
+                            <span>DevSecOps</span>
+                        </div>
+                    </div>
+                    <p class="outro-message">Автоматизация — не панацея, но без неё в современном мире не выжить. Вы теперь готовы к реальным проектам. Спасибо за курс!</p>
+                    <div class="questions">
+                        <i class="fas fa-question-circle"></i>
+                        <h3>Вопросы?</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Курс «Тестирование информационных систем» · Кирилл Мяги · Лекция 12</p>
+            <p class="footer-small">Реинжиниринг и автоматизация</p>
+        </div>
+    </footer>
+</body>
+</html>
