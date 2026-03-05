@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кирилл Мяги · Лекция 13 · Инструментарий DevOps</title>
+    <!-- Google Fonts & Font Awesome 6 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- боковая навигация -->
+    <nav class="slide-nav">
+        <a href="#hero" class="nav-dot" aria-label="Вступление"></a>
+        <a href="#devops-def" class="nav-dot" aria-label="Что такое DevOps"></a>
+        <a href="#pipeline" class="nav-dot" aria-label="Конвейер CI/CD"></a>
+        <a href="#tools" class="nav-dot" aria-label="Инструменты"></a>
+        <a href="#qa-role" class="nav-dot" aria-label="Роль тестировщика"></a>
+        <a href="#devsecops" class="nav-dot" aria-label="DevSecOps"></a>
+        <a href="#practice" class="nav-dot" aria-label="Практика GitHub Actions"></a>
+        <a href="#homework" class="nav-dot" aria-label="ДЗ"></a>
+        <a href="#outro" class="nav-dot" aria-label="Финал курса"></a>
+    </nav>
+
+    <main>
+        <!-- HERO -->
+        <section id="hero" class="section hero">
+            <div class="container">
+                <div class="hero-content">
+                    <span class="badge">Тринадцатая лекция · 05 марта 2026</span>
+                    <h1>Культура, автоматизация, <span class="gradient-text">конвейер</span></h1>
+                    <h2>CI/CD, мониторинг, инфраструктура как код</h2>
+                    <div class="lector">
+                        <div class="avatar">
+                            <i class="fas fa-infinity"></i>
+                        </div>
+                        <div class="lector-info">
+                            <p class="lector-name">Мяги Кирилл Александрович</p>
+                            <p class="lector-desc">DevOps · CI/CD · Автоматизация</p>
+                        </div>
+                    </div>
+                    <blockquote class="hero-quote">
+                        «DevOps — это не инструмент и не должность. <span style="color:var(--accent);">Это культура совместной ответственности</span>»
+                    </blockquote>
+                    <div class="scroll-hint">
+                        <span>Листайте к конвейеру</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-grid"></div>
+        </section>
+
+        <!-- ЧТО ТАКОЕ DEVOPS -->
+        <section id="devops-def" class="section devops-def">
+            <div class="container">
+                <div class="split-layout">
+                    <div class="split-text">
+                        <span class="section-subtitle">Определение</span>
+                        <h2>DevOps — культура и практики</h2>
+                        <p>DevOps объединяет разработку (Development) и эксплуатацию (Operations). Цель: сократить время от идеи до продакшена, сохраняя качество и надёжность.</p>
+                        <p class="highlight-text">Ключевые принципы: автоматизация всего, непрерывная интеграция и доставка, совместная ответственность, быстрая обратная связь, мониторинг и логирование.</p>
+                    </div>
+                    <div class="split-image">
+                        <i class="fas fa-arrows-rotate"></i>
+                        <i class="fas fa-chart-gantt"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- КОНВЕЙЕР CI/CD (ЭТАПЫ) -->
+        <section id="pipeline" class="section pipeline">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">От коммита до продакшена</span>
+                    <h2>Конвейер DevOps</h2>
+                </div>
+                <div class="pipeline-flow">
+                    <div class="pipeline-stage">
+                        <i class="fas fa-code-branch"></i>
+                        <h4>Хранение кода</h4>
+                        <p>Git, GitHub, GitLab</p>
+                    </div>
+                    <i class="fas fa-arrow-right"></i>
+                    <div class="pipeline-stage">
+                        <i class="fas fa-cogs"></i>
+                        <h4>CI (сборка, тесты)</h4>
+                        <p>Jenkins, GitHub Actions, GitLab CI</p>
+                    </div>
+                    <i class="fas fa-arrow-right"></i>
+                    <div class="pipeline-stage">
+                        <i class="fas fa-archive"></i>
+                        <h4>Артефакты</h4>
+                        <p>Nexus, Artifactory, Docker Hub</p>
+                    </div>
+                    <i class="fas fa-arrow-right"></i>
+                    <div class="pipeline-stage">
+                        <i class="fas fa-rocket"></i>
+                        <h4>CD / деплой</h4>
+                        <p>Ansible, Terraform, Kubernetes</p>
+                    </div>
+                    <i class="fas fa-arrow-right"></i>
+                    <div class="pipeline-stage">
+                        <i class="fas fa-chart-line"></i>
+                        <h4>Мониторинг и логи</h4>
+                        <p>Prometheus, Grafana, ELK</p>
+                    </div>
+                </div>
+                <div class="pipeline-note">
+                    <p>На каждом этапе — свои инструменты и автоматизация. Тестирование встроено во все этапы.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ИНСТРУМЕНТЫ ПО ЭТАПАМ (подробнее) -->
+        <section id="tools" class="section tools">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Экосистема</span>
+                    <h2>Инструментарий DevOps</h2>
+                </div>
+                <div class="tools-grid">
+                    <div class="tool-category">
+                        <h3><i class="fas fa-code"></i> Управление версиями</h3>
+                        <div class="tool-icons">
+                            <span><i class="fab fa-git-alt"></i> Git</span>
+                            <span><i class="fab fa-github"></i> GitHub</span>
+                            <span><i class="fab fa-gitlab"></i> GitLab</span>
+                        </div>
+                    </div>
+                    <div class="tool-category">
+                        <h3><i class="fas fa-cogs"></i> CI/CD</h3>
+                        <div class="tool-icons">
+                            <span><i class="fab fa-jenkins"></i> Jenkins</span>
+                            <span><i class="fab fa-github"></i> Actions</span>
+                            <span><i class="fab fa-gitlab"></i> GitLab CI</span>
+                            <span>TeamCity</span>
+                        </div>
+                    </div>
+                    <div class="tool-category">
+                        <h3><i class="fas fa-box"></i> Артефакты</h3>
+                        <div class="tool-icons">
+                            <span>Nexus</span>
+                            <span>Artifactory</span>
+                            <span>Docker Hub</span>
+                        </div>
+                    </div>
+                    <div class="tool-category">
+                        <h3><i class="fas fa-container-storage"></i> Контейнеризация</h3>
+                        <div class="tool-icons">
+                            <span><i class="fab fa-docker"></i> Docker</span>
+                            <span>Kubernetes</span>
+                        </div>
+                    </div>
+                    <div class="tool-category">
+                        <h3><i class="fas fa-screwdriver-wrench"></i> Управление конфигурацией</h3>
+                        <div class="tool-icons">
+                            <span>Ansible</span>
+                            <span>Puppet</span>
+                            <span>Chef</span>
+                            <span>Terraform</span>
+                        </div>
+                    </div>
+                    <div class="tool-category">
+                        <h3><i class="fas fa-eye"></i> Мониторинг и логи</h3>
+                        <div class="tool-icons">
+                            <span>Prometheus</span>
+                            <span>Grafana</span>
+                            <span>ELK</span>
+                            <span>Sentry</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- РОЛЬ ТЕСТИРОВЩИКА В DEVOPS -->
+        <section id="qa-role" class="section qa-role">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Новая роль</span>
+                    <h2>Тестировщик в DevOps-мире</h2>
+                </div>
+                <div class="role-grid">
+                    <div class="role-card">
+                        <i class="fas fa-code"></i>
+                        <h4>Пишет код тестов</h4>
+                        <p>Модульные, API, UI-тесты — в том же репозитории, что и продукт.</p>
+                    </div>
+                    <div class="role-card">
+                        <i class="fas fa-gears"></i>
+                        <h4>Настраивает пайплайны</h4>
+                        <p>Участвует в написании скриптов CI/CD, добавляет этапы тестирования.</p>
+                    </div>
+                    <div class="role-card">
+                        <i class="fas fa-chart-simple"></i>
+                        <h4>Анализирует результаты</h4>
+                        <p>Смотрит отчёты тестов в CI, отличает баги от flaky-тестов.</p>
+                    </div>
+                    <div class="role-card">
+                        <i class="fas fa-code-review"></i>
+                        <h4>Участвует в код-ревью</h4>
+                        <p>Проверяет не только код продукта, но и код тестов.</p>
+                    </div>
+                    <div class="role-card">
+                        <i class="fas fa-chart-line"></i>
+                        <h4>Работает с логами и метриками</h4>
+                        <p>Использует данные продакшена для улучшения тестового покрытия.</p>
+                    </div>
+                    <div class="role-card">
+                        <i class="fas fa-shield"></i>
+                        <h4>Внедряет безопасность</h4>
+                        <p>Добавляет в пайплайн сканеры уязвимостей (SAST, DAST).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DEVSECOPS -->
+        <section id="devsecops" class="section devsecops">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Безопасность встроена</span>
+                    <h2>DevSecOps: безопасность в пайплайне</h2>
+                </div>
+                <div class="secops-grid">
+                    <div class="secops-item">
+                        <i class="fas fa-magnifying-glass"></i>
+                        <h4>SAST</h4>
+                        <p>Статический анализ кода (SonarQube, Checkmarx) на каждый коммит.</p>
+                    </div>
+                    <div class="secops-item">
+                        <i class="fas fa-network-wired"></i>
+                        <h4>DAST</h4>
+                        <p>Динамическое сканирование работающего приложения (OWASP ZAP).</p>
+                    </div>
+                    <div class="secops-item">
+                        <i class="fas fa-box"></i>
+                        <h4>SCA</h4>
+                        <p>Анализ зависимостей (Snyk, OWASP Dependency-Check).</p>
+                    </div>
+                </div>
+                <p class="secops-quote">Задача тестировщика — настроить эти инструменты так, чтобы они ловили реальные уязвимости, но не блокировали разработку ложными срабатываниями.</p>
+            </div>
+        </section>
+
+        <!-- ПРАКТИКА: GITHUB ACTIONS -->
+        <section id="practice" class="section practice">
+            <div class="container">
+                <div class="practice-box">
+                    <span class="badge">Практика · GitHub Actions</span>
+                    <h2>Создаём простой CI/CD пайплайн</h2>
+                    <p>Добавьте в корень репозитория файл <code>.github/workflows/ci.yml</code>:</p>
+                    <div class="code-block">
+                        <pre><code>name: CI
+on: [push]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Lint
+        run: echo "Linting..." # замените на реальную команду
+      - name: Run unit tests
+        run: echo "Running tests..."</code></pre>
+                    </div>
+                    <p>После пуша перейдите на вкладку Actions в репозитории — увидите выполнение workflow.</p>
+                    <p class="practice-note">Это начало большого пути: сюда можно добавлять реальные тесты, статический анализ, сборку Docker, деплой.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ДОМАШНЕЕ ЗАДАНИЕ -->
+        <section id="homework" class="section homework">
+            <div class="container">
+                <div class="homework-box">
+                    <span class="badge">ДЗ · Лекция 13</span>
+                    <h2>Ваш первый CI/CD workflow</h2>
+                    <div class="homework-parts">
+                        <div class="hw-part">
+                            <i class="fas fa-code-branch"></i>
+                            <h3>Практическая часть</h3>
+                            <p>Создать в своём репозитории GitHub workflow (файл .github/workflows/main.yml), который запускается при push в main и выполняет хотя бы два действия (например, линтинг и один тест).</p>
+                        </div>
+                        <div class="hw-part">
+                            <i class="fas fa-file-lines"></i>
+                            <h3>Теоретическая часть</h3>
+                            <p>Написать краткий отчёт (страница текста): какие ещё шаги вы бы добавили в пайплайн для своего проекта (тесты, безопасность, деплой) и почему.</p>
+                        </div>
+                    </div>
+                    <div class="hw-deadline">
+                        <i class="fas fa-hourglass-half"></i> Финальная встреча — обсуждаем итоги курса.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ЗАКЛЮЧЕНИЕ КУРСА -->
+        <section id="outro" class="section outro">
+            <div class="container">
+                <div class="outro-box">
+                    <h2>Курс завершён — вы готовы к реальным проектам!</h2>
+                    <div class="outro-grid">
+                        <div class="outro-item">
+                            <i class="fas fa-infinity"></i>
+                            <span>DevOps-культура</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-tools"></i>
+                            <span>Инструменты CI/CD</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-user-check"></i>
+                            <span>Новая роль тестировщика</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-shield"></i>
+                            <span>DevSecOps</span>
+                        </div>
+                    </div>
+                    <p class="outro-message">Вы прошли путь от ручного тестирования до понимания того, как тестирование встраивается в современный процесс разработки. Теперь вы — инженеры по качеству, готовые к вызовам индустрии. Спасибо за курс!</p>
+                    <div class="questions">
+                        <i class="fas fa-question-circle"></i>
+                        <h3>Вопросы?</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Курс «Тестирование информационных систем» · Кирилл Мяги · Лекция 13</p>
+            <p class="footer-small">Инструментарий DevOps</p>
+        </div>
+    </footer>
+</body>
+</html>
