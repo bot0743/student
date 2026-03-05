@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кирилл Мяги · Лекция 14 · Итоги и карьера</title>
+    <!-- Google Fonts & Font Awesome 6 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- боковая навигация -->
+    <nav class="slide-nav">
+        <a href="#hero" class="nav-dot" aria-label="Вступление"></a>
+        <a href="#journey" class="nav-dot" aria-label="Пройденный путь"></a>
+        <a href="#roles" class="nav-dot" aria-label="Роли в тестировании"></a>
+        <a href="#superpowers" class="nav-dot" aria-label="Ваши суперсилы"></a>
+        <a href="#next-steps" class="nav-dot" aria-label="Что дальше"></a>
+        <a href="#interview" class="nav-dot" aria-label="Собеседования"></a>
+        <a href="#stats" class="nav-dot" aria-label="Статистика курса"></a>
+        <a href="#outro" class="nav-dot" aria-label="Напутствие"></a>
+    </nav>
+
+    <main>
+        <!-- HERO -->
+        <section id="hero" class="section hero">
+            <div class="container">
+                <div class="hero-content">
+                    <span class="badge">Четырнадцатая лекция · 05 марта 2026</span>
+                    <h1>От новичка до <span class="gradient-text">профессионала</span></h1>
+                    <h2>Итоги курса, карьерные ориентиры, будущее</h2>
+                    <div class="lector">
+                        <div class="avatar">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div class="lector-info">
+                            <p class="lector-name">Мяги Кирилл Александрович</p>
+                            <p class="lector-desc">Благодарность и напутствие</p>
+                        </div>
+                    </div>
+                    <blockquote class="hero-quote">
+                        «Тестирование — это не просто профессия, это образ мышления. <span style="color:var(--accent);">Вы им овладели</span>»
+                    </blockquote>
+                    <div class="scroll-hint">
+                        <span>Листайте к итогам</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-grid"></div>
+        </section>
+
+        <!-- ПРОЙДЕННЫЙ ПУТЬ (ТАЙМЛАЙН) -->
+        <section id="journey" class="section journey">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">17 лекций, 17 практик</span>
+                    <h2>Наш путь за семестр</h2>
+                </div>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <span class="timeline-badge">1</span>
+                        <div class="timeline-content">
+                            <h3>Введение в тестирование</h3>
+                            <p>Роли в команде, жизненный цикл бага, Git.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-badge">2</span>
+                        <div class="timeline-content">
+                            <h3>Тест-кейсы и баг-репорты</h3>
+                            <p>Чек-листы, тест-кейсы, граничные значения, классы эквивалентности.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-badge">3</span>
+                        <div class="timeline-content">
+                            <h3>Инструменты анализа качества</h3>
+                            <p>Unit-тесты, SonarQube, исключения.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-badge">4</span>
+                        <div class="timeline-content">
+                            <h3>Виды тестирования, API, Postman</h3>
+                            <p>Интеграционное тестирование, REST, коллекции, автотесты.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-badge">5</span>
+                        <div class="timeline-content">
+                            <h3>UI-тестирование, Selenium, PageObject</h3>
+                            <p>Ручное, DevTools, автоматизация, паттерн PageObject.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-badge">6</span>
+                        <div class="timeline-content">
+                            <h3>Исключения, SQL, безопасность</h3>
+                            <p>try-catch, stack trace, SQL-инъекции, параметризация.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-badge">7</span>
+                        <div class="timeline-content">
+                            <h3>Конфигурационное тестирование</h3>
+                            <p>Браузеры, ОС, региональные настройки, pairwise.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-badge">8</span>
+                        <div class="timeline-content">
+                            <h3>Тестирование безопасности</h3>
+                            <p>OWASP Top 10, OWASP ZAP, IDOR, XSS, CSRF.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-badge">9</span>
+                        <div class="timeline-content">
+                            <h3>Нагрузочное тестирование</h3>
+                            <p>JMeter, метрики, виды тестов, связь с безопасностью.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-badge">10</span>
+                        <div class="timeline-content">
+                            <h3>Тестирование установки и миграций</h3>
+                            <p>Инсталляторы, обновление, удаление, безопасность.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-badge">11</span>
+                        <div class="timeline-content">
+                            <h3>Метрики в тестировании</h3>
+                            <p>Критерии готовности, дефекты, покрытие, процессы.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-badge">12</span>
+                        <div class="timeline-content">
+                            <h3>Реинжиниринг и автоматизация</h3>
+                            <p>Пирамида тестирования, ROI, CI/CD.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-badge">13</span>
+                        <div class="timeline-content">
+                            <h3>Инструментарий DevOps</h3>
+                            <p>CI/CD конвейер, GitHub Actions, DevSecOps.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item current">
+                        <span class="timeline-badge">14</span>
+                        <div class="timeline-content">
+                            <h3>Итоги и карьера</h3>
+                            <p>Роли в индустрии, портфолио, развитие, собеседования.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- РОЛИ В ТЕСТИРОВАНИИ -->
+        <section id="roles" class="section roles">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Кем вы можете стать</span>
+                    <h2>Карьерные роли</h2>
+                </div>
+                <div class="roles-grid">
+                    <div class="role-card">
+                        <i class="fas fa-mouse-pointer"></i>
+                        <h3>Manual QA</h3>
+                        <p>Ручное тестирование, анализ требований, тест-кейсы, баг-репорты.</p>
+                        <div class="role-level">★ Готовы</div>
+                    </div>
+                    <div class="role-card">
+                        <i class="fas fa-robot"></i>
+                        <h3>Automation QA</h3>
+                        <p>Postman, Selenium, PageObject, CI/CD интеграция.</p>
+                        <div class="role-level">★★ Базовый уровень</div>
+                    </div>
+                    <div class="role-card">
+                        <i class="fas fa-shield"></i>
+                        <h3>Security QA / Pentester</h3>
+                        <p>OWASP Top 10, ZAP, SQLi, XSS, безопасность в CI/CD.</p>
+                        <div class="role-level">★★ Старт</div>
+                    </div>
+                    <div class="role-card">
+                        <i class="fas fa-gauge-high"></i>
+                        <h3>Performance QA</h3>
+                        <p>JMeter, нагрузка, метрики, стресс-тестирование.</p>
+                        <div class="role-level">★ Основы</div>
+                    </div>
+                    <div class="role-card">
+                        <i class="fas fa-code"></i>
+                        <h3>SDET</h3>
+                        <p>Разработка фреймворков, инфраструктура тестирования, DevOps.</p>
+                        <div class="role-level">★ Первые шаги</div>
+                    </div>
+                    <div class="role-card">
+                        <i class="fas fa-infinity"></i>
+                        <h3>DevOps-инженер</h3>
+                        <p>Git, CI/CD, Docker, мониторинг (база заложена).</p>
+                        <div class="role-level">★ Фундамент</div>
+                    </div>
+                </div>
+                <p class="roles-note">Вы не обязаны выбирать одну роль навсегда — можно расти и меняться.</p>
+            </div>
+        </section>
+
+        <!-- ВАШИ СУПЕРСИЛЫ (ТЕСТИРОВАНИЕ + БЕЗОПАСНОСТЬ) -->
+        <section id="superpowers" class="section superpowers">
+            <div class="container">
+                <div class="split-layout">
+                    <div class="split-text">
+                        <span class="section-subtitle">Уникальная комбинация</span>
+                        <h2>Ваше преимущество</h2>
+                        <p>Вы сочетаете глубокие знания тестирования с компетенциями в области компьютерной безопасности. Это редкость на рынке.</p>
+                        <ul class="super-list">
+                            <li><i class="fas fa-bug"></i> Функциональный тестировщик с пониманием уязвимостей</li>
+                            <li><i class="fas fa-robot"></i> Автоматизатор, пишущий тесты на XSS и SQLi</li>
+                            <li><i class="fas fa-chart-line"></i> Инженер по нагрузке, учитывающий DoS-риски</li>
+                            <li><i class="fas fa-shield"></i> Security-специалист, встроенный в процесс разработки</li>
+                        </ul>
+                    </div>
+                    <div class="split-image">
+                        <i class="fas fa-medal"></i>
+                        <i class="fas fa-shield-halved"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ЧТО ДАЛЬШЕ? (ПОРТФОЛИО, СЕРТИФИКАЦИИ, OPEN SOURCE) -->
+        <section id="next-steps" class="section next-steps">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Развитие после курса</span>
+                    <h2>Куда двигаться</h2>
+                </div>
+                <div class="steps-grid">
+                    <div class="step-item">
+                        <i class="fas fa-folder-open"></i>
+                        <h3>Портфолио на GitHub</h3>
+                        <p>Причешите учебный проект, добавьте README с бейджами, ссылайтесь в резюме.</p>
+                    </div>
+                    <div class="step-item">
+                        <i class="fas fa-certificate"></i>
+                        <h3>Сертификации</h3>
+                        <p>ISTQB Foundation, CompTIA Security+, в перспективе OSCP.</p>
+                    </div>
+                    <div class="step-item">
+                        <i class="fas fa-code-pull-request"></i>
+                        <h3>Open Source</h3>
+                        <p>Заводите баги, пишите тесты для проектов на GitHub.</p>
+                    </div>
+                    <div class="step-item">
+                        <i class="fas fa-users"></i>
+                        <h3>Сообщества и конференции</h3>
+                        <p>Telegram-чаты, SQA Days, Heisenbug, PHDays.</p>
+                    </div>
+                    <div class="step-item">
+                        <i class="fas fa-briefcase"></i>
+                        <h3>Стажировки и Junior-позиции</h3>
+                        <p>Не бойтесь откликаться — ваши проекты говорят сами за себя.</p>
+                    </div>
+                    <div class="step-item">
+                        <i class="fas fa-book-open"></i>
+                        <h3>Непрерывное обучение</h3>
+                        <p>Следите за новыми инструментами: Playwright, Gatling, новые уязвимости.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- КАК ПРОХОДИТЬ СОБЕСЕДОВАНИЯ -->
+        <section id="interview" class="section interview">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">Советы</span>
+                    <h2>Как успешно пройти собеседование</h2>
+                </div>
+                <div class="interview-grid">
+                    <div class="interview-card">
+                        <i class="fas fa-file-alt"></i>
+                        <h4>Резюме и портфолио</h4>
+                        <p>Опишите учебный проект как реальный опыт: что тестировали, какие инструменты, какие баги нашли.</p>
+                    </div>
+                    <div class="interview-card">
+                        <i class="fas fa-comments"></i>
+                        <h4>Техническое интервью</h4>
+                        <p>Будьте готовы рассказать о своём проекте, объяснить тест-кейсы, техники тест-дизайна.</p>
+                    </div>
+                    <div class="interview-card">
+                        <i class="fas fa-lightbulb"></i>
+                        <h4>Задачки на мышление</h4>
+                        <p>«Как тестировать чайник?» — покажите системный подход, а не заученные ответы.</p>
+                    </div>
+                    <div class="interview-card">
+                        <i class="fas fa-shield"></i>
+                        <h4>Безопасность как козырь</h4>
+                        <p>Упомяните, что знакомы с OWASP Top 10 и пробовали искать уязвимости — это выделит вас.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- СТАТИСТИКА КУРСА -->
+        <section id="stats" class="section stats">
+            <div class="container">
+                <div class="stats-box">
+                    <span class="badge">Цифры и факты</span>
+                    <h2>Мы сделали это вместе</h2>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-number">17</span>
+                            <span class="stat-label">лекций</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">17</span>
+                            <span class="stat-label">практических занятий</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">3</span>
+                            <span class="stat-label">веб-приложения</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">>100</span>
+                            <span class="stat-label">найденных багов</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">13</span>
+                            <span class="stat-label">инструментов</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">∞</span>
+                            <span class="stat-label">новых знаний</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- НАПУТСТВИЕ И БЛАГОДАРНОСТЬ -->
+        <section id="outro" class="section outro">
+            <div class="container">
+                <div class="outro-box">
+                    <h2>Спасибо за семестр!</h2>
+                    <div class="outro-grid">
+                        <div class="outro-item">
+                            <i class="fas fa-heart"></i>
+                            <span>Благодарность за труд</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-rocket"></i>
+                            <span>Удачи в карьере</span>
+                        </div>
+                        <div class="outro-item">
+                            <i class="fas fa-lightbulb"></i>
+                            <span>Никогда не останавливайтесь</span>
+                        </div>
+                    </div>
+                    <p class="outro-message">Вы прошли огромный путь. Теперь вы — инженеры по качеству с уникальным профилем. Вперёд к новым вершинам!</p>
+                    <div class="questions">
+                        <i class="fas fa-question-circle"></i>
+                        <h3>Вопросы?</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Курс «Тестирование информационных систем» · Кирилл Мяги · Лекция 14</p>
+            <p class="footer-small">Итоги и карьера</p>
+        </div>
+    </footer>
+</body>
+</html>
