@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Кирилл Мяги · Лекция 14 · От разработки до доставки</title>
+    <!-- Google Fonts & Font Awesome 6 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* RESET & GLOBAL */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0c0f;
+            color: #e6f1ff;
+            line-height: 1.5;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* каждый слайд — ровно 100vh */
+        .slide {
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem 2rem;
+            position: relative;
+            border-bottom: 1px solid rgba(46, 204, 113, 0.2);
+            scroll-snap-align: start;
+        }
+
+        /* контейнер контента с ограничением ширины */
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* заголовки, отступы */
+        h1 {
+            font-size: clamp(2.2rem, 8vw, 4.5rem);
+            font-weight: 800;
+            line-height: 1.2;
+            background: linear-gradient(135deg, #ffffff, #a8e6cf);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1.5rem;
+        }
+
+        h2 {
+            font-size: clamp(1.8rem, 5vw, 2.8rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #2ecc71;
+        }
+
+        h3 {
+            font-size: clamp(1.3rem, 4vw, 1.8rem);
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(46, 204, 113, 0.15);
+            border: 1px solid #2ecc71;
+            color: #2ecc71;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 1.5rem;
+        }
+
+        .grid-2, .scenarios-grid, .release-grid, .plan-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .card {
+            background: rgba(21, 24, 30, 0.8);
+            backdrop-filter: blur(4px);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.2s;
+        }
+
+        .card:hover {
+            border-color: #2ecc71;
+            transform: translateY(-4px);
+        }
+
+        .card i {
+            font-size: 2rem;
+            color: #2ecc71;
+            margin-bottom: 1rem;
+        }
+
+        .code-block {
+            background: #1e1e2f;
+            border-radius: 1rem;
+            padding: 1rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            overflow-x: auto;
+            border-left: 4px solid #2ecc71;
+            margin: 1rem 0;
+        }
+
+        .btn-icon {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #2ecc71;
+            color: #0a0c0f;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            text-decoration: none;
+            margin-top: 1rem;
+        }
+
+        /* навигационные точки */
+        .slide-nav {
+            position: fixed;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            z-index: 100;
+        }
+
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transition: 0.2s;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .nav-dot.active {
+            background: #2ecc71;
+            transform: scale(1.3);
+            box-shadow: 0 0 12px #2ecc71;
+        }
+
+        .nav-dot:hover {
+            background: #2ecc71;
+        }
+
+        /* футер для каждого слайда (необязательно) */
+        .slide-footer {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #5a6e7a;
+        }
+
+        /* адаптивность текста */
+        p, li {
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            color: #cbd5e1;
+        }
+
+        ul {
+            padding-left: 1.2rem;
+        }
+
+        li {
+            margin: 0.5rem 0;
+        }
+
+        /* скролл снаппинг */
+        html {
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
+
+        .slide {
+            scroll-snap-align: start;
+        }
+
+        /* для мобильных точек не мешаем */
+        @media (max-width: 768px) {
+            .slide-nav {
+                right: 0.8rem;
+                gap: 0.6rem;
+            }
+            .nav-dot {
+                width: 8px;
+                height: 8px;
+            }
+            .container {
+                padding: 0 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- навигация (будет заполнена скриптом) -->
+    <div class="slide-nav" id="slide-nav"></div>
+
+    <!-- СЛАЙД 1: Вступление -->
+    <section class="slide" id="slide1">
+        <div class="container">
+            <span class="badge">Лекция · Релизные практики</span>
+            <h1>От разработки до доставки</h1>
+            <p style="font-size: clamp(1.2rem, 3vw, 1.6rem); margin-bottom: 1rem;">Тестирование установки, CI/CD и релизные критерии</p>
+            <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin: 2rem 0;">
+                <i class="fas fa-cubes" style="font-size: 2.5rem; color: #2ecc71;"></i>
+                <div>
+                    <p><strong>Кирилл Мяги</strong> · Компьютерная безопасность</p>
+                    <p>Python → .msi → CI/CD → надёжный релиз</p>
+                </div>
+            </div>
+            <div class="card" style="background: rgba(46,204,113,0.05); border-left: 6px solid #2ecc71;">
+                <p>Вы уже написали приложение на Python, обменялись IP, нашли баги, проверили уязвимости через OWASP ZAP, собрали первый .msi. Теперь — как довести это до промышленного качества.</p>
+            </div>
+        </div>
+        <div class="slide-footer">Кирилл Мяги · Тестирование ПО</div>
+    </section>
+
+    <!-- СЛАЙД 2: Тестирование установки — ключевые сценарии -->
+    <section class="slide" id="slide2">
+        <div class="container">
+            <span class="badge">Качество установщика</span>
+            <h2>Что проверить в .msi?</h2>
+            <div class="scenarios-grid">
+                <div class="card"><i class="fas fa-broom"></i><h3>Чистая установка</h3><p>На новую систему: папки, файлы, ярлыки, запуск.</p></div>
+                <div class="card"><i class="fas fa-arrow-up"></i><h3>Обновление (upgrade)</h3><p>Сохранение пользовательских данных и настроек.</p></div>
+                <div class="card"><i class="fas fa-trash-alt"></i><h3>Удаление</h3><p>Полное удаление без мусора (файлы, реестр).</p></div>
+                <div class="card"><i class="fas fa-folder-open"></i><h3>Нестандартный путь</h3><p>Пробелы, кириллица, диск D: — всё должно работать.</p></div>
+                <div class="card"><i class="fas fa-hdd"></i><h3>Недостаток места</h3><p>Предупреждение, отказ от копирования.</p></div>
+                <div class="card"><i class="fas fa-user-lock"></i><h3>Без прав администратора</h3><p>Запрос UAC или понятная ошибка.</p></div>
+                <div class="card"><i class="fas fa-tools"></i><h3>Восстановление (repair)</h3><p>Восстановление повреждённых файлов.</p></div>
+            </div>
+            <p class="card" style="margin-top: 1rem; background: none; text-align: center;">❗ Это минимум — задокументируйте и выполните перед каждым релизом.</p>
+        </div>
+        <div class="slide-footer">Тестирование установки — отдельная дисциплина</div>
+    </section>
+
+    <!-- СЛАЙД 3: Автоматизация тестирования установки -->
+    <section class="slide" id="slide3">
+        <div class="container">
+            <span class="badge">Shift-Left для инсталляции</span>
+            <h2>Автоматизация проверок</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <i class="fas fa-terminal"></i>
+                    <h3>PowerShell скрипты</h3>
+                    <p>Тихая установка (msiexec /i /quiet), проверка файлов, запуск тестов, удаление.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-code-branch"></i>
+                    <h3>CI/CD пайплайн</h3>
+                    <p>Каждый коммит → сборка .msi → развертывание на чистой ВМ → smoke-тесты → отчёт.</p>
+                </div>
+            </div>
+            <div class="code-block">
+                <pre style="margin:0;"># Пример PowerShell для проверки установки
+Start-Process msiexec -Wait -ArgumentList "/i app.msi /quiet"
+Test-Path "C:\Program Files\MyApp\app.exe"
+Start-Process "http://localhost:5000"
+# ... проверка статуса
+msiexec /x {product-guid} /quiet</pre>
+            </div>
+            <p>Инструменты: GitHub Actions, GitLab CI, Jenkins, Ansible.</p>
+        </div>
+        <div class="slide-footer">Автоматизация → повторяемость → уверенность</div>
+    </section>
+
+    <!-- СЛАЙД 4: CI/CD пайплайн для .msi (GitHub Actions) -->
+    <section class="slide" id="slide4">
+        <div class="container">
+            <span class="badge">Непрерывная интеграция</span>
+            <h2>Пример workflow</h2>
+            <div class="code-block">
+                <pre>name: Build and Test Installer
+on: [push]
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build .msi with WiX
+        run: candle.exe product.wxs && light.exe product.wixobj
+      - name: Install silently
+        run: msiexec /i setup.msi /quiet
+      - name: Smoke test (HTTP)
+        run: curl -f http://localhost:5000
+      - name: Uninstall
+        run: msiexec /x setup.msi /quiet</pre>
+            </div>
+            <p>✅ Бесплатно для публичных репозиториев (GitHub Actions). Каждый пуш — проверка установки.</p>
+        </div>
+        <div class="slide-footer">DevOps для тестировщика — конкурентное преимущество</div>
+    </section>
+
+    <!-- СЛАЙД 5: Критерии готовности к релизу -->
+    <section class="slide" id="slide5">
+        <div class="container">
+            <span class="badge">Релиз или нет?</span>
+            <h2>Критерии готовности установщика</h2>
+            <div class="release-grid">
+                <div class="card"><i class="fas fa-check-circle"></i> Нет блокирующих дефектов установки/удаления</div>
+                <div class="card"><i class="fas fa-check-circle"></i> Все тесты установки пройдены на целевых ОС (Win10/11)</div>
+                <div class="card"><i class="fas fa-check-circle"></i> Время установки ≤ 2 мин на типичном ПК</div>
+                <div class="card"><i class="fas fa-check-circle"></i> Цифровая подпись (Code Signing) — доверие пользователя</div>
+                <div class="card"><i class="fas fa-check-circle"></i> Сканирование OWASP ZAP и антивирусами — 0 критических уязвимостей</div>
+            </div>
+            <p style="margin-top: 1.5rem;">Если хотя бы один критерий не выполнен — релиз откладывается.</p>
+        </div>
+        <div class="slide-footer">Качество — это не случайность, это результат</div>
+    </section>
+
+    <!-- СЛАЙД 6: Цифровая подпись и безопасность -->
+    <section class="slide" id="slide6">
+        <div class="container">
+            <span class="badge">Безопасность инсталляции</span>
+            <h2>Цифровая подпись (Code Signing)</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <i class="fas fa-file-signature"></i>
+                    <h3>Зачем подпись?</h3>
+                    <p>Гарантирует, что файл не изменён после подписания. Убирает предупреждение «Неизвестный издатель». В корпоративной среде без подписи блокируется политиками.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-laptop-code"></i>
+                    <h3>Как получить?</h3>
+                    <p>Code Signing Certificate от доверенного удостоверяющего центра (Comodo, DigiCert). Подпись через signtool или встроенные средства WiX.</p>
+                </div>
+            </div>
+            <div class="code-block">
+                <pre>signtool sign /fd SHA256 /a /tr http://timestamp.digicert.com myinstaller.msi</pre>
+            </div>
+            <p>Тестировщик должен проверять, что установщик подписан и подпись действительна.</p>
+        </div>
+        <div class="slide-footer">Безопасность начинается с доверия к инсталлятору</div>
+    </section>
+
+    <!-- СЛАЙД 7: Альтернатива — контейнеризация (Docker) -->
+    <section class="slide" id="slide7">
+        <div class="container">
+            <span class="badge">Современный путь</span>
+            <h2>Docker вместо .msi</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <i class="fab fa-docker"></i>
+                    <h3>Преимущества</h3>
+                    <p>Один образ — везде одинаково. Лёгкость, масштабируемость, отсутствие проблем с зависимостями.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-vial"></i>
+                    <h3>Тестирование образа</h3>
+                    <p>Запустить контейнер → проверить порт → прогнать API-тесты. Всё автоматизируется в CI/CD.</p>
+                </div>
+            </div>
+            <div class="code-block">
+                <pre>docker build -t myapp .
+docker run -d -p 5000:5000 myapp
+curl http://localhost:5000/health</pre>
+            </div>
+            <p>Это направление — мощный шаг в карьере (DevOps, SRE).</p>
+        </div>
+        <div class="slide-footer">Контейнеризация — стандарт индустрии</div>
+    </section>
+
+    <!-- СЛАЙД 8: Как это связано с карьерой? План действий -->
+    <section class="slide" id="slide8">
+        <div class="container">
+            <span class="badge">Ваш следующий шаг</span>
+            <h2>План действий после курса</h2>
+            <div class="plan-grid">
+                <div class="card"><i class="fas fa-clipboard-list"></i><h3>1. Протестируйте .msi вручную</h3><p>Чистая, обновление, удаление, недостаток места — задокументируйте.</p></div>
+                <div class="card"><i class="fab fa-github"></i><h3>2. GitHub Actions</h3><p>Создайте workflow, который собирает .msi (хотя бы проверяет его существование).</p></div>
+                <div class="card"><i class="fas fa-robot"></i><h3>3. Smoke-тест после установки</h3><p>Автоматический HTTP-запрос к вашему приложению.</p></div>
+                <div class="card"><i class="fas fa-check-double"></i><h3>4. Критерии готовности</h3><p>Составьте свой чек-лист и сравните с отраслевым.</p></div>
+            </div>
+            <div class="card" style="background: #2ecc7110; text-align: center; margin-top: 1rem;">
+                <p>🚀 Вы уже умеете больше, чем многие джуниоры. Добавьте CI/CD — станете инженером по качеству нового поколения.</p>
+            </div>
+        </div>
+        <div class="slide-footer">Действуйте — портфолио на GitHub говорит громче резюме</div>
+    </section>
+
+    <!-- СЛАЙД 9: Заключение и вопросы -->
+    <section class="slide" id="slide9">
+        <div class="container">
+            <span class="badge">Финальный аккорд</span>
+            <h2>Спасибо за работу!</h2>
+            <div style="display: flex; justify-content: center; gap: 2rem; margin: 2rem 0; flex-wrap: wrap;">
+                <div><i class="fas fa-cube" style="font-size: 3rem; color: #2ecc71;"></i><br>.msi</div>
+                <div><i class="fas fa-chart-line" style="font-size: 3rem; color: #2ecc71;"></i><br>CI/CD</div>
+                <div><i class="fas fa-shield" style="font-size: 3rem; color: #2ecc71;"></i><br>Безопасность</div>
+                <div><i class="fab fa-docker" style="font-size: 3rem; color: #2ecc71;"></i><br>Контейнеры</div>
+            </div>
+            <p style="max-width: 700px; margin: 0 auto; text-align: center;">Тестирование установки, автоматизация пайплайнов и релизные критерии — это то, что отделяет любительский проект от промышленного. Вы теперь знаете, как это делать.</p>
+            <div style="margin-top: 2rem; text-align: center;">
+                <i class="fas fa-question-circle" style="font-size: 2rem; color: #2ecc71;"></i>
+                <p style="font-size: 1.2rem; font-weight: 600;">Вопросы?</p>
+            </div>
+        </div>
+        <div class="slide-footer">Курс «Тестирование информационных систем» · Кирилл Мяги · Лекция 15</div>
+    </section>
+
+    <script>
+        // динамическое создание точек навигации
+        const slides = document.querySelectorAll('.slide');
+        const navContainer = document.getElementById('slide-nav');
+
+        function buildNav() {
+            navContainer.innerHTML = '';
+            slides.forEach((slide, idx) => {
+                const dot = document.createElement('a');
+                dot.classList.add('nav-dot');
+                dot.href = `#slide${idx+1}`;
+                dot.setAttribute('aria-label', `Слайд ${idx+1}`);
+                dot.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    slide.scrollIntoView({ behavior: 'smooth' });
+                });
+                navContainer.appendChild(dot);
+            });
+        }
+
+        function updateActiveDot() {
+            const scrollPos = window.scrollY + window.innerHeight / 2;
+            let currentIndex = 0;
+            slides.forEach((slide, idx) => {
+                const rect = slide.getBoundingClientRect();
+                const slideTop = rect.top + window.scrollY;
+                const slideBottom = slideTop + rect.height;
+                if (scrollPos >= slideTop && scrollPos < slideBottom) {
+                    currentIndex = idx;
+                }
+            });
+            const dots = document.querySelectorAll('.nav-dot');
+            dots.forEach((dot, idx) => {
+                if (idx === currentIndex) dot.classList.add('active');
+                else dot.classList.remove('active');
+            });
+        }
+
+        buildNav();
+        window.addEventListener('scroll', updateActiveDot);
+        window.addEventListener('resize', updateActiveDot);
+        updateActiveDot();
+    </script>
+</body>
+</html>
