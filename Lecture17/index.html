@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Кирилл Мяги · Защита без компромиссов</title>
+    <!-- Google Fonts & Font Awesome 6 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0c0f;
+            color: #e6f1ff;
+            line-height: 1.5;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .slide {
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem 2rem;
+            position: relative;
+            border-bottom: 1px solid rgba(0, 188, 212, 0.2);
+            scroll-snap-align: start;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 8vw, 4rem);
+            font-weight: 800;
+            line-height: 1.2;
+            background: linear-gradient(135deg, #ffffff, #7fdbff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1.5rem;
+        }
+
+        h2 {
+            font-size: clamp(1.6rem, 5vw, 2.6rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #00bcd4;
+        }
+
+        h3 {
+            font-size: clamp(1.2rem, 4vw, 1.6rem);
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(0, 188, 212, 0.15);
+            border: 1px solid #00bcd4;
+            color: #00bcd4;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 1.5rem;
+        }
+
+        .grid-2, .principles-grid, .tech-grid, .hero-grid, .example-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .card {
+            background: rgba(21, 24, 30, 0.8);
+            backdrop-filter: blur(4px);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.2s;
+        }
+
+        .card:hover {
+            border-color: #00bcd4;
+            transform: translateY(-4px);
+        }
+
+        .card i {
+            font-size: 2rem;
+            color: #00bcd4;
+            margin-bottom: 1rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #00bcd4;
+            line-height: 1.2;
+        }
+
+        .code-block {
+            background: #1e1e2f;
+            border-radius: 1rem;
+            padding: 1rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            overflow-x: auto;
+            border-left: 4px solid #00bcd4;
+            margin: 1rem 0;
+        }
+
+        .slide-footer {
+            position: absolute;
+            bottom: 1rem;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #5a6e7a;
+        }
+
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transition: 0.2s;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .nav-dot.active {
+            background: #00bcd4;
+            transform: scale(1.3);
+            box-shadow: 0 0 12px #00bcd4;
+        }
+
+        .nav-dot:hover {
+            background: #00bcd4;
+        }
+
+        .slide-nav {
+            position: fixed;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            z-index: 100;
+        }
+
+        html {
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
+
+        .slide {
+            scroll-snap-align: start;
+        }
+
+        @media (max-width: 768px) {
+            .slide-nav {
+                right: 0.8rem;
+                gap: 0.6rem;
+            }
+            .nav-dot {
+                width: 8px;
+                height: 8px;
+            }
+            .container {
+                padding: 0 1rem;
+            }
+        }
+
+        ul, p {
+            font-size: clamp(0.9rem, 2.5vw, 1.05rem);
+            color: #cbd5e1;
+        }
+
+        li {
+            margin: 0.5rem 0;
+        }
+
+        .quote {
+            font-style: italic;
+            border-left: 4px solid #00bcd4;
+            padding-left: 1.5rem;
+            margin: 1.5rem 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="slide-nav" id="slide-nav"></div>
+
+    <!-- Слайд 1: Вступление — путь от багов к защите -->
+    <section class="slide" id="slide1">
+        <div class="container">
+            <span class="badge">Финальная лекция</span>
+            <h1>Идеальной защиты не существует</h1>
+            <p style="font-size: clamp(1.1rem, 3vw, 1.5rem); margin-bottom: 1rem;">Но мы можем сделать атаку невозможной для человека</p>
+            <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin: 2rem 0;">
+                <i class="fas fa-shield-halved" style="font-size: 2.5rem; color: #00bcd4;"></i>
+                <div>
+                    <p><strong>Кирилл Мяги</strong> · Компьютерная безопасность</p>
+                    <p>Security by Design, региональные центры, истории успеха</p>
+                </div>
+            </div>
+            <div class="card" style="background: rgba(0,188,212,0.05); border-left: 6px solid #00bcd4;">
+                <p>Вы прошли путь от поиска багов до охоты за уязвимостями. Теперь — время строить неприступные системы.</p>
+            </div>
+        </div>
+        <div class="slide-footer">Курс «Тестирование ПО» · Кирилл Мяги</div>
+    </section>
+
+    <!-- Слайд 2: Security by Design (конструктивная безопасность) -->
+    <section class="slide" id="slide2">
+        <div class="container">
+            <span class="badge">ГОСТ Р 72118-2025</span>
+            <h2>Security by Design</h2>
+            <p>Безопасность должна закладываться в архитектуру на этапе проектирования, а не прикручиваться после. Иначе — как подушка безопасности в уже выехавший автомобиль.</p>
+            <div class="principles-grid">
+                <div class="card"><i class="fas fa-lock"></i><h3>Secure by Default</h3><p>Максимально жесткие настройки «из коробки», отключены лишние сервисы.</p></div>
+                <div class="card"><i class="fas fa-layer-group"></i><h3>Defense in Depth</h3><p>Эшелонированная защита: несколько уровней, чтобы после взлома одного хакер упёрся в следующий.</p></div>
+                <div class="card"><i class="fas fa-user-tag"></i><h3>Least Privilege</h3><p>Минимум прав для каждого пользователя и процесса — ни битом больше.</p></div>
+                <div class="card"><i class="fas fa-bullseye"></i><h3>Минимизация поверхности атаки</h3><p>Чем меньше открытых портов и сервисов, тем меньше лазеек.</p></div>
+            </div>
+        </div>
+        <div class="slide-footer">Моделирование угроз (Threat Modeling) — ключевой этап</div>
+    </section>
+
+    <!-- Слайд 3: Жигулевская долина — центр кибербезопасности региона -->
+    <section class="slide" id="slide3">
+        <div class="container">
+            <span class="badge">Самарская область</span>
+            <h2>Технопарк «Жигулевская долина»</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <i class="fas fa-trophy"></i>
+                    <div class="stat-number">2 место</div>
+                    <p>в национальном рейтинге технопарков России (2025)</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-users"></i>
+                    <div class="stat-number">320+</div>
+                    <p>инновационных проектов-резидентов</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-chart-line"></i>
+                    <div class="stat-number">18 млрд ₽</div>
+                    <p>выручка резидентов за 2024 год</p>
+                </div>
+            </div>
+            <p>Здесь разрабатываются технологии будущего, а кибербезопасность — один из приоритетов.</p>
+        </div>
+        <div class="slide-footer">Флагман инноваций в Поволжье</div>
+    </section>
+
+    <!-- Слайд 4: Компания «ТхеОол» и другие резиденты -->
+    <section class="slide" id="slide4">
+        <div class="container">
+            <span class="badge">Резиденты кибербезопасности</span>
+            <h2>«ТхеОол» — сверхбезопасная экосистема</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <i class="fas fa-microchip"></i>
+                    <h3>Уникальная разработка</h3>
+                    <p>В 2023 году на Skolkovo CyberDay представили экосистему, защищающую данные от всех видов захвата.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-database"></i>
+                    <h3>ЦОД правительства Самарской области</h3>
+                    <p>В 2024 году закуплено новое оборудование для защиты госинформресурсов. Серверная большинства государственных систем региона.</p>
+                </div>
+            </div>
+            <p>Региональный уровень — не абстракция. Здесь защищают реальные данные жителей и бизнеса.</p>
+        </div>
+        <div class="slide-footer">Безопасность — основа цифрового суверенитета</div>
+    </section>
+
+    <!-- Слайд 5: Примеры защиты — Лаборатория Касперского против Equation Group -->
+    <section class="slide" id="slide5">
+        <div class="container">
+            <span class="badge">Щит сильнее меча</span>
+            <h2>ProjectSauron vs Лаборатория Касперского</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <i class="fas fa-virus"></i>
+                    <h3>Сложнейшая APT</h3>
+                    <p>Шпионская платформа, поражавшая правительства и посольства, «засыпала» в нерабочее время, оставаясь незамеченной годами.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-microscope"></i>
+                    <h3>Результат расследования</h3>
+                    <p>«Лаборатория Касперского» не только обнаружила вирус, но и выявила все командные центры, уничтожив инструментарий группировки глобально.</p>
+                </div>
+            </div>
+            <div class="quote">
+                «Атака была не просто отражена — она была обезврежена на глобальном уровне, злоумышленники лишились своих самых дорогих активов — разработанных эксплойтов».
+            </div>
+        </div>
+        <div class="slide-footer">Успех, изменивший правила игры</div>
+    </section>
+
+    <!-- Слайд 6: Защита финансовых систем (UEBA, 5 млрд рублей) -->
+    <section class="slide" id="slide6">
+        <div class="container">
+            <span class="badge">Банковская безопасность</span>
+            <h2>Поведенческий анализ спасает миллиарды</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Технология UEBA</h3>
+                    <p>Анализ поведения пользователя: нехарактерные действия (перевод на новые счета в необычное время) автоматически блокируются.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-ruble-sign"></i>
+                    <h3>5 миллиардов рублей</h3>
+                    <p>Именно столько удалось предотвратить кражу в 2020 году одной из крупнейших российских финансовых групп благодаря UEBA.</p>
+                </div>
+            </div>
+            <p>Архитектура, которая сама распознаёт аномалию и наносит упреждающий удар — пример грамотного Security by Design.</p>
+        </div>
+        <div class="slide-footer">Деньги остались в системе, преступники обезврежены</div>
+    </section>
+
+    <!-- Слайд 7: Ликвидация REvil (ФСБ, обыски, аресты) -->
+    <section class="slide" id="slide7">
+        <div class="container">
+            <span class="badge">Правосудие в действии</span>
+            <h2>Ликвидация группировки REvil</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <i class="fas fa-gavel"></i>
+                    <h3>Задержания и обыски</h3>
+                    <p>2022 год, ФСБ России — 25 адресов, 14 задержанных членов REvil. Изъято криптовалюты на 500 млн рублей, арестовано 426 млн рублей на счетах.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-skull-crossbones"></i>
+                    <h3>REvil — это кто?</h3>
+                    <p>Группировка, стоящая за атакой на Colonial Pipeline (выкуп $4,4 млн) и на JBS — крупнейшего производителя мяса в мире.</p>
+                </div>
+            </div>
+            <p>Инфраструктура уничтожена, преступники за решёткой. Это — результат работы ИБ-сообщества и правоохранителей.</p>
+        </div>
+        <div class="slide-footer">Киберпреступность имеет реальные последствия</div>
+    </section>
+
+    <!-- Слайд 8: Выбор пути — предостережение и напутствие -->
+    <section class="slide" id="slide8">
+        <div class="container">
+            <span class="badge">Главный вопрос</span>
+            <h2>По какую сторону вы?</h2>
+            <div class="grid-2">
+                <div class="card" style="border-left: 6px solid #00bcd4;">
+                    <i class="fas fa-lightbulb"></i>
+                    <h3>Созидание</h3>
+                    <p>Строить безопасные архитектуры, защищать данные, помогать бизнесу, предотвращать катастрофы. Высокая зарплата, уважение, спокойная совесть.</p>
+                </div>
+                <div class="card" style="border-left: 6px solid #ff6b6b;">
+                    <i class="fas fa-skull"></i>
+                    <h3>Разрушение</h3>
+                    <p>Иллюзия лёгких денег, власть над чужими системами, но — реальные сроки, оперативная разработка, потеря свободы. Статья УК, задержания, тюрьма.</p>
+                </div>
+            </div>
+            <div class="quote" style="border-left-color: #ff6b6b; margin-top: 1rem;">
+                «Ваши знания — редчайший ресурс. Не позволяйте использовать его во вред. Настоящий герой — тот, кто защищает, а не взламывает».
+            </div>
+        </div>
+        <div class="slide-footer">Выбор за вами</div>
+    </section>
+
+    <!-- Слайд 9: Финальный аккорд — спасибо, вы — будущее кибербезопасности -->
+    <section class="slide" id="slide9">
+        <div class="container">
+            <span class="badge">Финал курса</span>
+            <h2>Спасибо за семестр!</h2>
+            <div style="display: flex; justify-content: center; gap: 2rem; margin: 2rem 0; flex-wrap: wrap;">
+                <div><i class="fas fa-shield" style="font-size: 3rem; color: #00bcd4;"></i><br>Security by Design</div>
+                <div><i class="fas fa-chart-line" style="font-size: 3rem; color: #00bcd4;"></i><br>Жигулёвская долина</div>
+                <div><i class="fas fa-user-secret" style="font-size: 3rem; color: #00bcd4;"></i><br>Антихакеры</div>
+                <div><i class="fas fa-gavel" style="font-size: 3rem; color: #00bcd4;"></i><br>Правосудие</div>
+            </div>
+            <p style="max-width: 700px; margin: 0 auto; text-align: center;">Вы прошли путь от поиска багов до понимания того, как строятся системы, атака на которые требует нечеловеческих усилий. Вы — будущее кибербезопасности. Созидайте.</p>
+            <div style="margin-top: 2rem; text-align: center;">
+                <i class="fas fa-question-circle" style="font-size: 2rem; color: #00bcd4;"></i>
+                <p style="font-size: 1.2rem; font-weight: 600;">Вопросы?</p>
+            </div>
+        </div>
+        <div class="slide-footer">Курс «Профессиональное тестирование ПО» · Кирилл Мяги</div>
+    </section>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const navContainer = document.getElementById('slide-nav');
+
+        function buildNav() {
+            navContainer.innerHTML = '';
+            slides.forEach((slide, idx) => {
+                const dot = document.createElement('a');
+                dot.classList.add('nav-dot');
+                dot.href = `#slide${idx+1}`;
+                dot.setAttribute('aria-label', `Слайд ${idx+1}`);
+                dot.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    slide.scrollIntoView({ behavior: 'smooth' });
+                });
+                navContainer.appendChild(dot);
+            });
+        }
+
+        function updateActiveDot() {
+            const scrollPos = window.scrollY + window.innerHeight / 2;
+            let currentIndex = 0;
+            slides.forEach((slide, idx) => {
+                const rect = slide.getBoundingClientRect();
+                const slideTop = rect.top + window.scrollY;
+                const slideBottom = slideTop + rect.height;
+                if (scrollPos >= slideTop && scrollPos < slideBottom) {
+                    currentIndex = idx;
+                }
+            });
+            const dots = document.querySelectorAll('.nav-dot');
+            dots.forEach((dot, idx) => {
+                if (idx === currentIndex) dot.classList.add('active');
+                else dot.classList.remove('active');
+            });
+        }
+
+        buildNav();
+        window.addEventListener('scroll', updateActiveDot);
+        window.addEventListener('resize', updateActiveDot);
+        updateActiveDot();
+    </script>
+</body>
+</html>
