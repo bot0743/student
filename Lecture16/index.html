@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Кирилл Мяги · Кибератаки: от Поволжья до пейджеров</title>
+    <!-- Google Fonts & Font Awesome 6 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0c0f;
+            color: #e6f1ff;
+            line-height: 1.5;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .slide {
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem 2rem;
+            position: relative;
+            border-bottom: 1px solid rgba(46, 204, 113, 0.2);
+            scroll-snap-align: start;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 8vw, 4rem);
+            font-weight: 800;
+            line-height: 1.2;
+            background: linear-gradient(135deg, #ffffff, #a8e6cf);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1.5rem;
+        }
+
+        h2 {
+            font-size: clamp(1.6rem, 5vw, 2.6rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #2ecc71;
+        }
+
+        h3 {
+            font-size: clamp(1.2rem, 4vw, 1.6rem);
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(46, 204, 113, 0.15);
+            border: 1px solid #2ecc71;
+            color: #2ecc71;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 1.5rem;
+        }
+
+        .grid-2, .stats-grid, .killchain-grid, .groups-grid, .attack-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .card {
+            background: rgba(21, 24, 30, 0.8);
+            backdrop-filter: blur(4px);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.2s;
+        }
+
+        .card:hover {
+            border-color: #2ecc71;
+            transform: translateY(-4px);
+        }
+
+        .card i {
+            font-size: 2rem;
+            color: #2ecc71;
+            margin-bottom: 1rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #2ecc71;
+            line-height: 1.2;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #a0b3cc;
+        }
+
+        .code-block {
+            background: #1e1e2f;
+            border-radius: 1rem;
+            padding: 1rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            overflow-x: auto;
+            border-left: 4px solid #2ecc71;
+            margin: 1rem 0;
+        }
+
+        .slide-footer {
+            position: absolute;
+            bottom: 1rem;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #5a6e7a;
+        }
+
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transition: 0.2s;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .nav-dot.active {
+            background: #2ecc71;
+            transform: scale(1.3);
+            box-shadow: 0 0 12px #2ecc71;
+        }
+
+        .nav-dot:hover {
+            background: #2ecc71;
+        }
+
+        .slide-nav {
+            position: fixed;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            z-index: 100;
+        }
+
+        html {
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
+
+        .slide {
+            scroll-snap-align: start;
+        }
+
+        @media (max-width: 768px) {
+            .slide-nav {
+                right: 0.8rem;
+                gap: 0.6rem;
+            }
+            .nav-dot {
+                width: 8px;
+                height: 8px;
+            }
+            .container {
+                padding: 0 1rem;
+            }
+        }
+
+        ul, p {
+            font-size: clamp(0.9rem, 2.5vw, 1.05rem);
+            color: #cbd5e1;
+        }
+
+        li {
+            margin: 0.5rem 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="slide-nav" id="slide-nav"></div>
+
+    <!-- Слайд 1: Вступление -->
+    <section class="slide" id="slide1">
+        <div class="container">
+            <span class="badge">Лекция · Реальный мир атак</span>
+            <h1>По ту сторону баррикад</h1>
+            <p style="font-size: clamp(1.1rem, 3vw, 1.5rem); margin-bottom: 1rem;">От Поволжья до взрыва пейджеров — как действуют хакеры</p>
+            <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin: 2rem 0;">
+                <i class="fas fa-shield-halved" style="font-size: 2.5rem; color: #2ecc71;"></i>
+                <div>
+                    <p><strong>Кирилл Мяги</strong> · Компьютерная безопасность</p>
+                    <p>Разведка, атаки, инфраструктура, защита</p>
+                </div>
+            </div>
+            <div class="card" style="background: rgba(46,204,113,0.05); border-left: 6px solid #2ecc71;">
+                <p>Киберпреступность — не абстракция. Она здесь, в Самарской области, и её масштаб растёт взрывными темпами. Сегодня — реальные кейсы и уроки.</p>
+            </div>
+        </div>
+        <div class="slide-footer">Курс «Тестирование ПО» · Кирилл Мяги</div>
+    </section>
+
+    <!-- Слайд 2: Статистика по Поволжью и Самарской области -->
+    <section class="slide" id="slide2">
+        <div class="container">
+            <span class="badge">Цифры за окном</span>
+            <h2>Атаки в нашем регионе</h2>
+            <div class="stats-grid">
+                <div class="card" style="text-align: center;">
+                    <div class="stat-number">>5000</div>
+                    <div class="stat-label">атак за первое полугодие 2025</div>
+                    <i class="fas fa-chart-line" style="margin-top: 0.5rem;"></i>
+                </div>
+                <div class="card" style="text-align: center;">
+                    <div class="stat-number">2.6x</div>
+                    <div class="stat-label">рост DDoS-атак в 2024 к 2023</div>
+                </div>
+                <div class="card" style="text-align: center;">
+                    <div class="stat-number">72 ч</div>
+                    <div class="stat-label">самая продолжительная атака в 2024</div>
+                </div>
+            </div>
+            <p>По данным RED Security (МТС), в IV квартале 2024 года DDoS-атаки на сферы услуг и медицины Самарской области выросли вдвое. Транспорт и IT — под ударом в ПФО (+60% в августе).</p>
+            <div class="card" style="margin-top: 1rem;">
+                <i class="fas fa-chart-simple"></i>
+                <p>Количество атак в Поволжье растёт быстрее, чем где-либо. Это новая реальность.</p>
+            </div>
+        </div>
+        <div class="slide-footer">Источник: RED Security, BI.ZONE</div>
+    </section>
+
+    <!-- Слайд 3: Атаки на компании региона -->
+    <section class="slide" id="slide3">
+        <div class="container">
+            <span class="badge">Под ударом — бизнес</span>
+            <h2>Самарские кейсы</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <i class="fas fa-store"></i>
+                    <h3>Сеть «Доброцен»</h3>
+                    <p>Июль 2025: атака на сервер, остановлены 5 офисов в 4 городах, включая Самару. Сайт и вся работа парализованы.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-plane"></i>
+                    <h3>«Аэрофлот»</h3>
+                    <p>Группировки «Киберпартизаны BY» и Silent Crow заявили о полной компрометации и уничтожении IT-инфраструктуры авиакомпании.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-prescription-bottle"></i>
+                    <h3>«Неофарм»</h3>
+                    <p>Атака на сеть аптек в тот же период — недоступность сервисов для тысяч пациентов.</p>
+                </div>
+            </div>
+            <p class="card" style="background: none;">⚠️ Крупный бизнес и социально значимые организации — основные цели.</p>
+        </div>
+        <div class="slide-footer">Источник: открытые данные, расследования</div>
+    </section>
+
+    <!-- Слайд 4: Мошенничество и схемы -->
+    <section class="slide" id="slide4">
+        <div class="container">
+            <span class="badge">Атаки на людей</span>
+            <h2>Кибермошенничество в регионе</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <i class="fas fa-phone-alt"></i>
+                    <h3>200 млн рублей</h3>
+                    <p>Похищено у жителей России группой, задержанной в Самарской области. Схема: звонок, установка поддельного банковского приложения, поднесение карты к смартфону.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-id-card"></i>
+                    <h3>Госуслуги под ударом</h3>
+                    <p>Новая схема взлома аккаунтов под видом оцифровки документов. Активно действует в регионе с конца 2025 года.</p>
+                </div>
+            </div>
+            <div class="code-block" style="margin-top: 1rem;">
+                <pre>⚠️ Важно: никогда не устанавливайте приложения по ссылке из звонка. Всегда проверяйте отправителя.</pre>
+            </div>
+        </div>
+        <div class="slide-footer">Социальная инженерия — самый частый входной вектор</div>
+    </section>
+
+    <!-- Слайд 5: Cyber Kill Chain -->
+    <section class="slide" id="slide5">
+        <div class="container">
+            <span class="badge">Модель атаки</span>
+            <h2>Cyber Kill Chain (Lockheed Martin)</h2>
+            <div class="killchain-grid" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));">
+                <div class="card"><i class="fas fa-search"></i> 1. Разведка</div>
+                <div class="card"><i class="fas fa-arrow-right"></i> 2. Создание инструмента</div>
+                <div class="card"><i class="fas fa-envelope"></i> 3. Доставка</div>
+                <div class="card"><i class="fas fa-bug"></i> 4. Эксплуатация</div>
+                <div class="card"><i class="fas fa-door-open"></i> 5. Закрепление</div>
+                <div class="card"><i class="fas fa-network-wired"></i> 6. Перемещение</div>
+                <div class="card"><i class="fas fa-database"></i> 7. Сбор и вывод</div>
+            </div>
+            <p>Каждая успешная атака проходит эти этапы. Остановить можно на любом — задача безопасности.</p>
+        </div>
+        <div class="slide-footer">Основа для построения защиты</div>
+    </section>
+
+    <!-- Слайд 6: MITRE ATT&CK и APT-группы -->
+    <section class="slide" id="slide6">
+        <div class="container">
+            <span class="badge">Тактики и техники</span>
+            <h2>MITRE ATT&CK и легендарные группировки</h2>
+            <div class="groups-grid">
+                <div class="card">
+                    <i class="fas fa-snake"></i>
+                    <h3>Turla (Secret Blizzard)</h3>
+                    <p>Российская APT, действует >25 лет. Атаковала иностранные посольства в Москве, используя СОРМ.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-skull"></i>
+                    <h3>Lazarus</h3>
+                    <p>Северная Корея. Кража $600 млн криптовалюты у Ronin Network (2022), атаки на банки, цепочки поставок.</p>
+                </div>
+            </div>
+            <p>ATT&CK — атлас реальных техник хакеров. Используется для построения обнаружения и тестирования на проникновение.</p>
+        </div>
+        <div class="slide-footer">Знать противника — значит победить</div>
+    </section>
+
+    <!-- Слайд 7: Colonial Pipeline -->
+    <section class="slide" id="slide7">
+        <div class="container">
+            <span class="badge">Инфраструктурная катастрофа</span>
+            <h2>Colonial Pipeline (2021)</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <i class="fas fa-oil-can"></i>
+                    <h3>Что случилось?</h3>
+                    <p>Крупнейший трубопровод США (45% топлива восточного побережья) остановлен на несколько дней. Паника на АЗС, дефицит топлива.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-key"></i>
+                    <h3>Причина</h3>
+                    <p>Один скомпрометированный пароль от VPN без 2FA. Группировка DarkSide проникла за несколько недель до атаки.</p>
+                </div>
+            </div>
+            <p class="card" style="background: rgba(46,204,113,0.05); margin-top: 0.5rem;">💰 Выкуп: 4,4 млн долларов в биткоинах (часть возвращена).</p>
+            <div class="code-block">Урок: двухфакторная аутентификация и мониторинг аномалий — не роскошь, а необходимость.</div>
+        </div>
+        <div class="slide-footer">Атака из-за одного пароля</div>
+    </section>
+
+    <!-- Слайд 8: SolarWinds -->
+    <section class="slide" id="slide8">
+        <div class="container">
+            <span class="badge">Атака на цепочку поставок</span>
+            <h2>SolarWinds (2020)</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <i class="fas fa-software"></i>
+                    <h3>Механизм</h3>
+                    <p>Внедрение бэкдора в легитимное обновление ПО Orion, которое используют тысячи компаний и правительств.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-building"></i>
+                    <h3>Жертвы</h3>
+                    <p>Госдеп, Минфин, Минэнерго США, Microsoft, FireEye. Вредонос распространялся с марта по июнь 2020 года.</p>
+                </div>
+            </div>
+            <p>Клиенты сами установили шпионское ПО, доверяя поставщику. Урок: верификация обновлений, изоляция, контроль целостности.</p>
+        </div>
+        <div class="slide-footer">Доверяй, но проверяй — каждое обновление</div>
+    </section>
+
+    <!-- Слайд 9: Взрыв пейджеров в Ливане -->
+    <section class="slide" id="slide9">
+        <div class="container">
+            <span class="badge">Синтез киберфизики</span>
+            <h2>Пейджеры «Хезболлы» (сентябрь 2024)</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <i class="fas fa-microchip"></i>
+                    <h3>Операция «Моссада»</h3>
+                    <p>В пейджеры тайваньского производителя Gold Apollo ещё на заводе внедрена взрывчатка (в литиевом аккумуляторе).</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-bomb"></i>
+                    <h3>Результат</h3>
+                    <p>Одновременный взрыв тысяч устройств в Бейруте и других городах. 11 погибших, ~4000 раненых.</p>
+                </div>
+            </div>
+            <p>Уязвимость: слепая вера в поставщика. Даже «низкотехнологичная» безопасность не спасает, если цепочка поставок скомпрометирована.</p>
+            <div class="card" style="background: none; margin-top: 0.5rem;">🔔 Позже аналогично взорвались и рации.</div>
+        </div>
+        <div class="slide-footer">Атака, изменившая представление о кибербезопасности</div>
+    </section>
+
+    <!-- Слайд 10: Заключение — роль тестировщиков и безопасников -->
+    <section class="slide" id="slide10">
+        <div class="container">
+            <span class="badge">Ваша миссия</span>
+            <h2>Что это значит для нас?</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <i class="fas fa-user-check"></i>
+                    <h3>Тестирование безопасности</h3>
+                    <p>Вы — те, кто ищет бреши до хакеров: проверка паролей, 2FA, инъекции, настройки прав.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-code-branch"></i>
+                    <h3>Автоматизация в CI/CD</h3>
+                    <p>Внедрение сканеров уязвимостей, проверка зависимостей, верификация подписей обновлений.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-shield"></i>
+                    <h3>Мониторинг и реагирование</h3>
+                    <p>Построение обнаружения на основе MITRE ATT&CK, анализ логов, расследование инцидентов.</p>
+                </div>
+            </div>
+            <div class="card" style="background: rgba(46,204,113,0.1); margin-top: 1rem; text-align: center;">
+                <p><strong>Вы — защитники. Каждый найденный вами баг — это потенциально спасённые миллионы и человеческие жизни.</strong></p>
+            </div>
+        </div>
+        <div class="slide-footer">Спасибо за внимание! Готовьтесь к защите проектов.</div>
+    </section>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const navContainer = document.getElementById('slide-nav');
+
+        function buildNav() {
+            navContainer.innerHTML = '';
+            slides.forEach((slide, idx) => {
+                const dot = document.createElement('a');
+                dot.classList.add('nav-dot');
+                dot.href = `#slide${idx+1}`;
+                dot.setAttribute('aria-label', `Слайд ${idx+1}`);
+                dot.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    slide.scrollIntoView({ behavior: 'smooth' });
+                });
+                navContainer.appendChild(dot);
+            });
+        }
+
+        function updateActiveDot() {
+            const scrollPos = window.scrollY + window.innerHeight / 2;
+            let currentIndex = 0;
+            slides.forEach((slide, idx) => {
+                const rect = slide.getBoundingClientRect();
+                const slideTop = rect.top + window.scrollY;
+                const slideBottom = slideTop + rect.height;
+                if (scrollPos >= slideTop && scrollPos < slideBottom) {
+                    currentIndex = idx;
+                }
+            });
+            const dots = document.querySelectorAll('.nav-dot');
+            dots.forEach((dot, idx) => {
+                if (idx === currentIndex) dot.classList.add('active');
+                else dot.classList.remove('active');
+            });
+        }
+
+        buildNav();
+        window.addEventListener('scroll', updateActiveDot);
+        window.addEventListener('resize', updateActiveDot);
+        updateActiveDot();
+    </script>
+</body>
+</html>
