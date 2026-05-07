@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Экзаменационный билет • Генератор вопросов</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle at 20% 30%, #0a0f1e, #03060c);
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            color: #eef2ff;
+        }
+
+        /* адаптация ровно под экран — гибкий контейнер */
+        .exam-container {
+            max-width: 1400px;
+            width: 100%;
+            height: auto;
+            min-height: 85vh;
+            background: rgba(18, 25, 45, 0.65);
+            backdrop-filter: blur(3px);
+            border-radius: 3rem;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* шапка — революционный акцент */
+        .hero {
+            padding: 2rem 2.5rem 1rem;
+            border-bottom: 1px solid rgba(56, 189, 248, 0.3);
+            background: linear-gradient(95deg, rgba(2, 15, 30, 0.7) 0%, rgba(0, 30, 50, 0.4) 100%);
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #FFFFFF 0%, #7dd3fc 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: #b9e2ff;
+            margin-top: 0.5rem;
+            font-weight: 400;
+            border-left: 3px solid #38bdf8;
+            padding-left: 1rem;
+        }
+
+        /* панель управления */
+        .control-bar {
+            padding: 1.5rem 2.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.2rem;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.25);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .btn {
+            border: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 0.9rem 2rem;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: transform 0.15s, background 0.2s, box-shadow 0.2s;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #1e2a3e;
+            color: #f0f9ff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary {
+            background: #0f3b5c;
+            border: 1px solid #38bdf8;
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: #1e5a7a;
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px rgba(0, 160, 255, 0.25);
+        }
+
+        .btn-secondary {
+            background: #2d3a4b;
+            border: 1px solid #5ee0fa;
+            color: #e0f2fe;
+        }
+
+        .btn-secondary:hover {
+            background: #3b4d64;
+            transform: scale(1.02);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            transform: none;
+            cursor: not-allowed;
+            filter: grayscale(0.1);
+        }
+
+        /* билетная область — читаемость, отсутствие смешения цветов */
+        .ticket-area {
+            flex: 1;
+            padding: 2rem 2.5rem;
+            overflow-y: auto;
+            max-height: 65vh;
+            scrollbar-width: thin;
+            scrollbar-color: #38bdf8 #1e2a3a;
+        }
+
+        .ticket-area::-webkit-scrollbar {
+            width: 6px;
+        }
+        .ticket-area::-webkit-scrollbar-track {
+            background: #111a28;
+            border-radius: 10px;
+        }
+        .ticket-area::-webkit-scrollbar-thumb {
+            background: #2c7da0;
+            border-radius: 10px;
+        }
+
+        /* сетка вопросов — современно, строго, отлично читается */
+        .questions-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.4rem;
+        }
+
+        .question-card {
+            background: #0f172ad9;
+            backdrop-filter: blur(2px);
+            border-left: 6px solid #38bdf8;
+            border-radius: 1.8rem;
+            padding: 1.2rem 1.8rem;
+            transition: all 0.2s;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+        }
+
+        .question-card:hover {
+            background: #111e32;
+            border-left-width: 8px;
+            transform: translateX(4px);
+        }
+
+        .question-number {
+            display: inline-block;
+            font-weight: 700;
+            font-size: 1rem;
+            background: #0a4c6e;
+            padding: 0.2rem 0.9rem;
+            border-radius: 40px;
+            letter-spacing: 0.3px;
+            margin-bottom: 0.7rem;
+            color: white;
+            box-shadow: inset 0 -1px 0 rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .question-text {
+            font-size: 1.35rem;
+            line-height: 1.45;
+            font-weight: 500;
+            word-break: break-word;
+            color: #f1f5f9;
+        }
+
+        .empty-ticket {
+            text-align: center;
+            padding: 3rem;
+            font-size: 1.3rem;
+            color: #94a3b8;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 2rem;
+            font-style: italic;
+        }
+
+        .info-badge {
+            margin-left: auto;
+            font-size: 0.85rem;
+            background: #1e2f41;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            color: #b9e6ff;
+        }
+
+        footer {
+            padding: 1rem 2.5rem;
+            font-size: 0.8rem;
+            text-align: right;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            color: #6f8faa;
+        }
+
+        @media (max-width: 700px) {
+            body { padding: 1rem; }
+            .hero h1 { font-size: 2rem; }
+            .question-text { font-size: 1.1rem; }
+            .control-bar { padding: 1rem 1.5rem; }
+            .ticket-area { padding: 1.5rem; }
+            .btn { padding: 0.7rem 1.4rem; font-size: 1rem; }
+        }
+
+        @media (max-width: 550px) {
+            .question-card { padding: 1rem; }
+            .question-text { font-size: 1rem; }
+        }
+
+        /* акцент для безсмешения цветов — высокая контрастность, без резких чистых rgb конфликтов */
+        .btn-primary, .btn-secondary {
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+<div class="exam-container">
+    <div class="hero">
+        <h1>🎓 ЭКЗАМЕНАЦИОННЫЙ БИЛЕТ</h1>
+        <p>Генератор вопросов • 3 основных + дополнительные • полная нумерация</p>
+    </div>
+    <div class="control-bar">
+        <button class="btn btn-primary" id="getTicketBtn">🎲 ПОЛУЧИТЬ БИЛЕТ</button>
+        <button class="btn btn-secondary" id="extraQuestionBtn" disabled style="display: none;">➕ ПОЛУЧИТЬ ДОПОЛНИТЕЛЬНЫЙ ВОПРОС</button>
+        <div class="info-badge">📋 105 вопросов в базе</div>
+    </div>
+
+    <div class="ticket-area" id="ticketContainer">
+        <div class="empty-ticket">
+            ⚡ Нажмите «ПОЛУЧИТЬ БИЛЕТ» — 3 случайных вопроса появятся здесь.<br>
+            Дополнительные вопросы можно добавлять сколько угодно.
+        </div>
+    </div>
+    <footer>
+        ⚡ Революционный формат • Уникальная нумерация • Без ответов — только знания
+    </footer>
+</div>
+
+<script>
+    // --------------------------------------------------------------
+    //  БАЗА ВОПРОСОВ (105 шт. полностью из файла, только вопросы)
+    // --------------------------------------------------------------
+    const QUESTIONS_DB = [
+        { num: 1, text: "Структура команды условного IT-отдела на примере строительства дома" },
+        { num: 2, text: "Что такое «дефект» и что такое «баг»?" },
+        { num: 3, text: "Жизненный цикл бага, можно на примере" },
+        { num: 4, text: "Почему важно пользоваться системой отслеживания ошибок?" },
+        { num: 5, text: "Базовые принципы Agile -- Scrum (по спринтам)" },
+        { num: 6, text: "Роль тестировщика в спринтах" },
+        { num: 7, text: "Система контроля версий Git" },
+        { num: 8, text: "Почему тестировщику жизненно необходимо понимать Git?" },
+        { num: 9, text: "Что такое исследовательское тестирование?" },
+        { num: 10, text: "Проблемы исследовательского тестирования" },
+        { num: 11, text: "С чего начинается профессиональный подход тестирования?" },
+        { num: 12, text: "Чек-лист" },
+        { num: 13, text: "Тест-кейс и отличия от чек-листа" },
+        { num: 14, text: "Из чего состоит тест-кейс?" },
+        { num: 15, text: "Классы эквивалентности и граничные значения на примере возраста в анкете" },
+        { num: 16, text: "Баг-репорт" },
+        { num: 17, text: "Серьезность и приоритет в баг-репорте, отличия" },
+        { num: 18, text: "Модуль. Модульное тестирование" },
+        { num: 19, text: "SonarQube" },
+        { num: 20, text: "Цикломатическая сложность Томаса Маккейба" },
+        { num: 21, text: "Обработка исключительных ситуаций" },
+        { num: 22, text: "Конструкция try-catch-finally при обработке исключительных ситуаций" },
+        { num: 23, text: "Классификация тестирования по уровню тестирования" },
+        { num: 24, text: "Системное тестирование" },
+        { num: 25, text: "Приемочное тестирование" },
+        { num: 26, text: "Классификация тестирования по запуску кода" },
+        { num: 27, text: "Статическое тестирование" },
+        { num: 28, text: "Динамическое тестирование" },
+        { num: 29, text: "Классификация тестирования по знанию внутреннего устройства системы" },
+        { num: 30, text: "Тестирование белого ящика + пример" },
+        { num: 31, text: "Тестирование черного ящика + пример" },
+        { num: 32, text: "Тестирование серого ящика" },
+        { num: 33, text: "Классификация тестирования по степени автоматизации" },
+        { num: 34, text: "Классификация тестирования по целям тестирования" },
+        { num: 35, text: "Интеграционное тестирование на примере строительства дома" },
+        { num: 36, text: "Стратегия интеграционного тестирования - монолитная интеграция, или «большой взрыв» (Big Bang)." },
+        { num: 37, text: "Стратегия интеграционного тестирования - нисходящая интеграция (Top-Down)." },
+        { num: 38, text: "Стратегия интеграционного тестирования - восходящая интеграция (Bottom-Up)." },
+        { num: 39, text: "Типовая архитектура веб-приложений. Расположение интеграционного тестирования." },
+        { num: 40, text: "API + риски" },
+        { num: 41, text: "Функциональное тестирование пользовательского интерфейса" },
+        { num: 42, text: "Ручное исследовательское тестирование UI" },
+        { num: 43, text: "Инструменты разработчика в браузере" },
+        { num: 44, text: "Инструменты разработчика в браузере. Elements." },
+        { num: 45, text: "Инструменты разработчика в браузере. Console" },
+        { num: 46, text: "Инструменты разработчика в браузере. Network" },
+        { num: 47, text: "Инструменты разработчика в браузере. Application" },
+        { num: 48, text: "Инструменты разработчика в браузере. Performance" },
+        { num: 49, text: "Инструменты разработчика в браузере. Lighthouse" },
+        { num: 50, text: "Исключительная ситуация в контексте работы программы" },
+        { num: 51, text: "Конструкция try-catch-finally" },
+        { num: 52, text: "Что такое «логи»?" },
+        { num: 53, text: "Транзакции в БД для тестировщика" },
+        { num: 54, text: "Конфигурационное тестирование" },
+        { num: 55, text: "Почему конфигурационное тестирование так важно и почему его выделяют в отдельный вид?" },
+        { num: 56, text: "Понятие комбинаторного взрыва" },
+        { num: 57, text: "Почему тестирование безопасности выделяют в отдельную дисциплину и почему оно так важно?" },
+        { num: 58, text: "Уязвимость" },
+        { num: 59, text: "Угроза" },
+        { num: 60, text: "Риск" },
+        { num: 61, text: "Вектор атаки" },
+        { num: 62, text: "Золотой стандарт в веб-безопасности" },
+        { num: 63, text: "Суть SQL-инъекции" },
+        { num: 64, text: "Нарушение контроля доступа (Broken Access Control)" },
+        { num: 65, text: "Криптографические ошибки (Cryptographic Failures)." },
+        { num: 66, text: "Уязвимости компонентов (Vulnerable and Outdated Components)" },
+        { num: 67, text: "Идентификация и аутентификация (Identification and Authentication Failures)" },
+        { num: 68, text: "Нецелостность данных и программного обеспечения (Software and Data Integrity Failures)" },
+        { num: 69, text: "Недостаточность логирования и мониторинга (Security Logging and Monitoring Failures)" },
+        { num: 70, text: "Подделка запросов на стороне сервера (Server-Side Request Forgery, SSRF)" },
+        { num: 71, text: "Этапы процесса тестирования безопасности" },
+        { num: 72, text: "Нагрузочное тестирование" },
+        { num: 73, text: "Стрессовое тестирование" },
+        { num: 74, text: "Объемное тестирование" },
+        { num: 75, text: "Тестирование стабильности" },
+        { num: 76, text: "Перечислить метрики нагрузочного тестирования" },
+        { num: 77, text: "Время отклика" },
+        { num: 78, text: "Пропускная способность" },
+        { num: 79, text: "Загрузка ресурсов" },
+        { num: 80, text: "Количество ошибок" },
+        { num: 81, text: "Время до первого байта (TTFB --- Time To First Byte) и время полной загрузки страницы" },
+        { num: 82, text: "Этапы нагрузочного тестирования" },
+        { num: 83, text: "Связь DDoS с нагрузочным тестированием. Защита от DDoS" },
+        { num: 84, text: "Тестирование установки (installation testing)" },
+        { num: 85, text: "Тестирование чистой установки" },
+        { num: 86, text: "Тестирование установки при наличии предыдущей версии" },
+        { num: 87, text: "Тестирование установки в нестандартных условиях" },
+        { num: 88, text: "Тестирование удаления" },
+        { num: 89, text: "Тестирование восстановления после сбоя" },
+        { num: 90, text: "Тестирование миграций" },
+        { num: 91, text: "Метрика в тестировании. Примеры" },
+        { num: 92, text: "Реинжиниринг бизнес-процессов (Business Process Reengineering, BPR)" },
+        { num: 93, text: "ФИО преподавателя и название дисциплины" },
+        { num: 94, text: "Год Крещения Руси" },
+        { num: 95, text: "Год первого полета человека в космос" },
+        { num: 96, text: "Название самого глубокого озера в мире" },
+        { num: 97, text: "Кто создал периодическую таблицу химических элементов (имя и фамилия)" },
+        { num: 98, text: "Автор автомата Калашникова (имя и фамилия)" },
+        { num: 99, text: "Год отмены крепостного права в России" },
+        { num: 100, text: "Имя полководца, командовавший «Ледовым побоищем»" },
+        { num: 101, text: "Первая женщина-космонавт СССР? (имя и фамилия)" },
+        { num: 102, text: "Главный православный храм России, расположенный в Москве" },
+        { num: 103, text: "Автор знаменитой картины «Богатыри»" },
+        { num: 104, text: "Кто из российских императоров основал Санкт-Петербург?" },
+        { num: 105, text: "Российский учёный, основоположник космонавтики" }
+    ];
+
+    // Глобальный массив текущих отображаемых вопросов (объекты {num, text})
+    let currentQuestionsList = [];
+
+    // DOM элементы
+    const ticketContainer = document.getElementById('ticketContainer');
+    const getTicketBtn = document.getElementById('getTicketBtn');
+    const extraBtn = document.getElementById('extraQuestionBtn');
+
+    // Функция рендеринга билета (чистая отрисовка массива currentQuestionsList)
+    function renderTicket() {
+        if (!currentQuestionsList.length) {
+            ticketContainer.innerHTML = `
+                <div class="empty-ticket">
+                    🎟️ Билет пуст. Нажмите «ПОЛУЧИТЬ БИЛЕТ», чтобы начать.
+                </div>
+            `;
+            return;
+        }
+
+        const questionsHtml = currentQuestionsList.map(q => `
+            <div class="question-card">
+                <div class="question-number">Вопрос № ${q.num}</div>
+                <div class="question-text">${escapeHtml(q.text)}</div>
+            </div>
+        `).join('');
+
+        ticketContainer.innerHTML = `
+            <div class="questions-grid">
+                ${questionsHtml}
+            </div>
+        `;
+    }
+
+    // простой sanitizer для защиты от XSS (хотя данные статичны, но привычка)
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+            return c;
+        });
+    }
+
+    // выбор случайных уникальных вопросов из массива (не больше длины)
+    function getRandomDistinctQuestions(count, excludeSet = new Set()) {
+        // доступные номера вопросов: все номера из БД, которых нет в excludeSet (по номеру)
+        let available = QUESTIONS_DB.filter(q => !excludeSet.has(q.num));
+        if (available.length === 0) return [];
+        if (count > available.length) count = available.length;
+        // перемешиваем копию
+        const shuffled = [...available];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled.slice(0, count);
+    }
+
+    // Получение нового дополнительного вопроса (отсутствует в текущем списке)
+    function getExtraQuestion() {
+        const existingNumbers = new Set(currentQuestionsList.map(q => q.num));
+        if (existingNumbers.size === QUESTIONS_DB.length) {
+            // все вопросы уже использованы в этом билете
+            alert('📌 В билете уже использованы все 105 вопросов! Нельзя добавить больше.');
+            return null;
+        }
+        const availableQuestions = QUESTIONS_DB.filter(q => !existingNumbers.has(q.num));
+        if (availableQuestions.length === 0) return null;
+        const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+        return availableQuestions[randomIndex];
+    }
+
+    // функция для добавления дополнительного вопроса
+    function addExtraQuestion() {
+        const newQuestion = getExtraQuestion();
+        if (!newQuestion) {
+            alert('⚠️ Все возможные вопросы уже в билете (использовано 105/105).');
+            // блокируем кнопку если достигнут лимит
+            if (currentQuestionsList.length >= QUESTIONS_DB.length) {
+                extraBtn.disabled = true;
+            }
+            return;
+        }
+        currentQuestionsList.push(newQuestion);
+        renderTicket();
+        // после добавления проверим, не достигнут ли лимит
+        if (currentQuestionsList.length >= QUESTIONS_DB.length) {
+            extraBtn.disabled = true;
+        } else {
+            extraBtn.disabled = false;
+        }
+    }
+
+    // инициализация нового билета (3 случайных уникальных вопроса)
+    function generateNewTicket() {
+        // берем 3 разных вопроса
+        let selected = getRandomDistinctQuestions(3, new Set());
+        if (selected.length < 3) {
+            // fallback, хотя вопросов 105 достаточно
+            selected = [...QUESTIONS_DB].sort(() => 0.5 - Math.random()).slice(0, 3);
+        }
+        currentQuestionsList = selected;
+        renderTicket();
+
+        // Показываем кнопку дополнительных вопросов (делаем активной)
+        extraBtn.style.display = 'inline-flex';
+        extraBtn.disabled = false;
+
+        // если по капризу судьбы уже все 105? невозможно при старте 3/105
+        if (currentQuestionsList.length >= QUESTIONS_DB.length) {
+            extraBtn.disabled = true;
+        } else {
+            extraBtn.disabled = false;
+        }
+    }
+
+    // Обработчики
+    getTicketBtn.addEventListener('click', () => {
+        generateNewTicket();
+    });
+
+    extraBtn.addEventListener('click', () => {
+        addExtraQuestion();
+    });
+
+    // начальное состояние: кнопка дополнительных вопросов не видна, только после первого билета.
+    // но можно сделать что по первому клику "получить билет" – она появится.
+    // уже всё реализовано в generateNewTicket.
+    // дополнительно убедимся, что при загрузке страницы нет случайного билета - просто пусто.
+    // но также разрешим пользователю сразу нажать "получить билет"
+    // всё корректно.
+    // Так же для полного соответствия: после нажатия "получить билет" сбрасываем все доп.вопросы. 
+    // generateNewTicket перезаписывает currentQuestionsList, кнопка extra становится активной.
+
+    // также на случай если попытаться нажать дополнительный вопрос без билета – кнопка скрыта/disabled,
+    // но она неактивна до генерации. добавим защиту
+    // финальный штрих - доступность кнопки доп вопроса только после генерации.
+    // Изначально кнопка скрыта display:none, будет показана в generateNewTicket.
+    // также если пользователь после генерации много добавит и захочет новый билет — всё сбрасывается.
+    // всё корректно.
+
+    // дополнительная функция: для красивой поддержки темы, убедимся что при повторном получении билета
+    // кнопка extra снова включается и очищается список.
+    // тест кейс: после генерации нового билета, сбрасывается предыдущий расширенный список.
+    console.log("Готово! Революционный генератор билетов загружен ✅");
+</script>
+</body>
+</html>
