@@ -1,0 +1,1676 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Сквозной проект: стек технологий</title>
+<style>
+  /* ============ RESET & BASE ============ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-1: #f5f7fb;
+    --bg-2: #eef2f9;
+    --surface: #ffffff;
+    --ink: #0f172a;
+    --ink-soft: #334155;
+    --muted: #64748b;
+    --line: #e2e8f0;
+    --accent: #4f46e5;
+    --accent-2: #0ea5e9;
+    --accent-soft: #eef2ff;
+    --green: #10b981;
+    --amber: #f59e0b;
+    --rose: #e11d48;
+    --shadow-sm: 0 1px 2px rgba(15,23,42,.06), 0 1px 3px rgba(15,23,42,.05);
+    --shadow-md: 0 10px 30px -10px rgba(15,23,42,.18), 0 4px 10px -4px rgba(15,23,42,.08);
+    --radius: 18px;
+    --font: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    --mono: "JetBrains Mono", "SF Mono", "Consolas", "Menlo", monospace;
+  }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    background: var(--bg-1);
+    color: var(--ink);
+    font-family: var(--font);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* ============ DECK ============ */
+  .deck {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 5vh 7vw 9vh;
+    background:
+      radial-gradient(1200px 600px at 88% -10%, rgba(79,70,229,.09), transparent 60%),
+      radial-gradient(900px 500px at -5% 110%, rgba(14,165,233,.08), transparent 60%),
+      linear-gradient(180deg, var(--bg-1), var(--bg-2));
+    opacity: 0;
+    transform: translateY(18px) scale(.99);
+    transition: opacity .45s cubic-bezier(.22,.61,.36,1),
+                transform .45s cubic-bezier(.22,.61,.36,1);
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .slide.active {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+
+  /* ============ PROGRESS ============ */
+  .progress {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: rgba(15,23,42,.06);
+    z-index: 60;
+  }
+  .progress__bar {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transition: width .45s cubic-bezier(.22,.61,.36,1);
+  }
+
+  /* ============ CHROME (counter + arrows) ============ */
+  .chrome {
+    position: fixed;
+    bottom: 22px;
+    right: 30px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    z-index: 60;
+  }
+
+  .counter {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .06em;
+    color: var(--muted);
+    background: rgba(255,255,255,.75);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--line);
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-variant-numeric: tabular-nums;
+    box-shadow: var(--shadow-sm);
+    user-select: none;
+  }
+  .counter b { color: var(--ink); }
+
+  .navbtn {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: rgba(255,255,255,.85);
+    backdrop-filter: blur(8px);
+    color: var(--ink-soft);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: transform .18s ease, background .18s ease, color .18s ease, border-color .18s ease;
+  }
+  .navbtn:hover { background: var(--accent); color: #fff; border-color: var(--accent); transform: translateY(-2px); }
+  .navbtn:active { transform: translateY(0) scale(.96); }
+  .navbtn svg { width: 18px; height: 18px; }
+
+  .brand {
+    position: fixed;
+    bottom: 26px;
+    left: 30px;
+    z-index: 60;
+    font-size: 12px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+    user-select: none;
+  }
+  .brand span { color: var(--accent); }
+
+  /* ============ TYPOGRAPHY ============ */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 18px;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 26px; height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    border-radius: 2px;
+  }
+
+  h1.title {
+    font-size: clamp(40px, 4.6vw, 76px);
+    line-height: 1.04;
+    letter-spacing: -.025em;
+    font-weight: 800;
+    color: var(--ink);
+  }
+  h1.title .grad {
+    background: linear-gradient(100deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  h2.head {
+    font-size: clamp(28px, 2.9vw, 46px);
+    line-height: 1.1;
+    letter-spacing: -.02em;
+    font-weight: 800;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  h2.head .accent { color: var(--accent); }
+
+  .lead {
+    font-size: clamp(15px, 1.15vw, 19px);
+    line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: 68ch;
+  }
+  .lead.tight { max-width: 60ch; }
+
+  .subtitle {
+    font-size: clamp(15px, 1.2vw, 20px);
+    color: var(--muted);
+    line-height: 1.6;
+    max-width: 62ch;
+  }
+
+  .rule {
+    height: 1px;
+    background: linear-gradient(90deg, var(--line), transparent);
+    margin: 22px 0 26px;
+    max-width: 1100px;
+  }
+
+  /* ============ LAYOUT HELPERS ============ */
+  .slide__inner { width: 100%; max-width: 1240px; margin: 0 auto; }
+  .center { text-align: center; }
+  .center .eyebrow { justify-content: center; }
+  .center .lead, .center .subtitle { margin-left: auto; margin-right: auto; }
+
+  .grid { display: grid; gap: 18px; }
+  .g2 { grid-template-columns: repeat(2, 1fr); }
+  .g3 { grid-template-columns: repeat(3, 1fr); }
+  .g4 { grid-template-columns: repeat(4, 1fr); }
+
+  /* ============ CARDS ============ */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 24px 24px 22px;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: #d7dce8;
+  }
+  .card__num {
+    position: absolute;
+    top: 14px; right: 18px;
+    font-size: 40px;
+    font-weight: 800;
+    color: rgba(79,70,229,.08);
+    line-height: 1;
+    letter-spacing: -.04em;
+  }
+  .card__icon {
+    width: 42px; height: 42px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: var(--accent-soft);
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+  .card__icon svg { width: 22px; height: 22px; }
+  .card h3 {
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: -.01em;
+    margin-bottom: 8px;
+    color: var(--ink);
+  }
+  .card p {
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+  .card p + p { margin-top: 8px; }
+  .card p strong { color: var(--ink-soft); font-weight: 600; }
+
+  /* accent variants */
+  .card.is-accent { border-top: 3px solid var(--accent); }
+  .card.is-sky    { border-top: 3px solid var(--accent-2); }
+  .card.is-green  { border-top: 3px solid var(--green); }
+  .card.is-amber  { border-top: 3px solid var(--amber); }
+  .card.is-rose   { border-top: 3px solid var(--rose); }
+
+  .card.is-accent .card__icon { background: var(--accent-soft); color: var(--accent); }
+  .card.is-sky .card__icon    { background: #e0f2fe; color: #0284c7; }
+  .card.is-green .card__icon  { background: #d1fae5; color: #059669; }
+  .card.is-amber .card__icon  { background: #fef3c7; color: #d97706; }
+  .card.is-rose .card__icon   { background: #ffe4e6; color: #be123c; }
+
+  /* ============ LISTS ============ */
+  .list { list-style: none; display: grid; gap: 12px; }
+  .list li {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    font-size: 15.5px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 15px 18px;
+    box-shadow: var(--shadow-sm);
+  }
+  .list li .dot {
+    flex: 0 0 auto;
+    width: 26px; height: 26px;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 800;
+    margin-top: 1px;
+  }
+  .list li strong { color: var(--ink); font-weight: 700; }
+
+  .list.compact li { padding: 12px 16px; font-size: 14.5px; }
+
+  /* ============ CHECK LIST ============ */
+  .checks { list-style: none; display: grid; gap: 11px; }
+  .checks li {
+    display: flex; gap: 12px; align-items: flex-start;
+    font-size: 15px; line-height: 1.5; color: var(--ink-soft);
+  }
+  .checks li svg { flex: 0 0 auto; width: 20px; height: 20px; color: var(--green); margin-top: 2px; }
+  .checks li b { color: var(--ink); font-weight: 700; }
+
+  /* ============ COMPARISON TABLE ============ */
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  .compare__col {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    box-shadow: var(--shadow-sm);
+  }
+  .compare__col.win {
+    border: 1.5px solid var(--accent);
+    box-shadow: 0 12px 34px -14px rgba(79,70,229,.35);
+  }
+  .compare__head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .compare__head h3 { font-size: 22px; font-weight: 800; letter-spacing: -.01em; }
+  .compare__head .tag {
+    font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+    padding: 5px 10px; border-radius: 999px;
+    background: #f1f5f9; color: var(--muted);
+  }
+  .compare__col.win .compare__head .tag { background: var(--accent-soft); color: var(--accent); }
+  .compare__col ul { list-style: none; display: grid; gap: 10px; }
+  .compare__col li {
+    font-size: 14.5px; line-height: 1.5; color: var(--muted);
+    padding-left: 18px; position: relative;
+  }
+  .compare__col li::before {
+    content: ""; position: absolute; left: 0; top: 8px;
+    width: 7px; height: 7px; border-radius: 2px;
+    background: #cbd5e1;
+  }
+  .compare__col.win li::before { background: var(--accent); }
+  .compare__col li b { color: var(--ink-soft); font-weight: 600; }
+
+  /* ============ CODE BLOCK ============ */
+  .code {
+    background: #0f172a;
+    border-radius: 16px;
+    padding: 20px 22px;
+    font-family: var(--mono);
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: #e2e8f0;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    border: 1px solid #1e293b;
+  }
+  .code .c-key { color: #c084fc; }
+  .code .c-fn  { color: #7dd3fc; }
+  .code .c-str { color: #86efac; }
+  .code .c-com { color: #64748b; font-style: italic; }
+  .code .c-num { color: #fbbf24; }
+
+  /* ============ FACT STRIP ============ */
+  .facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .fact {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 20px 22px;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+  }
+  .fact__year {
+    font-size: 12px; font-weight: 800; letter-spacing: .14em;
+    color: var(--accent); text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .fact p { font-size: 14.5px; line-height: 1.55; color: var(--ink-soft); }
+  .fact p b { color: var(--ink); }
+
+  /* ============ TIMELINE ============ */
+  .timeline { position: relative; padding-left: 30px; display: grid; gap: 18px; }
+  .timeline::before {
+    content: ""; position: absolute; left: 8px; top: 8px; bottom: 8px;
+    width: 2px; background: linear-gradient(180deg, var(--accent), var(--accent-2), transparent);
+    border-radius: 2px;
+  }
+  .timeline__item { position: relative; }
+  .timeline__item::before {
+    content: ""; position: absolute; left: -30px; top: 6px;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: #fff; border: 3px solid var(--accent);
+    box-shadow: 0 0 0 4px rgba(79,70,229,.12);
+  }
+  .timeline__item h4 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .timeline__item p { font-size: 14.5px; line-height: 1.55; color: var(--muted); }
+
+  /* ============ ARCHITECTURE DIAGRAM ============ */
+  .arch { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: stretch; }
+  .arch__layer {
+    border-radius: var(--radius);
+    padding: 22px 22px 20px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+    display: flex; flex-direction: column;
+    position: relative;
+  }
+  .arch__layer .step {
+    font-size: 11px; font-weight: 800; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .arch__layer h3 { font-size: 21px; font-weight: 800; margin-bottom: 6px; letter-spacing: -.01em; }
+  .arch__layer p { font-size: 14px; color: var(--muted); line-height: 1.55; margin-bottom: 14px; }
+  .arch__layer .chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: auto; }
+  .chip {
+    font-size: 12px; font-weight: 700;
+    padding: 5px 11px; border-radius: 999px;
+    background: #f1f5f9; color: var(--ink-soft);
+    border: 1px solid var(--line);
+  }
+  .arch__layer.l1 { border-top: 4px solid var(--accent-2); }
+  .arch__layer.l2 { border-top: 4px solid var(--accent); }
+  .arch__layer.l3 { border-top: 4px solid var(--green); }
+  .arch__layer.l1 .chip { background: #e0f2fe; color: #0369a1; border-color: #bae6fd; }
+  .arch__layer.l2 .chip { background: var(--accent-soft); color: #4338ca; border-color: #c7d2fe; }
+  .arch__layer.l3 .chip { background: #d1fae5; color: #047857; border-color: #a7f3d0; }
+
+  /* ============ STACK SUMMARY ============ */
+  .stack { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .stack__col {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+  }
+  .stack__col h3 { font-size: 18px; font-weight: 800; margin-bottom: 4px; }
+  .stack__col .meta { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; color: var(--accent); margin-bottom: 14px; }
+  .stack__col ul { list-style: none; display: grid; gap: 9px; }
+  .stack__col li { font-size: 14.5px; line-height: 1.5; color: var(--muted); padding-left: 16px; position: relative; }
+  .stack__col li::before { content: ""; position: absolute; left: 0; top: 8px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent-2); }
+
+  /* ============ TITLE SLIDE ============ */
+  .title-slide { text-align: left; }
+  .title-slide .badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 8px 16px; border-radius: 999px;
+    background: var(--surface); border: 1px solid var(--line);
+    font-size: 13px; font-weight: 600; color: var(--ink-soft);
+    box-shadow: var(--shadow-sm); margin-bottom: 26px;
+  }
+  .title-slide .badge .pulse {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--green); box-shadow: 0 0 0 4px rgba(16,185,129,.18);
+  }
+  .title-slide .meta-row {
+    display: flex; gap: 40px; margin-top: 38px; flex-wrap: wrap;
+  }
+  .title-slide .meta-row div { }
+  .title-slide .meta-row .k { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin-bottom: 5px; }
+  .title-slide .meta-row .v { font-size: 16px; font-weight: 700; color: var(--ink); }
+
+  /* ============ BIG NUMBER / QUOTE ============ */
+  .quote {
+    font-size: clamp(20px, 1.9vw, 30px);
+    line-height: 1.45;
+    font-weight: 600;
+    color: var(--ink);
+    max-width: 30ch;
+  }
+  .quote .hl { color: var(--accent); }
+
+  .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 26px; }
+  .stat {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 16px; padding: 20px 22px; box-shadow: var(--shadow-sm);
+  }
+  .stat .n { font-size: 32px; font-weight: 800; letter-spacing: -.03em; color: var(--accent); line-height: 1; margin-bottom: 8px; }
+  .stat .l { font-size: 13.5px; color: var(--muted); line-height: 1.5; }
+
+  /* ============ PILL ROW ============ */
+  .pills { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+  .pill {
+    padding: 9px 16px; border-radius: 999px;
+    background: var(--surface); border: 1px solid var(--line);
+    font-size: 14px; font-weight: 600; color: var(--ink-soft);
+    box-shadow: var(--shadow-sm);
+  }
+  .pill.accent { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* ============ TWO COLUMN ============ */
+  .split { display: grid; grid-template-columns: 1.05fr .95fr; gap: 34px; align-items: center; }
+  .split.top { align-items: start; }
+
+  /* ============ HINT ============ */
+  .hint {
+    position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%);
+    font-size: 12px; color: var(--muted); letter-spacing: .04em;
+    background: rgba(255,255,255,.7); backdrop-filter: blur(8px);
+    border: 1px solid var(--line); border-radius: 999px;
+    padding: 7px 16px; z-index: 60; user-select: none;
+    transition: opacity .4s ease;
+  }
+  .hint.hide { opacity: 0; }
+  .hint kbd {
+    font-family: var(--mono); font-size: 11px;
+    background: #f1f5f9; border: 1px solid var(--line);
+    border-bottom-width: 2px; border-radius: 5px;
+    padding: 1px 6px; margin: 0 2px; color: var(--ink-soft);
+  }
+
+  /* ============ RESPONSIVE TIGHTENING ============ */
+  @media (max-width: 1180px) {
+    .slide { padding: 4vh 5vw 8vh; }
+    .g4 { grid-template-columns: repeat(2, 1fr); }
+    .facts { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-height: 760px) {
+    .slide { padding-top: 3.5vh; padding-bottom: 8vh; }
+    .card { padding: 18px 20px; }
+    .list li { padding: 12px 16px; font-size: 14.5px; }
+    .rule { margin: 16px 0 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress"><div class="progress__bar" id="progressBar"></div></div>
+
+<div class="deck" id="deck">
+
+  <!-- ============ 1. TITLE ============ -->
+  <section class="slide title-slide active">
+    <div class="slide__inner">
+      <div class="badge"><span class="pulse"></span> Сквозной проект · 2 семестра</div>
+      <h1 class="title">Стек технологий<br>для <span class="grad">сквозного проекта</span></h1>
+      <p class="subtitle" style="margin-top:22px; max-width:56ch;">
+        От теории — к практике. Почему выбран именно этот набор инструментов,
+        чем он хорош, какие у него альтернативы и что за каждым из них стоит.
+      </p>
+
+      <div class="meta-row">
+        <div>
+          <div class="k">Язык</div>
+          <div class="v">Python</div>
+        </div>
+        <div>
+          <div class="k">Бэкенд</div>
+          <div class="v">Flask</div>
+        </div>
+        <div>
+          <div class="k">Базы данных</div>
+          <div class="v">SQLite · MySQL</div>
+        </div>
+        <div>
+          <div class="k">Фронтенд</div>
+          <div class="v">HTML · CSS · JS</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2. ВВЕДЕНИЕ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Введение</div>
+      <h2 class="head">Момент, когда <span class="accent">теория становится практикой</span></h2>
+      <div class="rule"></div>
+
+      <div class="split top">
+        <div>
+          <p class="lead">
+            Мы разобрали основы построения сетей, архитектуру безопасной инфраструктуры,
+            152-ФЗ и требования к защите персональных данных, шифрование и передачу данных.
+            Теперь — сквозной проект, который растянется на два семестра.
+          </p>
+
+          <ul class="checks" style="margin-top:24px;">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+              <span><b>Документация</b> — проектирование и описание системы</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+              <span><b>Разработка</b> — реализация на выбранном стеке</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+              <span><b>Тестирование</b> — все уровни, от юнитов до end-to-end</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card is-accent" style="padding:28px;">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg>
+          </div>
+          <h3 style="font-size:22px;">Зачем понимать стек?</h3>
+          <p style="font-size:15px; margin-top:10px;">
+            Понимание стека — это половина успеха в тестировании. Нельзя качественно
+            проверять систему, если не понимаешь, из чего она собрана и как
+            взаимодействуют её части.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3. АРХИТЕКТУРА ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Архитектурная модель</div>
+      <h2 class="head">Классическая <span class="accent">клиент-серверная</span> архитектура с тремя слоями</h2>
+      <div class="rule"></div>
+
+      <div class="arch">
+        <div class="arch__layer l1">
+          <div class="step">Слой 1 · Клиент</div>
+          <h3>Фронтенд</h3>
+          <p>То, что видит пользователь в браузере: страницы, стили, интерактивность.</p>
+          <div class="chips">
+            <span class="chip">HTML</span>
+            <span class="chip">CSS</span>
+            <span class="chip">JavaScript</span>
+          </div>
+        </div>
+
+        <div class="arch__layer l2">
+          <div class="step">Слой 2 · Сервер</div>
+          <h3>Бэкенд</h3>
+          <p>Логика обработки запросов, работа с данными, аутентификация пользователей.</p>
+          <div class="chips">
+            <span class="chip">Python</span>
+            <span class="chip">Flask</span>
+          </div>
+        </div>
+
+        <div class="arch__layer l3">
+          <div class="step">Слой 3 · Данные</div>
+          <h3>База данных</h3>
+          <p>Хранение всей информации системы: пользователи, задачи, заявки, журналы.</p>
+          <div class="chips">
+            <span class="chip">SQLite</span>
+            <span class="chip">MySQL</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card is-accent" style="margin-top:22px; padding:20px 24px;">
+        <p style="font-size:15px; color:var(--ink-soft);">
+          <strong style="color:var(--accent);">Почему это важно для тестирования:</strong>
+          разделение на слои позволяет тестировать каждый уровень отдельно — юнит-тесты бэкенда и работы с БД,
+          интеграционные тесты взаимодействия Flask и базы, сквозные (end-to-end) тесты полного пользовательского сценария.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4. PYTHON: ИСТОРИЯ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Компонент 1 · Python</div>
+      <h2 class="head">История создания языка</h2>
+      <div class="rule"></div>
+
+      <div class="split top">
+        <div class="timeline">
+          <div class="timeline__item">
+            <h4>1989 · Замысел</h4>
+            <p>Гвидо ван Россум работает в нидерландском центре CWI над распределённой ОС Amoeba. Ему нужен язык для быстрого написания системных утилит — быстрее, чем на C.</p>
+          </div>
+          <div class="timeline__item">
+            <h4>1991 · Первый публичный релиз</h4>
+            <p>Python выходит в свет. Он вырос из языка ABC — учебного языка с чистой и читаемой архитектурой, но непригодного для работы с сетью и файловой системой.</p>
+          </div>
+          <div class="timeline__item">
+            <h4>Название</h4>
+            <p>Не имеет отношения к змеям. Гвидо был фанатом группы Monty Python и назвал язык в честь шоу «Летающий цирк Монти Пайтона».</p>
+          </div>
+        </div>
+
+        <div class="card is-accent" style="padding:30px;">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          </div>
+          <p class="quote">Программирование должно приносить <span class="hl">удовольствие</span>, а не быть мучением.</p>
+          <p style="margin-top:18px; font-size:14.5px; color:var(--muted); line-height:1.55;">
+            Эта философия хорошо иллюстрируется названием языка и лежит в основе
+            всего дизайна Python.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 5. PYTHON: ПОЧЕМУ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Компонент 1 · Python</div>
+      <h2 class="head">Почему для проекта выбран <span class="accent">именно Python</span></h2>
+      <div class="rule"></div>
+
+      <div class="grid g4">
+        <div class="card is-accent">
+          <div class="card__num">01</div>
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          </div>
+          <h3>Читаемость кода</h3>
+          <p>Упор на лаконичность синтаксиса. Меньше времени на борьбу с языком — больше на архитектуру и логику тестирования.</p>
+        </div>
+
+        <div class="card is-sky">
+          <div class="card__num">02</div>
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </div>
+          <h3>Экосистема тестирования</h3>
+          <p>Один из лидеров по инструментам: unittest, pytest, Selenium, Locust, pytest-cov. Всё это мы будем использовать.</p>
+        </div>
+
+        <div class="card is-green">
+          <div class="card__num">03</div>
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l4-4 4 4 5-6"/></svg>
+          </div>
+          <h3>Востребованность</h3>
+          <p>Ведущий язык в NLP, больших данных, машинном обучении. Навыки напрямую применимы в реальной работе.</p>
+        </div>
+
+        <div class="card is-amber">
+          <div class="card__num">04</div>
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6M12 17v6M4.2 4.2l4.3 4.3M15.5 15.5l4.3 4.3M1 12h6M17 12h6M4.2 19.8l4.3-4.3M15.5 8.5l4.3-4.3"/></svg>
+          </div>
+          <h3>Связующий элемент</h3>
+          <p>Хорошо интегрируется с БД, веб-серверами, системами шифрования. В проекте связывает Flask, БД и тестовые фреймворки.</p>
+        </div>
+      </div>
+
+      <div class="facts" style="margin-top:22px; grid-template-columns: repeat(3,1fr);">
+        <div class="fact">
+          <div class="fact__year">2007 &amp; 2010</div>
+          <p>Python дважды признавался <b>языком года</b> по версии TIOBE.</p>
+        </div>
+        <div class="fact">
+          <div class="fact__year">Сегодня</div>
+          <p>Стабильно входит в <b>тройку самых популярных</b> языков мира.</p>
+        </div>
+        <div class="fact">
+          <div class="fact__year">1989</div>
+          <p>Начал разрабатываться как <b>хобби-проект</b> в свободное время.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 6. FLASK: ЧТО ЭТО ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Компонент 2 · Flask</div>
+      <h2 class="head">Микрофреймворк для Python</h2>
+      <div class="rule"></div>
+
+      <div class="split top">
+        <div>
+          <p class="lead">
+            Создан Армином Ронахером, выпущен в 2010 году как альтернатива
+            более тяжёлому Django. Ключевое слово — <strong>микро</strong>.
+          </p>
+
+          <ul class="checks" style="margin-top:22px;">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+              <span>Не навязывает <b>структуру проекта</b></span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+              <span>Не требует конкретной <b>ORM</b> (Object-Relational Mapping)</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+              <span>Не включает <b>админ-панель</b> из коробки</span>
+            </li>
+          </ul>
+
+          <div class="pills">
+            <span class="pill accent">Маршрутизация</span>
+            <span class="pill">Обработка запросов</span>
+            <span class="pill">Шаблонизатор Jinja2</span>
+          </div>
+        </div>
+
+        <div class="code">
+<span class="c-com"># минимальное приложение на Flask</span>
+<span class="c-key">from</span> flask <span class="c-key">import</span> Flask
+
+app = <span class="c-fn">Flask</span>(__name__)
+
+<span class="c-key">@app</span>.<span class="c-fn">route</span>(<span class="c-str">"/"</span>)
+<span class="c-key">def</span> <span class="c-fn">index</span>():
+    <span class="c-key">return</span> <span class="c-str">"Hello, World!"</span>
+
+<span class="c-key">if</span> __name__ == <span class="c-str">"__main__"</span>:
+    app.<span class="c-fn">run</span>()
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 7. FLASK VS DJANGO ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Компонент 2 · Flask</div>
+      <h2 class="head">Flask <span class="accent">против</span> Django</h2>
+      <div class="rule"></div>
+
+      <div class="compare">
+        <div class="compare__col">
+          <div class="compare__head">
+            <h3>Django</h3>
+            <span class="tag">Batteries included</span>
+          </div>
+          <ul>
+            <li>Философия <b>«всё включено»</b></li>
+            <li>Готовая структура проекта</li>
+            <li>Встроенная ORM и аутентификация</li>
+            <li>Админ-панель из коробки</li>
+            <li>Выше порог входа: нужно изучить структуру, ORM, админку</li>
+            <li>Гибкость ограничена рамками фреймворка</li>
+            <li>Много <b>«магии»</b> скрыто от разработчика</li>
+          </ul>
+        </div>
+
+        <div class="compare__col win">
+          <div class="compare__head">
+            <h3>Flask</h3>
+            <span class="tag">Собери сам</span>
+          </div>
+          <ul>
+            <li>Философия <b>«собери сам»</b></li>
+            <li>Низкий порог входа — можно начать с 10 строк</li>
+            <li>Максимальная гибкость: библиотеки выбираете вы</li>
+            <li>Прозрачность: видно, как работает каждый запрос</li>
+            <li>Не привязан к конкретной ORM</li>
+            <li>Встроенные утилиты для тестирования</li>
+            <li>Идеален для обучения</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 8. FLASK: ПОЧЕМУ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Компонент 2 · Flask</div>
+      <h2 class="head">Три причины <span class="accent">выбора Flask</span></h2>
+      <div class="rule"></div>
+
+      <div class="grid g3">
+        <div class="card is-accent">
+          <div class="card__num">01</div>
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/></svg>
+          </div>
+          <h3>Прозрачность</h3>
+          <p>Flask даёт понять, как на самом деле работает веб-приложение: путь запроса от браузера до сервера, формирование ответа, работа сессии.</p>
+          <p><strong>Критически важно для будущих тестировщиков.</strong></p>
+        </div>
+
+        <div class="card is-sky">
+          <div class="card__num">02</div>
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+          </div>
+          <h3>Гибкость в выборе БД</h3>
+          <p>Можно работать с SQLite через стандартный модуль sqlite3, с MySQL через mysql-connector-python или использовать SQLAlchemy.</p>
+          <p>Это позволяет сравнить разные подходы в одном проекте.</p>
+        </div>
+
+        <div class="card is-green">
+          <div class="card__num">03</div>
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 6 6 .9-4.5 4.3 1.1 6.3L12 16.8 6.4 19.5l1.1-6.3L3 8.9 9 8z"/></svg>
+          </div>
+          <h3>Простота тестирования</h3>
+          <p>Встроенный тестовый клиент позволяет отправлять запросы к приложению без запуска реального сервера.</p>
+          <p>В сочетании с pytest это даёт очень удобный workflow.</p>
+        </div>
+      </div>
+
+      <div class="facts" style="margin-top:22px; grid-template-columns: repeat(2,1fr);">
+        <div class="fact">
+          <div class="fact__year">Первоапрельская шутка</div>
+          <p>Армин Ронахер и коллеги хотели показать, что <b>микрофреймворк — не оксюморон</b>. Шутка оказалась настолько удачной, что превратилась в один из самых популярных фреймворков Python.</p>
+        </div>
+        <div class="fact">
+          <div class="fact__year">Без батареек</div>
+          <p>Flask <b>не включает</b> базу данных, ORM или систему аутентификации — всё это подключается отдельно. Именно поэтому он идеален для обучения: вы видите, из чего собирается веб-приложение.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 9. SQLITE ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Компонент 3 · Базы данных</div>
+      <h2 class="head">SQLite — <span class="accent">встраиваемая</span> реляционная БД</h2>
+      <div class="rule"></div>
+
+      <div class="split top">
+        <div>
+          <p class="lead">
+            Не работает как отдельный серверный процесс. Вся база хранится
+            в <strong>одном файле</strong>, который можно скопировать, отправить
+            по почте или положить в систему контроля версий.
+          </p>
+
+          <ul class="list compact" style="margin-top:22px;">
+            <li><span class="dot">1</span><span><strong>Нулевая настройка.</strong> Не нужно устанавливать сервер, настраивать пользователей и порты. Создаёте файл — и работаете.</span></li>
+            <li><span class="dot">2</span><span><strong>Полная поддержка ACID</strong> — атомарность, согласованность, изоляция и долговечность транзакций, как во «взрослых» СУБД.</span></li>
+            <li><span class="dot">3</span><span><strong>Идеальна для тестирования.</strong> Тесты запускаются на изолированной копии базы, которая создаётся и удаляется для каждого теста.</span></li>
+            <li><span class="dot">4</span><span><strong>Высокая скорость чтения.</strong> Бенчмарки 2025 года показывают: SQLite обгоняет MySQL на чтении при малой конкурентности.</span></li>
+          </ul>
+        </div>
+
+        <div style="display:grid; gap:16px;">
+          <div class="card is-green">
+            <div class="card__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+            </div>
+            <h3>В каждом смартфоне</h3>
+            <p>Используется и на iOS, и на Android. Вероятно, самая распространённая база данных в мире.</p>
+          </div>
+
+          <div class="card is-sky">
+            <div class="card__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>
+            </div>
+            <h3>В авионике</h3>
+            <p>Используется в самолётах Airbus A350 — одна из немногих баз, сертифицированных для авионики.</p>
+          </div>
+
+          <div class="card is-amber">
+            <div class="card__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+            </div>
+            <h3>Без администратора</h3>
+            <p>База «самообслуживается» — идеальна для встраиваемых систем и учебных проектов.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 10. MYSQL ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Компонент 3 · Базы данных</div>
+      <h2 class="head">MySQL — полноценная <span class="accent">серверная СУБД</span></h2>
+      <div class="rule"></div>
+
+      <p class="lead" style="margin-bottom:26px;">
+        Работает как отдельная служба. Приложения подключаются к ней по сети,
+        а не работают с файлом напрямую.
+      </p>
+
+      <div class="grid g3">
+        <div class="card is-rose">
+          <div class="card__num">01</div>
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h3>Высокая конкурентность</h3>
+          <p>Если несколько пользователей одновременно записывают данные, MySQL справляется лучше SQLite.</p>
+        </div>
+
+        <div class="card is-accent">
+          <div class="card__num">02</div>
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6"/><rect x="12" y="8" width="3" height="10"/><rect x="17" y="4" width="3" height="14"/></svg>
+          </div>
+          <h3>Масштабирование</h3>
+          <p>Поддерживает репликацию, кластеризацию и шардирование — может расти вместе с нагрузкой.</p>
+        </div>
+
+        <div class="card is-green">
+          <div class="card__num">03</div>
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+          </div>
+          <h3>Близость к production</h3>
+          <p>В реальных проектах вы чаще встретите MySQL, PostgreSQL или аналогичные серверные СУБД.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 11. ГИБРИДНАЯ СТРАТЕГИЯ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Компонент 3 · Базы данных</div>
+      <h2 class="head">Гибридная <span class="accent">стратегия</span> проекта</h2>
+      <div class="rule"></div>
+
+      <div class="compare" style="grid-template-columns: 1fr 1fr;">
+        <div class="compare__col win">
+          <div class="compare__head">
+            <h3>SQLite</h3>
+            <span class="tag">Разработка и юнит-тесты</span>
+          </div>
+          <ul>
+            <li><b>Быстро</b> — не требует инфраструктуры</li>
+            <li><b>Изолированно</b> — своя база на каждый тест</li>
+            <li>База может создаваться <b>в оперативной памяти</b></li>
+            <li>Уничтожается после завершения тестов</li>
+            <li>Гарантирует, что тесты не влияют друг на друга</li>
+          </ul>
+        </div>
+
+        <div class="compare__col">
+          <div class="compare__head">
+            <h3>MySQL</h3>
+            <span class="tag">Интеграция и демонстрация</span>
+          </div>
+          <ul>
+            <li>Показывает поведение приложения <b>в условиях, близких к реальным</b></li>
+            <li>Проверка работы при <b>высокой конкурентности</b></li>
+            <li>Демонстрация <b>сетевого подключения</b> к БД</li>
+            <li>Отработка миграции между СУБД</li>
+            <li>Приближает проект к production-сценарию</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card is-accent" style="margin-top:24px; padding:22px 26px;">
+        <p style="font-size:15.5px; color:var(--ink-soft); line-height:1.6;">
+          <strong style="color:var(--accent);">Что это даёт:</strong>
+          вы научитесь адаптировать код под разные СУБД — навык, который высоко ценится в индустрии.
+          Тестировщик, умеющий работать с разными базами данных и понимающий их различия,
+          стоит дороже и ценится больше.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 12. HTML ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Компонент 4 · Фронтенд</div>
+      <h2 class="head">HTML — <span class="accent">структура</span> веб-страницы</h2>
+      <div class="rule"></div>
+
+      <div class="split top">
+        <div>
+          <p class="lead">
+            HyperText Markup Language — язык разметки, определяющий структуру
+            страницы: заголовки, параграфы, формы, таблицы, ссылки.
+          </p>
+
+          <div class="grid g2" style="margin-top:22px;">
+            <div class="card is-sky">
+              <h3 style="font-size:16px;">В проекте</h3>
+              <p>Формы ввода данных — регистрация, отправка заявки. Навигация между страницами. Семантическая разметка.</p>
+            </div>
+            <div class="card is-accent">
+              <h3 style="font-size:16px;">Для тестирования</h3>
+              <p>Атрибуты <strong>id</strong>, <strong>class</strong>, <strong>name</strong> — «якоря», за которые цепляются Selenium-тесты.</p>
+            </div>
+          </div>
+
+          <p style="margin-top:20px; font-size:15px; color:var(--muted); line-height:1.6;">
+            Чем лучше размечена страница, тем проще писать автоматические тесты.
+            Если разработчик не уделил внимания разметке, тестировщику приходится
+            писать хрупкие селекторы, которые ломаются при малейшем изменении вёрстки.
+          </p>
+        </div>
+
+        <div class="code">
+<span class="c-com">&lt;!-- форма регистрации --&gt;</span>
+&lt;<span class="c-key">form</span> <span class="c-fn">action</span>=<span class="c-str">"/register"</span> <span class="c-fn">method</span>=<span class="c-str">"post"</span>&gt;
+  &lt;<span class="c-key">label</span> <span class="c-fn">for</span>=<span class="c-str">"email"</span>&gt;Email&lt;/<span class="c-key">label</span>&gt;
+  &lt;<span class="c-key">input</span> <span class="c-fn">type</span>=<span class="c-str">"email"</span>
+         <span class="c-fn">id</span>=<span class="c-str">"email"</span>
+         <span class="c-fn">name</span>=<span class="c-str">"email"</span>
+         <span class="c-fn">required</span>&gt;
+
+  &lt;<span class="c-key">button</span> <span class="c-fn">type</span>=<span class="c-str">"submit"</span>
+          <span class="c-fn">id</span>=<span class="c-str">"submit-btn"</span>&gt;
+    Зарегистрироваться
+  &lt;/<span class="c-key">button</span>&gt;
+&lt;/<span class="c-key">form</span>&gt;
+        </div>
+      </div>
+
+      <div class="fact" style="margin-top:22px;">
+        <div class="fact__year">1991 · Тим Бернерс-Ли</div>
+        <p>HTML создан в том же году, когда вышел Python.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 13. CSS ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Компонент 4 · Фронтенд</div>
+      <h2 class="head">CSS — <span class="accent">внешний вид</span> и адаптивность</h2>
+      <div class="rule"></div>
+
+      <div class="split top">
+        <div>
+          <p class="lead">
+            Cascading Style Sheets отвечает за цвета, шрифты, отступы,
+            расположение элементов и адаптивность под разные экраны.
+          </p>
+
+          <ul class="list compact" style="margin-top:22px;">
+            <li><span class="dot">✓</span><span><strong>Визуальные регрессии</strong> — один из видов тестирования: после изменения стилей страница может «поехать».</span></li>
+            <li><span class="dot">✓</span><span><strong>Доступность (accessibility)</strong> — контрастность, размеры шрифтов, читаемость — всё это влияет на качество продукта.</span></li>
+            <li><span class="dot">✓</span><span><strong>Скриншот-тесты</strong> — CSS создаёт точки для автоматизированной проверки визуальной части.</span></li>
+          </ul>
+        </div>
+
+        <div class="card is-accent" style="padding:30px;">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="14.5" r="2.5"/><circle cx="8.5" cy="7.5" r="2.5"/><circle cx="6.5" cy="15.5" r="2.5"/><path d="M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20z"/></svg>
+          </div>
+          <h3 style="font-size:22px; margin-bottom:12px;">Разделение структуры и представления</h3>
+          <p style="font-size:15px; line-height:1.6;">
+            CSS появился только в <strong>1996 году</strong> — до этого стили задавались
+            прямо в HTML-тегах. Это значит, что разделение структуры и представления —
+            относительно молодая идея, но она себя полностью оправдала.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 14. JAVASCRIPT ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Компонент 4 · Фронтенд</div>
+      <h2 class="head">JavaScript — <span class="accent">интерактивность</span>, но дозированно</h2>
+      <div class="rule"></div>
+
+      <div class="grid g3" style="margin-bottom:22px;">
+        <div class="card is-amber">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </div>
+          <h3>Валидация форм</h3>
+          <p>Проверка данных на клиенте без перезагрузки страницы.</p>
+        </div>
+
+        <div class="card is-sky">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M9 9h6v6H9z"/></svg>
+          </div>
+          <h3>Асинхронные запросы</h3>
+          <p>Обращение к API через fetch или XMLHttpRequest.</p>
+        </div>
+
+        <div class="card is-green">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.2-8.6"/><path d="M22 4l-10 10-3-3"/></svg>
+          </div>
+          <h3>Обновление интерфейса</h3>
+          <p>Динамические изменения без полной перезагрузки страницы.</p>
+        </div>
+      </div>
+
+      <div class="split top" style="grid-template-columns: 1.2fr 1fr;">
+        <div class="card is-accent" style="padding:24px;">
+          <h3 style="font-size:18px; margin-bottom:10px;">Почему JavaScript не больше?</h3>
+          <p style="font-size:15px; line-height:1.6;">
+            Проект учебный. Мы хотим, чтобы вы понимали, как работает <strong>backend</strong>,
+            а не прятали всю логику в браузере. Кроме того, чем меньше JavaScript,
+            тем проще тестировать приложение: меньше асинхронности, меньше «плавающих» багов.
+          </p>
+        </div>
+
+        <div class="fact">
+          <div class="fact__year">1995 · Брендан Айк · 10 дней</div>
+          <p>Изначально назывался <b>Mocha</b>, потом <b>LiveScript</b>, и только потом — JavaScript, причём в маркетинговых целях, чтобы ассоциироваться с Java. <b>Никакого отношения к Java он не имеет.</b></p>
+        </div>
+      </div>
+
+      <div class="pills" style="margin-top:20px;">
+        <span class="pill accent">HTML → Selenium: наличие и корректность элементов</span>
+        <span class="pill accent">CSS → визуальное тестирование через скриншоты</span>
+        <span class="pill accent">JS → тестирование поведения: события, асинхронность</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 15. ЮНИТ-ТЕСТЫ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Тестирование · Уровень 1</div>
+      <h2 class="head"><span class="accent">Юнит-тестирование</span> — стандарт pytest</h2>
+      <div class="rule"></div>
+
+      <div class="split top">
+        <div>
+          <p class="lead">
+            Фреймворк для тестирования Python-кода, который позволяет писать
+            тесты в виде простых функций с <strong>assert</strong>-ами.
+          </p>
+
+          <ul class="list compact" style="margin-top:22px;">
+            <li><span class="dot">1</span><span>Создаёте задачу и проверяете, что её заголовок совпадает с ожидаемым.</span></li>
+            <li><span class="dot">2</span><span>Проверяете, что статус выполнения по умолчанию — <strong>ложный</strong>.</span></li>
+            <li><span class="dot">3</span><span><strong>Фикстуры</strong> готовят окружение: тестовое приложение Flask, тестовую базу SQLite.</span></li>
+            <li><span class="dot">4</span><span>База может создаваться <strong>в оперативной памяти</strong> и уничтожаться после тестов — изоляция и скорость.</span></li>
+          </ul>
+        </div>
+
+        <div class="code">
+<span class="c-com"># tests/test_tasks.py</span>
+<span class="c-key">def</span> <span class="c-fn">test_task_title</span>(client):
+    <span class="c-com"># создаём задачу</span>
+    r = client.<span class="c-fn">post</span>(<span class="c-str">"/tasks"</span>,
+        json={<span class="c-str">"title"</span>: <span class="c-str">"Написать ТЗ"</span>})
+
+    data = r.<span class="c-fn">get_json</span>()
+
+    <span class="c-key">assert</span> data[<span class="c-str">"title"</span>] == <span class="c-str">"Написать ТЗ"</span>
+    <span class="c-key">assert</span> data[<span class="c-str">"done"</span>] <span class="c-key">is</span> <span class="c-num">False</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 16. ИНТЕГРАЦИОННОЕ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Тестирование · Уровень 2</div>
+      <h2 class="head"><span class="accent">Интеграционное</span> тестирование</h2>
+      <div class="rule"></div>
+
+      <div class="split top">
+        <div>
+          <p class="lead">
+            Проверяет, как разные части системы работают <strong>вместе</strong>:
+            Flask-приложение корректно сохраняет данные в базу, API возвращает
+            правильный JSON, аутентификация работает совместно с сессиями.
+          </p>
+
+          <div class="card is-accent" style="margin-top:22px; padding:22px;">
+            <h3 style="font-size:17px; margin-bottom:10px;">Тестовый клиент Flask</h3>
+            <p style="font-size:14.5px; line-height:1.6;">
+              Позволяет отправлять HTTP-запросы к приложению <strong>без запуска
+              реального сервера</strong>. Быстро, удобно, воспроизводимо.
+            </p>
+          </div>
+        </div>
+
+        <div class="code">
+<span class="c-com"># отправляем POST-запрос к приложению</span>
+<span class="c-key">def</span> <span class="c-fn">test_create_task</span>(client):
+    response = client.<span class="c-fn">post</span>(
+        <span class="c-str">"/tasks"</span>,
+        json={<span class="c-str">"title"</span>: <span class="c-str">"Новая задача"</span>}
+    )
+
+    <span class="c-com"># проверяем код ответа</span>
+    <span class="c-key">assert</span> response.status_code == <span class="c-num">201</span>
+
+    <span class="c-com"># проверяем тело ответа</span>
+    body = response.<span class="c-fn">get_json</span>()
+    <span class="c-key">assert</span> body[<span class="c-str">"title"</span>] == <span class="c-str">"Новая задача"</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 17. E2E ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Тестирование · Уровень 3</div>
+      <h2 class="head">Сквозное <span class="accent">end-to-end</span> тестирование</h2>
+      <div class="rule"></div>
+
+      <div class="split top">
+        <div>
+          <p class="lead">
+            <strong>Selenium</strong> — инструмент для автоматизации браузера.
+            Имитирует действия реального пользователя: открыть страницу,
+            заполнить форму, нажать кнопку, проверить результат.
+          </p>
+
+          <div class="grid g2" style="margin-top:22px;">
+            <div class="card is-rose">
+              <h3 style="font-size:16px;">Минусы</h3>
+              <p>Самый «дорогой» вид тестов: медленные, хрупкие, требуют запущенного браузера.</p>
+            </div>
+            <div class="card is-green">
+              <h3 style="font-size:16px;">Плюсы</h3>
+              <p>Дают максимальную уверенность, что система работает так, как ожидает пользователь.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="code">
+<span class="c-com"># открываем главную страницу</span>
+driver.<span class="c-fn">get</span>(<span class="c-str">"http://localhost:5000"</span>)
+
+<span class="c-com"># находим поле ввода по имени</span>
+field = driver.<span class="c-fn">find_element</span>(
+    By.NAME, <span class="c-str">"title"</span>
+)
+field.<span class="c-fn">send_keys</span>(<span class="c-str">"Купить хлеб"</span>)
+
+<span class="c-com"># находим кнопку по идентификатору</span>
+driver.<span class="c-fn">find_element</span>(
+    By.ID, <span class="c-str">"add-btn"</span>
+).<span class="c-fn">click</span>()
+
+<span class="c-com"># проверяем, что текст появился</span>
+<span class="c-key">assert</span> <span class="c-str">"Купить хлеб"</span> <span class="c-key">in</span> driver.page_source
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 18. ПОКРЫТИЕ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Тестирование · Уровень 4</div>
+      <h2 class="head">Тестирование <span class="accent">покрытия</span> — pytest-cov</h2>
+      <div class="rule"></div>
+
+      <div class="split">
+        <div>
+          <p class="lead">
+            Инструмент позволяет измерить, какой процент кода покрыт тестами.
+            Это важная метрика качества, которую вы будете использовать
+            в документации проекта.
+          </p>
+
+          <div class="card is-accent" style="margin-top:24px; padding:24px;">
+            <h3 style="font-size:17px; margin-bottom:10px;">Разумное покрытие</h3>
+            <p style="font-size:15px; line-height:1.6;">
+              Мы будем стремиться <strong>не к ста процентам любой ценой</strong>,
+              а к тому, чтобы критически важные участки кода были проверены.
+            </p>
+          </div>
+        </div>
+
+        <div class="stat-row" style="grid-template-columns:1fr; margin-top:0; gap:14px;">
+          <div class="stat">
+            <div class="n">pytest</div>
+            <div class="l">Юнит-тесты · простые функции с assert-ами</div>
+          </div>
+          <div class="stat">
+            <div class="n">pytest-cov</div>
+            <div class="l">Измерение покрытия кода тестами</div>
+          </div>
+          <div class="stat">
+            <div class="n">Selenium</div>
+            <div class="l">Сквозные тесты в реальном браузере</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 19. БЕЗОПАСНОСТЬ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Безопасность · 152-ФЗ</div>
+      <h2 class="head">Как стек соотносится с <span class="accent">требованиями 152-ФЗ</span></h2>
+      <div class="rule"></div>
+
+      <div class="grid g4">
+        <div class="card is-accent">
+          <div class="card__num">01</div>
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <h3>Аутентификация и хеширование</h3>
+          <p>Flask не имеет встроенной аутентификации, но даёт гибкие механизмы. Пароли — через <strong>werkzeug.security</strong>.</p>
+          <p>Когда пользователь регистрируется, сохраняется только хеш. При входе — хеш сравнивается с сохранённым.</p>
+        </div>
+
+        <div class="card is-sky">
+          <div class="card__num">02</div>
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3>Защита от SQL-инъекций</h3>
+          <p>И SQLite, и MySQL поддерживают <strong>параметризованные запросы</strong>.</p>
+          <p>Никогда не используйте конкатенацию строк для формирования SQL-запросов — это классическая уязвимость.</p>
+        </div>
+
+        <div class="card is-amber">
+          <div class="card__num">03</div>
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+          </div>
+          <h3>Секретные ключи и сессии</h3>
+          <p>Flask использует <strong>SECRET_KEY</strong> для подписи сессионных cookie.</p>
+          <p>Ключ не должен попадать в репозиторий — только переменные окружения или конфиги вне Git.</p>
+        </div>
+
+        <div class="card is-green">
+          <div class="card__num">04</div>
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+          </div>
+          <h3>Логирование и аудит</h3>
+          <p>Для соблюдения 152-ФЗ важно фиксировать доступ к персональным данным.</p>
+          <p>Flask позволяет легко добавить логирование всех запросов: кто, когда и к каким данным обращался.</p>
+        </div>
+      </div>
+
+      <div class="card is-rose" style="margin-top:22px; padding:20px 24px;">
+        <p style="font-size:15px; color:var(--ink-soft);">
+          <strong style="color:var(--rose);">Важно:</strong>
+          пароли не хранятся в открытом виде. Даже если злоумышленник получит доступ к базе,
+          он не сможет восстановить пароли. Проверка этих требований — часть тестирования безопасности.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 20. ИНТЕРЕСНЫЕ ФАКТЫ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Интересные факты</div>
+      <h2 class="head">Технологии, которые мы считаем <span class="accent">«серьёзными»</span></h2>
+      <div class="rule"></div>
+
+      <div class="grid g3" style="gap:16px;">
+        <div class="card is-accent">
+          <h3 style="font-size:17px;">Python</h3>
+          <p>Гвидо ван Россум начал разработку как хобби-проект в свободное время. Он даже не был уверен, что это «официальная» работа.</p>
+        </div>
+        <div class="card is-sky">
+          <h3 style="font-size:17px;">Flask</h3>
+          <p>Начинался как первоапрельская шутка — доказательство того, что микрофреймворк не оксюморон.</p>
+        </div>
+        <div class="card is-green">
+          <h3 style="font-size:17px;">SQLite</h3>
+          <p>Используется в самолётах Airbus A350 и практически в каждом смартфоне.</p>
+        </div>
+        <div class="card is-amber">
+          <h3 style="font-size:17px;">HTML и Python</h3>
+          <p>Появились в одном году — 1991.</p>
+        </div>
+        <div class="card is-rose">
+          <h3 style="font-size:17px;">JavaScript</h3>
+          <p>Написан за десять дней Бренданом Айком в 1995 году.</p>
+        </div>
+        <div class="card is-accent">
+          <h3 style="font-size:17px;">CSS</h3>
+          <p>Появился через пять лет после HTML — в 1996 году.</p>
+        </div>
+      </div>
+
+      <div class="card is-accent" style="margin-top:24px; padding:24px 28px;">
+        <p style="font-size:16px; line-height:1.6; color:var(--ink-soft);">
+          Все эти факты объединяет одна идея: технологии, которые мы считаем «серьёзными» и «промышленными»,
+          часто начинались с <strong>простых экспериментов</strong>. И это важно помнить, когда вы будете делать свой проект.
+          Не бойтесь экспериментировать, не бойтесь ошибаться, не бойтесь начинать с малого.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 21. ИТОГ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Итог</div>
+      <h2 class="head">Стек — это <span class="accent">сбалансированная система</span></h2>
+      <div class="rule"></div>
+
+      <div class="stack">
+        <div class="stack__col">
+          <h3>Серверная логика</h3>
+          <div class="meta">Python · Flask</div>
+          <ul>
+            <li>Прозрачны и гибки</li>
+            <li>Хорошо тестируются</li>
+            <li>Минимум «магии»</li>
+            <li>Лёгкий старт</li>
+          </ul>
+        </div>
+        <div class="stack__col">
+          <h3>Хранение данных</h3>
+          <div class="meta">SQLite · MySQL</div>
+          <ul>
+            <li>Сравнение двух подходов</li>
+            <li>Лёгкий встраиваемый</li>
+            <li>Полноценный серверный</li>
+            <li>Адаптация под разные СУБД</li>
+          </ul>
+        </div>
+        <div class="stack__col">
+          <h3>Интерфейс</h3>
+          <div class="meta">HTML · CSS · JavaScript</div>
+          <ul>
+            <li>Взаимодействие с пользователем</li>
+            <li>Точки для автотестов</li>
+            <li>Семантическая разметка</li>
+            <li>Дозированная интерактивность</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="grid g3" style="margin-top:24px;">
+        <div class="fact">
+          <p style="font-size:15px;"><b>Каждый компонент</b> решает свою задачу</p>
+        </div>
+        <div class="fact">
+          <p style="font-size:15px;"><b>Каждый прозрачен</b> для обучения</p>
+        </div>
+        <div class="fact">
+          <p style="font-size:15px;"><b>Все вместе</b> соответствуют требованиям безопасности</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 22. ВОПРОСЫ И ДЗ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Вопросы и домашнее задание</div>
+      <h2 class="head">Подумайте и <span class="accent">подготовьтесь</span></h2>
+      <div class="rule"></div>
+
+      <div class="split top" style="grid-template-columns: 1.15fr .85fr;">
+        <div>
+          <ul class="list compact">
+            <li><span class="dot">1</span><span>Почему Flask называют <strong>микрофреймворком</strong> и в чём его отличие от Django?</span></li>
+            <li><span class="dot">2</span><span>В каких случаях <strong>SQLite лучше MySQL</strong>, а в каких — наоборот?</span></li>
+            <li><span class="dot">3</span><span>Как <strong>HTML-разметка</strong> влияет на качество автоматических тестов?</span></li>
+            <li><span class="dot">4</span><span>Какие <strong>меры безопасности</strong> нужно реализовать в проекте для соответствия 152-ФЗ?</span></li>
+          </ul>
+        </div>
+
+        <div class="card is-accent" style="padding:28px;">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          </div>
+          <h3 style="font-size:20px; margin-bottom:12px;">Домашнее задание</h3>
+          <p style="font-size:15px; line-height:1.65;">
+            Изучить документацию Flask по тестированию.
+          </p>
+          <p style="font-size:15px; line-height:1.65; margin-top:10px;">
+            Подготовить <strong>черновик структуры базы данных</strong> для вашего проекта.
+          </p>
+          <p style="font-size:14px; line-height:1.6; margin-top:16px; color:var(--muted);">
+            Это будет первый шаг к тому, чтобы ваш сквозной проект стал не просто
+            учебным заданием, а реальным портфолио.
+          </p>
+        </div>
+      </div>
+
+      <div class="center" style="margin-top:34px;">
+        <p style="font-size:15px; color:var(--muted);">Спасибо за внимание · до следующего занятия</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ============ CHROME ============ -->
+<div class="brand">Сквозной проект · <span>Стек технологий</span></div>
+
+<div class="chrome">
+  <div class="counter"><b id="cur">01</b> / <span id="total">22</span></div>
+  <button class="navbtn" id="prev" aria-label="Назад">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <button class="navbtn" id="next" aria-label="Вперёд">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+</div>
+
+<div class="hint" id="hint">
+  <kbd>←</kbd> <kbd>→</kbd> для навигации · <kbd>Space</kbd> вперёд
+</div>
+
+<script>
+  (function () {
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const total = slides.length;
+    const curEl = document.getElementById('cur');
+    const totalEl = document.getElementById('total');
+    const bar = document.getElementById('progressBar');
+    const hint = document.getElementById('hint');
+
+    let index = 0;
+
+    totalEl.textContent = String(total).padStart(2, '0');
+
+    function pad(n) { return String(n).padStart(2, '0'); }
+
+    function go(i) {
+      index = Math.max(0, Math.min(total - 1, i));
+      slides.forEach((s, k) => s.classList.toggle('active', k === index));
+      curEl.textContent = pad(index + 1);
+      bar.style.width = ((index + 1) / total * 100) + '%';
+      if (index > 0) hint.classList.add('hide');
+    }
+
+    function next() { go(index + 1); }
+    function prev() { go(index - 1); }
+
+    document.getElementById('next').addEventListener('click', next);
+    document.getElementById('prev').addEventListener('click', prev);
+
+    document.addEventListener('keydown', (e) => {
+      switch (e.key) {
+        case 'ArrowRight':
+        case 'ArrowDown':
+        case 'PageDown':
+        case ' ':
+          e.preventDefault(); next(); break;
+        case 'ArrowLeft':
+        case 'ArrowUp':
+        case 'PageUp':
+          e.preventDefault(); prev(); break;
+        case 'Home':
+          e.preventDefault(); go(0); break;
+        case 'End':
+          e.preventDefault(); go(total - 1); break;
+      }
+    });
+
+    // touch / wheel support (optional, desktop-first)
+    let wheelLock = false;
+    window.addEventListener('wheel', (e) => {
+      if (wheelLock) return;
+      if (Math.abs(e.deltaY) < 24) return;
+      wheelLock = true;
+      if (e.deltaY > 0) next(); else prev();
+      setTimeout(() => { wheelLock = false; }, 550);
+    }, { passive: true });
+
+    // init
+    go(0);
+  })();
+</script>
+
+</body>
+</html>
