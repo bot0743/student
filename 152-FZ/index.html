@@ -1,0 +1,1872 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>152-ФЗ · Персональные данные</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-1: #f5f7fb;
+    --bg-2: #eef2f9;
+    --surface: #ffffff;
+    --ink: #0f172a;
+    --ink-soft: #334155;
+    --muted: #64748b;
+    --line: #e2e8f0;
+    --accent: #4f46e5;
+    --accent-2: #0ea5e9;
+    --accent-soft: #eef2ff;
+    --green: #10b981;
+    --amber: #f59e0b;
+    --rose: #e11d48;
+    --shadow-sm: 0 1px 2px rgba(15,23,42,.06), 0 1px 3px rgba(15,23,42,.05);
+    --shadow-md: 0 10px 30px -10px rgba(15,23,42,.18), 0 4px 10px -4px rgba(15,23,42,.08);
+    --radius: 18px;
+    --font: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    --mono: "JetBrains Mono", "SF Mono", "Consolas", "Menlo", monospace;
+  }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    background: var(--bg-1);
+    color: var(--ink);
+    font-family: var(--font);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .deck {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 5vh 7vw 9vh;
+    background:
+      radial-gradient(1200px 600px at 88% -10%, rgba(79,70,229,.09), transparent 60%),
+      radial-gradient(900px 500px at -5% 110%, rgba(14,165,233,.08), transparent 60%),
+      linear-gradient(180deg, var(--bg-1), var(--bg-2));
+    opacity: 0;
+    transform: translateY(18px) scale(.99);
+    transition: opacity .45s cubic-bezier(.22,.61,.36,1),
+                transform .45s cubic-bezier(.22,.61,.36,1);
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .slide.active {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+
+  .progress {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: rgba(15,23,42,.06);
+    z-index: 60;
+  }
+  .progress__bar {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transition: width .45s cubic-bezier(.22,.61,.36,1);
+  }
+
+  .chrome {
+    position: fixed;
+    bottom: 22px;
+    right: 30px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    z-index: 60;
+  }
+
+  .counter {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .06em;
+    color: var(--muted);
+    background: rgba(255,255,255,.75);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--line);
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-variant-numeric: tabular-nums;
+    box-shadow: var(--shadow-sm);
+    user-select: none;
+  }
+  .counter b { color: var(--ink); }
+
+  .navbtn {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: rgba(255,255,255,.85);
+    backdrop-filter: blur(8px);
+    color: var(--ink-soft);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: transform .18s ease, background .18s ease, color .18s ease, border-color .18s ease;
+  }
+  .navbtn:hover { background: var(--accent); color: #fff; border-color: var(--accent); transform: translateY(-2px); }
+  .navbtn:active { transform: translateY(0) scale(.96); }
+  .navbtn svg { width: 18px; height: 18px; }
+
+  .brand {
+    position: fixed;
+    bottom: 26px;
+    left: 30px;
+    z-index: 60;
+    font-size: 12px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+    user-select: none;
+  }
+  .brand span { color: var(--accent); }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 18px;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 26px; height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    border-radius: 2px;
+  }
+
+  h1.title {
+    font-size: clamp(40px, 4.6vw, 76px);
+    line-height: 1.04;
+    letter-spacing: -.025em;
+    font-weight: 800;
+    color: var(--ink);
+  }
+  h1.title .grad {
+    background: linear-gradient(100deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  h2.head {
+    font-size: clamp(28px, 2.9vw, 46px);
+    line-height: 1.1;
+    letter-spacing: -.02em;
+    font-weight: 800;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  h2.head .accent { color: var(--accent); }
+
+  .lead {
+    font-size: clamp(15px, 1.15vw, 19px);
+    line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: 68ch;
+  }
+
+  .subtitle {
+    font-size: clamp(15px, 1.2vw, 20px);
+    color: var(--muted);
+    line-height: 1.6;
+    max-width: 62ch;
+  }
+
+  .rule {
+    height: 1px;
+    background: linear-gradient(90deg, var(--line), transparent);
+    margin: 22px 0 26px;
+    max-width: 1100px;
+  }
+
+  .slide__inner { width: 100%; max-width: 1240px; margin: 0 auto; }
+  .center { text-align: center; }
+  .center .eyebrow { justify-content: center; }
+  .center .lead, .center .subtitle { margin-left: auto; margin-right: auto; }
+
+  .grid { display: grid; gap: 18px; }
+  .g2 { grid-template-columns: repeat(2, 1fr); }
+  .g3 { grid-template-columns: repeat(3, 1fr); }
+  .g4 { grid-template-columns: repeat(4, 1fr); }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 24px 24px 22px;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: #d7dce8;
+  }
+  .card__num {
+    position: absolute;
+    top: 14px; right: 18px;
+    font-size: 40px;
+    font-weight: 800;
+    color: rgba(79,70,229,.08);
+    line-height: 1;
+    letter-spacing: -.04em;
+  }
+  .card__icon {
+    width: 42px; height: 42px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: var(--accent-soft);
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+  .card__icon svg { width: 22px; height: 22px; }
+  .card h3 {
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: -.01em;
+    margin-bottom: 8px;
+    color: var(--ink);
+  }
+  .card p {
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+  .card p + p { margin-top: 8px; }
+  .card p strong { color: var(--ink-soft); font-weight: 600; }
+
+  .card.is-accent { border-top: 3px solid var(--accent); }
+  .card.is-sky    { border-top: 3px solid var(--accent-2); }
+  .card.is-green  { border-top: 3px solid var(--green); }
+  .card.is-amber  { border-top: 3px solid var(--amber); }
+  .card.is-rose   { border-top: 3px solid var(--rose); }
+
+  .card.is-accent .card__icon { background: var(--accent-soft); color: var(--accent); }
+  .card.is-sky .card__icon    { background: #e0f2fe; color: #0284c7; }
+  .card.is-green .card__icon  { background: #d1fae5; color: #059669; }
+  .card.is-amber .card__icon  { background: #fef3c7; color: #d97706; }
+  .card.is-rose .card__icon   { background: #ffe4e6; color: #be123c; }
+
+  .list { list-style: none; display: grid; gap: 12px; }
+  .list li {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    font-size: 15.5px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 15px 18px;
+    box-shadow: var(--shadow-sm);
+  }
+  .list li .dot {
+    flex: 0 0 auto;
+    width: 26px; height: 26px;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 800;
+    margin-top: 1px;
+  }
+  .list li strong { color: var(--ink); font-weight: 700; }
+  .list.compact li { padding: 12px 16px; font-size: 14.5px; }
+
+  .checks { list-style: none; display: grid; gap: 11px; }
+  .checks li {
+    display: flex; gap: 12px; align-items: flex-start;
+    font-size: 15px; line-height: 1.5; color: var(--ink-soft);
+  }
+  .checks li svg { flex: 0 0 auto; width: 20px; height: 20px; color: var(--green); margin-top: 2px; }
+  .checks li b { color: var(--ink); font-weight: 700; }
+
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  .compare__col {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    box-shadow: var(--shadow-sm);
+  }
+  .compare__col.win {
+    border: 1.5px solid var(--accent);
+    box-shadow: 0 12px 34px -14px rgba(79,70,229,.35);
+  }
+  .compare__head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .compare__head h3 { font-size: 22px; font-weight: 800; letter-spacing: -.01em; }
+  .compare__head .tag {
+    font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+    padding: 5px 10px; border-radius: 999px;
+    background: #f1f5f9; color: var(--muted);
+  }
+  .compare__col.win .compare__head .tag { background: var(--accent-soft); color: var(--accent); }
+  .compare__col ul { list-style: none; display: grid; gap: 10px; }
+  .compare__col li {
+    font-size: 14.5px; line-height: 1.5; color: var(--muted);
+    padding-left: 18px; position: relative;
+  }
+  .compare__col li::before {
+    content: ""; position: absolute; left: 0; top: 8px;
+    width: 7px; height: 7px; border-radius: 2px;
+    background: #cbd5e1;
+  }
+  .compare__col.win li::before { background: var(--accent); }
+  .compare__col li b { color: var(--ink-soft); font-weight: 600; }
+
+  .code {
+    background: #0f172a;
+    border-radius: 16px;
+    padding: 20px 22px;
+    font-family: var(--mono);
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: #e2e8f0;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    border: 1px solid #1e293b;
+  }
+  .code .c-key { color: #c084fc; }
+  .code .c-fn  { color: #7dd3fc; }
+  .code .c-str { color: #86efac; }
+  .code .c-com { color: #64748b; font-style: italic; }
+  .code .c-num { color: #fbbf24; }
+
+  .facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .fact {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 20px 22px;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+  }
+  .fact__year {
+    font-size: 12px; font-weight: 800; letter-spacing: .14em;
+    color: var(--accent); text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .fact p { font-size: 14.5px; line-height: 1.55; color: var(--ink-soft); }
+  .fact p b { color: var(--ink); }
+
+  .timeline { position: relative; padding-left: 30px; display: grid; gap: 18px; }
+  .timeline::before {
+    content: ""; position: absolute; left: 8px; top: 8px; bottom: 8px;
+    width: 2px; background: linear-gradient(180deg, var(--accent), var(--accent-2), transparent);
+    border-radius: 2px;
+  }
+  .timeline__item { position: relative; }
+  .timeline__item::before {
+    content: ""; position: absolute; left: -30px; top: 6px;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: #fff; border: 3px solid var(--accent);
+    box-shadow: 0 0 0 4px rgba(79,70,229,.12);
+  }
+  .timeline__item h4 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .timeline__item p { font-size: 14.5px; line-height: 1.55; color: var(--muted); }
+
+  .arch { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: stretch; }
+  .arch__layer {
+    border-radius: var(--radius);
+    padding: 22px 22px 20px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+    display: flex; flex-direction: column;
+    position: relative;
+  }
+  .arch__layer .step {
+    font-size: 11px; font-weight: 800; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .arch__layer h3 { font-size: 21px; font-weight: 800; margin-bottom: 6px; letter-spacing: -.01em; }
+  .arch__layer p { font-size: 14px; color: var(--muted); line-height: 1.55; margin-bottom: 14px; }
+  .arch__layer .chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: auto; }
+  .chip {
+    font-size: 12px; font-weight: 700;
+    padding: 5px 11px; border-radius: 999px;
+    background: #f1f5f9; color: var(--ink-soft);
+    border: 1px solid var(--line);
+  }
+  .arch__layer.l1 { border-top: 4px solid var(--accent-2); }
+  .arch__layer.l2 { border-top: 4px solid var(--accent); }
+  .arch__layer.l3 { border-top: 4px solid var(--green); }
+  .arch__layer.l1 .chip { background: #e0f2fe; color: #0369a1; border-color: #bae6fd; }
+  .arch__layer.l2 .chip { background: var(--accent-soft); color: #4338ca; border-color: #c7d2fe; }
+  .arch__layer.l3 .chip { background: #d1fae5; color: #047857; border-color: #a7f3d0; }
+
+  .stack { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .stack__col {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+  }
+  .stack__col h3 { font-size: 18px; font-weight: 800; margin-bottom: 4px; }
+  .stack__col .meta { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; color: var(--accent); margin-bottom: 14px; }
+  .stack__col ul { list-style: none; display: grid; gap: 9px; }
+  .stack__col li { font-size: 14.5px; line-height: 1.5; color: var(--muted); padding-left: 16px; position: relative; }
+  .stack__col li::before { content: ""; position: absolute; left: 0; top: 8px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent-2); }
+
+  .title-slide { text-align: left; }
+  .title-slide .badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 8px 16px; border-radius: 999px;
+    background: var(--surface); border: 1px solid var(--line);
+    font-size: 13px; font-weight: 600; color: var(--ink-soft);
+    box-shadow: var(--shadow-sm); margin-bottom: 26px;
+  }
+  .title-slide .badge .pulse {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--green); box-shadow: 0 0 0 4px rgba(16,185,129,.18);
+  }
+  .title-slide .meta-row {
+    display: flex; gap: 40px; margin-top: 38px; flex-wrap: wrap;
+  }
+  .title-slide .meta-row .k { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin-bottom: 5px; }
+  .title-slide .meta-row .v { font-size: 16px; font-weight: 700; color: var(--ink); }
+
+  .quote {
+    font-size: clamp(20px, 1.9vw, 30px);
+    line-height: 1.45;
+    font-weight: 600;
+    color: var(--ink);
+    max-width: 30ch;
+  }
+  .quote .hl { color: var(--accent); }
+
+  .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 26px; }
+  .stat {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 16px; padding: 20px 22px; box-shadow: var(--shadow-sm);
+  }
+  .stat .n { font-size: 32px; font-weight: 800; letter-spacing: -.03em; color: var(--accent); line-height: 1; margin-bottom: 8px; }
+  .stat .l { font-size: 13.5px; color: var(--muted); line-height: 1.5; }
+
+  .pills { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+  .pill {
+    padding: 9px 16px; border-radius: 999px;
+    background: var(--surface); border: 1px solid var(--line);
+    font-size: 14px; font-weight: 600; color: var(--ink-soft);
+    box-shadow: var(--shadow-sm);
+  }
+  .pill.accent { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  .split { display: grid; grid-template-columns: 1.05fr .95fr; gap: 34px; align-items: center; }
+  .split.top { align-items: start; }
+
+  .hint {
+    position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%);
+    font-size: 12px; color: var(--muted); letter-spacing: .04em;
+    background: rgba(255,255,255,.7); backdrop-filter: blur(8px);
+    border: 1px solid var(--line); border-radius: 999px;
+    padding: 7px 16px; z-index: 60; user-select: none;
+    transition: opacity .4s ease;
+  }
+  .hint.hide { opacity: 0; }
+  .hint kbd {
+    font-family: var(--mono); font-size: 11px;
+    background: #f1f5f9; border: 1px solid var(--line);
+    border-bottom-width: 2px; border-radius: 5px;
+    padding: 1px 6px; margin: 0 2px; color: var(--ink-soft);
+  }
+
+  @media (max-width: 1180px) {
+    .slide { padding: 4vh 5vw 8vh; }
+    .g4 { grid-template-columns: repeat(2, 1fr); }
+    .facts { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-height: 760px) {
+    .slide { padding-top: 3.5vh; padding-bottom: 8vh; }
+    .card { padding: 18px 20px; }
+    .list li { padding: 12px 16px; font-size: 14.5px; }
+    .rule { margin: 16px 0 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress"><div class="progress__bar" id="progressBar"></div></div>
+
+<div class="deck" id="deck">
+
+  <!-- ============ 1. TITLE ============ -->
+  <section class="slide title-slide active">
+    <div class="slide__inner">
+      <div class="badge"><span class="pulse"></span> Федеральный закон № 152-ФЗ</div>
+      <h1 class="title">Персональные<br>данные и <span class="grad">закон</span></h1>
+      <p class="subtitle" style="margin-top:22px; max-width:58ch;">
+        Не про технологии как таковые, а про то, как технологии соотносятся
+        с законом и правами человека. Глазами будущего тестировщика.
+      </p>
+
+      <div class="meta-row">
+        <div>
+          <div class="k">Принят</div>
+          <div class="v">27 июля 2006</div>
+        </div>
+        <div>
+          <div class="k">Вступил в силу</div>
+          <div class="v">2007</div>
+        </div>
+        <div>
+          <div class="k">Последние изменения</div>
+          <div class="v">2025 – 2026</div>
+        </div>
+        <div>
+          <div class="k">Регулятор</div>
+          <div class="v">Роскомнадзор</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2. ВВЕДЕНИЕ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Введение</div>
+      <h2 class="head">Тестировщик — это не просто <span class="accent">человек с кнопками</span></h2>
+      <div class="rule"></div>
+
+      <div class="split top">
+        <div>
+          <p class="lead">
+            Мы разобрали основы сетей, безопасную инфраструктуру, шифрование и соединения.
+            Но есть тема, которая стоит особняком: как технологии соотносятся с законом
+            и правами человека.
+          </p>
+
+          <ul class="checks" style="margin-top:24px;">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+              <span>Отвечает за то, чтобы система <b>не нарушала закон</b></span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+              <span>Отвечает за то, чтобы данные <b>не утекали</b></span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+              <span>Отвечает за то, чтобы не создавать проблем ни пользователям, ни компании</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card is-accent" style="padding:28px;">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3 style="font-size:22px;">Полтора часа</h3>
+          <p style="font-size:15px; margin-top:10px;">
+            У нас с вами на то, чтобы разобрать закон от корней
+            до сегодняшних изменений — включая поправки, которые
+            вступили в силу в прошлом году и продолжают вступать в этом.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3. ЧТО ТАКОЕ ПДн ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Основы</div>
+      <h2 class="head">Что такое <span class="accent">персональные данные</span>?</h2>
+      <div class="rule"></div>
+
+      <div class="card is-accent" style="padding:26px 30px; margin-bottom:22px;">
+        <p style="font-size:clamp(16px,1.3vw,21px); line-height:1.55; color:var(--ink); font-weight:600;">
+          Любая информация, относящаяся к прямо или косвенно определённому
+          или определяемому физическому лицу.
+        </p>
+      </div>
+
+      <p class="lead" style="margin-bottom:22px;">
+        Обратите внимание на слова <strong>«косвенно определяемому»</strong> и
+        <strong>«любая информация»</strong>. Это значит, что персональными данными
+        могут быть не только ФИО и паспорт.
+      </p>
+
+      <div class="grid g4">
+        <div class="card is-sky">
+          <h3 style="font-size:16px;">Прямые</h3>
+          <p>ФИО, паспортные данные, номер телефона, email.</p>
+        </div>
+        <div class="card is-accent">
+          <h3 style="font-size:16px;">Косвенные</h3>
+          <p>IP-адрес, файлы cookie, настройки браузера, геолокация.</p>
+        </div>
+        <div class="card is-amber">
+          <h3 style="font-size:16px;">Поведенческие</h3>
+          <p>История покупок, предпочтения в музыке, интересы.</p>
+        </div>
+        <div class="card is-green">
+          <h3 style="font-size:16px;">Биометрические</h3>
+          <p>Отпечатки пальцев, изображение лица, рисунок радужной оболочки, голос.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4. СУБЪЕКТ И ОПЕРАТОР ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Основы</div>
+      <h2 class="head">Субъект и <span class="accent">оператор</span></h2>
+      <div class="rule"></div>
+
+      <div class="compare" style="grid-template-columns: 1fr 1fr;">
+        <div class="compare__col">
+          <div class="compare__head">
+            <h3>Субъект</h3>
+            <span class="tag">Человек</span>
+          </div>
+          <ul>
+            <li>Тот, о ком <b>собирается информация</b></li>
+            <li>Имеет <b>права</b> на информацию, доступ, уточнение, удаление</li>
+            <li>Может <b>отозвать согласие</b></li>
+            <li>Может <b>обжаловать</b> действия оператора в Роскомнадзор или суд</li>
+          </ul>
+        </div>
+
+        <div class="compare__col win">
+          <div class="compare__head">
+            <h3>Оператор</h3>
+            <span class="tag">Тот, кто обрабатывает</span>
+          </div>
+          <ul>
+            <li>Собирает, хранит, использует, передаёт данные</li>
+            <li>Любая организация, ИП и <b>даже самозанятый</b></li>
+            <li>Несёт обязанности по защите данных</li>
+            <li>Отвечает перед законом за нарушения</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card is-rose" style="margin-top:24px; padding:22px 26px;">
+        <p style="font-size:15.5px; color:var(--ink-soft); line-height:1.6;">
+          <strong style="color:var(--rose);">Важно для нашего проекта:</strong>
+          учебный проект, который вы будете делать, тоже будет обрабатывать персональные
+          данные, если вы добавите туда регистрацию пользователей или форму обратной связи.
+          Требования закона распространяются и на вас — пусть и в учебном контексте.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 5. ИСТОРИЯ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">История</div>
+      <h2 class="head">Как появился <span class="accent">152-ФЗ</span></h2>
+      <div class="rule"></div>
+
+      <div class="split top">
+        <div class="timeline">
+          <div class="timeline__item">
+            <h4>До 2006 · Фрагментарное регулирование</h4>
+            <p>Сфера защиты персональных данных регулировалась отдельными нормативными актами, единой рамки не было.</p>
+          </div>
+          <div class="timeline__item">
+            <h4>27 июля 2006 · Принятие</h4>
+            <p>Принят Федеральный закон № 152-ФЗ «О персональных данных».</p>
+          </div>
+          <div class="timeline__item">
+            <h4>2007 · Вступление в силу</h4>
+            <p>Закон создал единую рамку: права субъектов, обязанности операторов, принципы обработки, требования к безопасности.</p>
+          </div>
+          <div class="timeline__item">
+            <h4>2018 · Аналог в Европе</h4>
+            <p>Европейский GDPR вступил в силу. Российский закон созвучен ему, но есть важные отличия — особенно в части локализации.</p>
+          </div>
+          <div class="timeline__item">
+            <h4>2025 – 2026 · Существенные изменения</h4>
+            <p>Ужесточение требований к согласию, локализации, инцидентам, штрафам. Обязательная регистрация всех операторов.</p>
+          </div>
+        </div>
+
+        <div class="card is-accent" style="padding:30px;">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg>
+          </div>
+          <p class="quote">Персональные данные — это <span class="hl">ценность</span>, которую нужно защищать.</p>
+          <p style="margin-top:18px; font-size:14.5px; color:var(--muted); line-height:1.6;">
+            У человека есть право контролировать, как его данные используются.
+            Эта идея осталась неизменной с момента принятия закона.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 6. ПРИНЦИПЫ ОБРАБОТКИ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Основы · Принципы</div>
+      <h2 class="head">Шесть <span class="accent">принципов обработки</span></h2>
+      <div class="rule"></div>
+
+      <div class="grid g3">
+        <div class="card is-accent">
+          <div class="card__num">01</div>
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3>Законность и справедливость</h3>
+          <p>Обработка — только на законных основаниях. Нельзя собирать данные просто потому, что захотелось.</p>
+        </div>
+
+        <div class="card is-sky">
+          <div class="card__num">02</div>
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          </div>
+          <h3>Целевая ограниченность</h3>
+          <p>Данные собираются для конкретных, заранее определённых и законных целей. Нельзя «на всякий случай».</p>
+        </div>
+
+        <div class="card is-green">
+          <div class="card__num">03</div>
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l4-4 4 4 5-6"/></svg>
+          </div>
+          <h3>Минимизация</h3>
+          <p>Только те данные, которые действительно необходимы для цели. Для заказа достаточно имени и телефона.</p>
+        </div>
+
+        <div class="card is-amber">
+          <div class="card__num">04</div>
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </div>
+          <h3>Точность и актуальность</h3>
+          <p>Данные должны быть достоверными и, если нужно, обновляться.</p>
+        </div>
+
+        <div class="card is-rose">
+          <div class="card__num">05</div>
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </div>
+          <h3>Хранение не дольше необходимого</h3>
+          <p>Как только цель достигнута — данные должны быть уничтожены или обезличены.</p>
+        </div>
+
+        <div class="card is-accent">
+          <div class="card__num">06</div>
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <h3>Конфиденциальность и безопасность</h3>
+          <p>Оператор обязан защищать данные от несанкционированного доступа.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 7. СОГЛАСИЕ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Правовые основания</div>
+      <h2 class="head">Согласие на обработку — <span class="accent">пять характеристик</span></h2>
+      <div class="rule"></div>
+
+      <div class="grid g3" style="margin-bottom:22px;">
+        <div class="card is-accent">
+          <h3 style="font-size:16px;">Конкретное</h3>
+          <p>На определённые цели и определённые действия с данными.</p>
+        </div>
+        <div class="card is-sky">
+          <h3 style="font-size:16px;">Предметное</h3>
+          <p>Субъект понимает, какие именно его данные обрабатываются.</p>
+        </div>
+        <div class="card is-green">
+          <h3 style="font-size:16px;">Информированное</h3>
+          <p>Кто оператор, зачем собирает, как долго хранит, как отозвать.</p>
+        </div>
+        <div class="card is-amber">
+          <h3 style="font-size:16px;">Сознательное</h3>
+          <p>Человек понимает последствия своего решения.</p>
+        </div>
+        <div class="card is-rose">
+          <h3 style="font-size:16px;">Однозначное</h3>
+          <p>Чёткое волеизъявление: галочка, подпись. Не молчание и не бездействие.</p>
+        </div>
+        <div class="card is-accent" style="background: var(--accent-soft); border-color: #c7d2fe;">
+          <h3 style="font-size:16px; color: var(--accent);">С 1 сентября 2025</h3>
+          <p style="color: var(--ink-soft);">Согласие оформляется <strong>отдельно</strong> от иных документов. Установлены унифицированные формы.</p>
+        </div>
+      </div>
+
+      <div class="card is-rose" style="padding:20px 24px;">
+        <p style="font-size:15px; color:var(--ink-soft);">
+          <strong style="color:var(--rose);">Нельзя</strong> спрятать пункт о согласии в конце пользовательского
+          соглашения на двадцати страницах. Нарушение унифицированной формы — само по себе основание для штрафа.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 8. ДРУГИЕ ОСНОВАНИЯ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Правовые основания</div>
+      <h2 class="head">Когда согласие <span class="accent">не требуется</span></h2>
+      <div class="rule"></div>
+
+      <p class="lead" style="margin-bottom:24px;">
+        Согласие — не единственное основание. Закон предусматривает и другие случаи.
+      </p>
+
+      <div class="grid g3">
+        <div class="card is-accent">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+          </div>
+          <h3>Исполнение договора</h3>
+          <p>Стороной которого является субъект. Например, интернет-магазин обрабатывает данные для доставки заказа.</p>
+        </div>
+
+        <div class="card is-sky">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 6 6 .9-4.5 4.3 1.1 6.3L12 16.8 6.4 19.5l1.1-6.3L3 8.9 9 8z"/></svg>
+          </div>
+          <h3>Исполнение судебного акта</h3>
+          <p>Обработка допускается для исполнения судебного акта, для осуществления правосудия.</p>
+        </div>
+
+        <div class="card is-green">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <h3>Защита жизни и здоровья</h3>
+          <p>Когда обработка необходима для защиты жизни и здоровья субъекта.</p>
+        </div>
+      </div>
+
+      <div class="card is-amber" style="margin-top:24px; padding:22px 26px;">
+        <p style="font-size:15.5px; color:var(--ink-soft); line-height:1.6;">
+          <strong style="color:var(--amber);">Важно:</strong>
+          если вы обрабатываете данные без согласия, вы должны быть готовы доказать,
+          что у вас есть законное основание. Это одна из точек, которую мы будем
+          проверять при тестировании.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 9. ПРАВА СУБЪЕКТА ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Права субъекта</div>
+      <h2 class="head">Что может <span class="accent">человек</span></h2>
+      <div class="rule"></div>
+
+      <div class="grid g3">
+        <div class="card is-accent">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          </div>
+          <h3>Право на информацию</h3>
+          <p>Запросить, какие данные обрабатываются, с какой целью, кому передавались, как долго хранятся.</p>
+        </div>
+
+        <div class="card is-sky">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <h3>Право на доступ</h3>
+          <p>Ознакомиться с тем, что о нём хранится.</p>
+        </div>
+
+        <div class="card is-green">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
+          </div>
+          <h3>Право на уточнение</h3>
+          <p>Блокирование или уничтожение неполных, устаревших, неточных или незаконно полученных данных.</p>
+        </div>
+
+        <div class="card is-amber">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </div>
+          <h3>Право на отзыв согласия</h3>
+          <p>В любой момент. Оператор обязан прекратить обработку, если нет других законных оснований.</p>
+        </div>
+
+        <div class="card is-rose">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-3"/></svg>
+          </div>
+          <h3>Право на обжалование</h3>
+          <p>В Роскомнадзор или в суд.</p>
+        </div>
+
+        <div class="card is-accent">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+          </div>
+          <h3>Право на защиту</h3>
+          <p>Возмещение убытков и компенсация морального вреда.</p>
+        </div>
+      </div>
+
+      <div class="stat-row" style="margin-top:24px; grid-template-columns: repeat(2, 1fr);">
+        <div class="stat">
+          <div class="n">6000+</div>
+          <div class="l">обращений в Центр правовой помощи гражданам в цифровой среде за первое полугодие 2026 года</div>
+        </div>
+        <div class="stat">
+          <div class="n">+36%</div>
+          <div class="l">рост по сравнению с аналогичным периодом прошлого года</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 10. ОБЯЗАННОСТИ ОПЕРАТОРА ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Обязанности оператора</div>
+      <h2 class="head">Что должен делать <span class="accent">оператор</span></h2>
+      <div class="rule"></div>
+
+      <div class="grid g4">
+        <div class="card is-accent">
+          <div class="card__num">01</div>
+          <h3 style="font-size:15px;">Уведомление Роскомнадзора</h3>
+          <p>Регистрация в реестре операторов. С 30 мая 2025 — обязательно для всех.</p>
+        </div>
+        <div class="card is-sky">
+          <div class="card__num">02</div>
+          <h3 style="font-size:15px;">Ответственный за обработку</h3>
+          <p>Штатный сотрудник или внешний специалист.</p>
+        </div>
+        <div class="card is-green">
+          <div class="card__num">03</div>
+          <h3 style="font-size:15px;">Политика обработки</h3>
+          <p>Публичный документ: какие данные, зачем, как хранятся, кому передаются, как защищаются.</p>
+        </div>
+        <div class="card is-amber">
+          <div class="card__num">04</div>
+          <h3 style="font-size:15px;">Меры защиты</h3>
+          <p>Правовые, организационные и технические меры для защиты данных.</p>
+        </div>
+        <div class="card is-rose">
+          <div class="card__num">05</div>
+          <h3 style="font-size:15px;">Конфиденциальность</h3>
+          <p>Не разглашать данные третьим лицам без согласия субъекта или иного основания.</p>
+        </div>
+        <div class="card is-accent">
+          <div class="card__num">06</div>
+          <h3 style="font-size:15px;">Уничтожение данных</h3>
+          <p>По достижении целей обработки или при отзыве согласия.</p>
+        </div>
+        <div class="card is-sky">
+          <div class="card__num">07</div>
+          <h3 style="font-size:15px;">Уведомление об инцидентах</h3>
+          <p>Незамедлительно информировать Роскомнадзор об утечках.</p>
+        </div>
+        <div class="card is-green">
+          <div class="card__num">08</div>
+          <h3 style="font-size:15px;">Обновление сведений</h3>
+          <p>Не позднее 15-го числа месяца, следующего за изменением.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 11. ЛОКАЛИЗАЦИЯ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Локализация данных</div>
+      <h2 class="head">Данные граждан РФ — <span class="accent">на территории РФ</span></h2>
+      <div class="rule"></div>
+
+      <div class="split top">
+        <div>
+          <div class="card is-accent" style="padding:24px;">
+            <h3 style="font-size:18px; margin-bottom:14px;">Требование</h3>
+            <p style="font-size:15px; line-height:1.65;">
+              Персональные данные граждан Российской Федерации должны записываться,
+              систематизироваться, накапливаться, храниться, уточняться и извлекаться
+              с использованием баз данных, находящихся на территории РФ.
+            </p>
+          </div>
+
+          <div class="card is-rose" style="padding:24px; margin-top:16px;">
+            <h3 style="font-size:18px; margin-bottom:14px;">С 1 июля 2025</h3>
+            <p style="font-size:15px; line-height:1.65;">
+              Запрет на хранение и обработку персональных данных граждан РФ
+              за пределами страны стал ещё жёстче — за исключением случаев,
+              прямо предусмотренных законом.
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-size:17px; margin-bottom:14px; color: var(--ink);">Что это означает на практике</h3>
+          <ul class="checks">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+              <span>Нельзя хранить данные на <b>зарубежных серверах</b></span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+              <span>Нельзя использовать <b>зарубежные облака</b> для обработки</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+              <span>Нельзя передавать данные в зарубежные сервисы <b>без специального основания</b></span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+              <span>Если проект будет развёрнут — <b>база данных должна быть в России</b></span>
+            </li>
+          </ul>
+
+          <div class="stat-row" style="grid-template-columns: 1fr 1fr; margin-top:20px; gap:14px;">
+            <div class="stat" style="padding:16px 18px;">
+              <div class="n" style="font-size:24px;">6 млн ₽</div>
+              <div class="l">первичное нарушение</div>
+            </div>
+            <div class="stat" style="padding:16px 18px;">
+              <div class="n" style="font-size:24px;">18 млн ₽</div>
+              <div class="l">повторное нарушение</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 12. СТАТЬЯ 19 ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Статья 19 · Требования к защите</div>
+      <h2 class="head">Меры защиты <span class="accent">персональных данных</span></h2>
+      <div class="rule"></div>
+
+      <p class="lead" style="margin-bottom:22px;">
+        Оператор обязан принимать правовые, организационные и технические меры для защиты
+        данных от неправомерного или случайного доступа, уничтожения, изменения,
+        блокирования, копирования, предоставления и распространения.
+      </p>
+
+      <div class="grid g4">
+        <div class="card is-accent">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          </div>
+          <h3 style="font-size:15px;">Определение угроз</h3>
+          <p>Анализ угроз безопасности перед вводом системы в эксплуатацию.</p>
+        </div>
+        <div class="card is-sky">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <h3 style="font-size:15px;">Меры защиты</h3>
+          <p>Шифрование, разграничение доступа, антивирусы, межсетевые экраны.</p>
+        </div>
+        <div class="card is-green">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </div>
+          <h3 style="font-size:15px;">Оценка эффективности</h3>
+          <p>Аудит или пентест перед вводом системы в эксплуатацию.</p>
+        </div>
+        <div class="card is-amber">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          </div>
+          <h3 style="font-size:15px;">Учёт носителей</h3>
+          <p>Учёт машинных носителей персональных данных.</p>
+        </div>
+        <div class="card is-rose">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          </div>
+          <h3 style="font-size:15px;">Обнаружение НСД</h3>
+          <p>Выявление несанкционированного доступа и реагирование на инциденты.</p>
+        </div>
+        <div class="card is-accent">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.2-8.6"/><path d="M22 4l-10 10-3-3"/></svg>
+          </div>
+          <h3 style="font-size:15px;">Восстановление</h3>
+          <p>Восстановление данных, модифицированных или уничтоженных в результате НСД.</p>
+        </div>
+        <div class="card is-sky">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+          </div>
+          <h3 style="font-size:15px;">Правила доступа</h3>
+          <p>Установление правил доступа к персональным данным.</p>
+        </div>
+        <div class="card is-green">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l4-4 4 4 5-6"/></svg>
+          </div>
+          <h3 style="font-size:15px;">Регистрация действий</h3>
+          <p>Логирование всех действий с персональными данными.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 13. УРОВНИ ЗАЩИЩЁННОСТИ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Уровни защищённости</div>
+      <h2 class="head">Четыре уровня по <span class="accent">Постановлению № 1119</span></h2>
+      <div class="rule"></div>
+
+      <p class="lead" style="margin-bottom:24px;">
+        Уровни определяются в зависимости от категории данных и количества субъектов.
+        Конкретные требования устанавливаются Постановлением Правительства № 1119
+        от 1 ноября 2012 года.
+      </p>
+
+      <div class="grid g4">
+        <div class="card is-rose">
+          <div class="card__num">1</div>
+          <h3>Первый уровень</h3>
+          <p><strong>Самый высокий.</strong> Специальные категории данных: расовая принадлежность, политические убеждения, состояние здоровья.</p>
+        </div>
+        <div class="card is-amber">
+          <div class="card__num">2</div>
+          <h3>Второй уровень</h3>
+          <p>Общедоступные данные о субъектах, требующих особой защиты.</p>
+        </div>
+        <div class="card is-sky">
+          <div class="card__num">3</div>
+          <h3>Третий уровень</h3>
+          <p>Общедоступные персональные данные о значительном количестве субъектов.</p>
+        </div>
+        <div class="card is-green">
+          <div class="card__num">4</div>
+          <h3>Четвёртый уровень</h3>
+          <p><strong>Самый низкий.</strong> Обезличенные данные или данные небольшого количества субъектов.</p>
+        </div>
+      </div>
+
+      <div class="card is-accent" style="margin-top:24px; padding:22px 26px;">
+        <p style="font-size:15.5px; color:var(--ink-soft); line-height:1.6;">
+          Постановление определяет, какие меры защиты должны применяться,
+          какие классы средств защиты информации использовать, как организовывать доступ.
+          Оно периодически обновляется, чтобы соответствовать развитию технологий.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 14. КОНТРОЛЬ И НАДЗОР ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Контроль и надзор</div>
+      <h2 class="head">Роскомнадзор и <span class="accent">автоматизированные системы</span></h2>
+      <div class="rule"></div>
+
+      <div class="split top">
+        <div>
+          <p class="lead">
+            Главный орган — <strong>Роскомнадзор</strong>: Федеральная служба по надзору
+            в сфере связи, информационных технологий и массовых коммуникаций.
+          </p>
+
+          <ul class="list compact" style="margin-top:22px;">
+            <li><span class="dot">✓</span><span>Использует <strong>автоматизированные системы</strong> дистанционного выявления нарушений.</span></li>
+            <li><span class="dot">✓</span><span>Выявляет: отсутствие политики, некорректный сбор согласий, хранение данных на зарубежных серверах.</span></li>
+            <li><span class="dot">✓</span><span>Подход стал <strong>риск-ориентированным</strong>: регулятор действует точечно, сосредотачиваясь на тех, кто представляет наибольшую угрозу.</span></li>
+          </ul>
+        </div>
+
+        <div class="stat-row" style="grid-template-columns:1fr; margin-top:0; gap:14px;">
+          <div class="stat">
+            <div class="n">160 000</div>
+            <div class="l">интернет-ресурсов проверено за полтора года</div>
+          </div>
+          <div class="stat">
+            <div class="n">90%</div>
+            <div class="l">сайтов с признаками нарушений</div>
+          </div>
+          <div class="stat">
+            <div class="n">150 000</div>
+            <div class="l">обращений граждан с начала 2025 года</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 15. ОТВЕТСТВЕННОСТЬ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Ответственность</div>
+      <h2 class="head">Штрафы, которые <span class="accent">изменились в 2025</span></h2>
+      <div class="rule"></div>
+
+      <div class="grid g3">
+        <div class="card is-amber">
+          <h3 style="font-size:16px;">Обработка без основания</h3>
+          <p><strong>Должностные:</strong> 50 000 – 100 000 ₽</p>
+          <p><strong>Юридические:</strong> 150 000 – 300 000 ₽</p>
+          <p style="font-size:13px; color:var(--rose);">При повторном нарушении — удваиваются</p>
+        </div>
+        <div class="card is-rose">
+          <h3 style="font-size:16px;">Без согласия / нарушение формы</h3>
+          <p><strong>Должностные:</strong> 100 000 – 300 000 ₽</p>
+          <p><strong>Юридические:</strong> 300 000 – 700 000 ₽</p>
+          <p style="font-size:13px; color:var(--rose);">При повторном — для ИП 500 000 – 1 млн ₽, для юрлиц 1 – 1,5 млн ₽</p>
+        </div>
+        <div class="card is-accent">
+          <h3 style="font-size:16px;">Нарушение локализации</h3>
+          <p><strong>Должностные:</strong> 100 000 – 200 000 ₽</p>
+          <p><strong>Юридические:</strong> 1 – 6 млн ₽</p>
+          <p style="font-size:13px; color:var(--rose);">Самый крупный состав для юрлиц</p>
+        </div>
+      </div>
+
+      <div class="grid g2" style="margin-top:20px;">
+        <div class="card is-rose">
+          <h3 style="font-size:16px;">Первичная утечка</h3>
+          <p><strong>1 000 – 10 000 субъектов:</strong> до 5 млн ₽</p>
+          <p><strong>100 000 – 1 млн субъектов:</strong> до 15 млн ₽</p>
+        </div>
+        <div class="card" style="background:#0f172a; border-color:#1e293b;">
+          <h3 style="font-size:16px; color:#f87171;">Повторная утечка · оборотные штрафы</h3>
+          <p style="color:#cbd5e1;">1 – 3% годовой выручки</p>
+          <p style="color:#cbd5e1;">Не менее 25 млн ₽ и не более 500 млн ₽</p>
+          <p style="color:#94a3b8; font-size:13px; margin-top:6px;">Это угроза самому существованию бизнеса.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 16. УГОЛОВНАЯ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Уголовная ответственность</div>
+      <h2 class="head">Когда <span class="accent">административкой</span> не ограничивается</h2>
+      <div class="rule"></div>
+
+      <div class="grid g2">
+        <div class="card is-rose">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3>Неправомерный доступ к компьютерной информации</h3>
+          <p>Применяется, когда действия приводят к серьёзным последствиям.</p>
+        </div>
+        <div class="card is-rose">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          </div>
+          <h3>Нарушение неприкосновенности частной жизни</h3>
+          <p>Также влечёт уголовную ответственность.</p>
+        </div>
+      </div>
+
+      <div class="card is-amber" style="margin-top:24px; padding:22px 26px;">
+        <p style="font-size:15.5px; color:var(--ink-soft); line-height:1.65;">
+          <strong style="color:var(--amber);">Судебная практика:</strong>
+          компании могут нести ответственность не только за свои действия,
+          но и за действия <strong>подрядчиков</strong>, которые имели доступ к данным.
+          Поэтому так важно выстраивать договорные отношения с партнёрами
+          и проверять их соответствие требованиям закона.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 17. COMPLIANCE-ТЕСТИРОВАНИЕ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Тестирование · Compliance</div>
+      <h2 class="head">Тестирование <span class="accent">на соответствие</span> 152-ФЗ</h2>
+      <div class="rule"></div>
+
+      <p class="lead" style="margin-bottom:22px;">
+        Ваша задача — не просто проверить, работает ли функция. Ваша задача —
+        проверить, соответствует ли система требованиям закона.
+      </p>
+
+      <div class="grid g3">
+        <div class="card is-accent">
+          <div class="card__num">01</div>
+          <h3 style="font-size:15px;">Согласие</h3>
+          <p>Форма отдельная, содержит все обязательные сведения, есть возможность отозвать.</p>
+        </div>
+        <div class="card is-sky">
+          <div class="card__num">02</div>
+          <h3 style="font-size:15px;">Минимизация</h3>
+          <p>Система не собирает избыточные данные. Нет обязательного поля «паспортные данные» там, где оно не нужно.</p>
+        </div>
+        <div class="card is-green">
+          <div class="card__num">03</div>
+          <h3 style="font-size:15px;">Удаление и обезличивание</h3>
+          <p>Когда пользователь удаляет аккаунт или отзывает согласие — данные удаляются или обезличиваются.</p>
+        </div>
+        <div class="card is-amber">
+          <div class="card__num">04</div>
+          <h3 style="font-size:15px;">Защита от SQL-инъекций</h3>
+          <p>И других уязвимостей, которые могут привести к утечке данных.</p>
+        </div>
+        <div class="card is-rose">
+          <div class="card__num">05</div>
+          <h3 style="font-size:15px;">Логирование доступа</h3>
+          <p>Система фиксирует, кто и когда обращался к каким данным.</p>
+        </div>
+        <div class="card is-accent">
+          <div class="card__num">06</div>
+          <h3 style="font-size:15px;">Уведомление об инцидентах</h3>
+          <p>Возможность оперативно обнаружить утечку и уведомить Роскомнадзор.</p>
+        </div>
+      </div>
+
+      <div class="card is-accent" style="margin-top:22px; padding:20px 26px;">
+        <p style="font-size:15.5px; color:var(--ink-soft); line-height:1.6;">
+          Это то, что отличает просто тестировщика от специалиста, который понимает контекст.
+          Вы не просто проверяете, что кнопка нажимается. Вы проверяете, что система
+          <strong style="color:var(--accent);">не нарушает права пользователей</strong>
+          и <strong style="color:var(--accent);">не создаёт рисков для бизнеса</strong>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 18. ПРИМЕРЫ ИЗ ПРАКТИКИ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Практика</div>
+      <h2 class="head">Пять примеров <span class="accent">нарушений</span></h2>
+      <div class="rule"></div>
+
+      <ul class="list compact">
+        <li>
+          <span class="dot">1</span>
+          <span>Компания собирает email для рассылки, но <strong>не получает отдельного согласия</strong> — включает пункт в общее пользовательское соглашение. <em style="color:var(--rose);">Нарушение.</em></span>
+        </li>
+        <li>
+          <span class="dot">2</span>
+          <span>Интернет-магазин <strong>хранит данные банковских карт на своём сервере</strong>. Это не только нарушение PCI DSS, но и риск утечки. <em style="color:var(--rose);">Нарушение.</em></span>
+        </li>
+        <li>
+          <span class="dot">3</span>
+          <span>Система <strong>не удаляет данные пользователя</strong> после удаления аккаунта, а просто помечает его неактивным. <em style="color:var(--rose);">Нарушение принципа хранения не дольше необходимого.</em></span>
+        </li>
+        <li>
+          <span class="dot">4</span>
+          <span>Система <strong>логирует все запросы, включая пароли в открытом виде</strong>. <em style="color:var(--rose);">Грубое нарушение.</em></span>
+        </li>
+        <li>
+          <span class="dot">5</span>
+          <span>Система использует <strong>зарубежный облачный сервис</strong> для хранения данных российских пользователей. <em style="color:var(--rose);">Нарушение локализации.</em></span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ 19. ДОКУМЕНТАЦИЯ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Практика · Документация</div>
+      <h2 class="head">Что должно быть <span class="accent">у оператора</span></h2>
+      <div class="rule"></div>
+
+      <div class="grid g3">
+        <div class="card is-accent">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+          </div>
+          <h3>Политика обработки</h3>
+          <p>Цели, категории данных, способы обработки, меры защиты, права субъектов. Опубликована на сайте.</p>
+        </div>
+        <div class="card is-sky">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M9 9h6v6H9z"/></svg>
+          </div>
+          <h3>Уведомление Роскомнадзора</h3>
+          <p>Электронная форма на сайте ведомства: сведения об операторе, цели, категории, меры, местонахождение базы.</p>
+        </div>
+        <div class="card is-green">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          </div>
+          <h3>Ответственный</h3>
+          <p>Сотрудник, прошедший обучение, или внешний консультант.</p>
+        </div>
+        <div class="card is-amber">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8"/></svg>
+          </div>
+          <h3>Внутренние регламенты</h3>
+          <p>Как сотрудники работают с данными, какие меры безопасности соблюдают, как реагируют на инциденты.</p>
+        </div>
+        <div class="card is-rose">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l4-4 4 4 5-6"/></svg>
+          </div>
+          <h3>Журналы учёта</h3>
+          <p>Какие данные, когда, кем, с какой целью собраны, кому передавались.</p>
+        </div>
+        <div class="card is-accent">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg>
+          </div>
+          <h3>Порядок уведомлений</h3>
+          <p>Готовность оперативно уведомить Роскомнадзор об инциденте.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 20. ИЗМЕНЕНИЯ 2025-2026 ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Изменения 2025 – 2026</div>
+      <h2 class="head">Что <span class="accent">изменилось</span> в законе</h2>
+      <div class="rule"></div>
+
+      <div class="grid g2" style="gap:14px;">
+        <div class="card is-accent" style="padding:18px 22px;">
+          <h3 style="font-size:15px;">1. Обязательная регистрация</h3>
+          <p>Все операторы — включая самозанятых — регистрируются в реестре Роскомнадзора.</p>
+        </div>
+        <div class="card is-sky" style="padding:18px 22px;">
+          <h3 style="font-size:15px;">2. Ужесточение требований к согласию</h3>
+          <p>Согласие — отдельный документ, унифицированная форма.</p>
+        </div>
+        <div class="card is-green" style="padding:18px 22px;">
+          <h3 style="font-size:15px;">3. Усиление локализации</h3>
+          <p>С 1 июля 2025 запрет на хранение данных граждан РФ за пределами страны стал более строгим.</p>
+        </div>
+        <div class="card is-amber" style="padding:18px 22px;">
+          <h3 style="font-size:15px;">4. Новые правила уведомления</h3>
+          <p>Незамедлительное информирование Роскомнадзора об утечках.</p>
+        </div>
+        <div class="card is-rose" style="padding:18px 22px;">
+          <h3 style="font-size:15px;">5. Ужесточение штрафов</h3>
+          <p>Оборотные штрафы за повторные утечки — до 500 млн ₽.</p>
+        </div>
+        <div class="card is-accent" style="padding:18px 22px;">
+          <h3 style="font-size:15px;">6. Усиление контроля</h3>
+          <p>Автоматизированные системы Роскомнадзора, привлечение силовых ведомств.</p>
+        </div>
+        <div class="card is-sky" style="padding:18px 22px;">
+          <h3 style="font-size:15px;">7. Обезличивание</h3>
+          <p>Обязательное обезличивание данных в некоторых случаях — как ответ на рост утечек.</p>
+        </div>
+        <div class="card is-green" style="padding:18px 22px;">
+          <h3 style="font-size:15px;">8. Единая биометрическая система</h3>
+          <p>Централизация сбора и хранения биометрических данных.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 21. PRIVACY BY DESIGN ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Принцип</div>
+      <h2 class="head"><span class="accent">Privacy by design</span> — конфиденциальность с самого начала</h2>
+      <div class="rule"></div>
+
+      <div class="split top">
+        <div>
+          <p class="lead">
+            Если вы разрабатываете систему, которая собирает персональные данные,
+            вы должны с самого начала закладывать требования закона в архитектуру.
+          </p>
+
+          <ul class="checks" style="margin-top:22px;">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+              <span>Система собирает <b>минимум данных</b></span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+              <span>Хранит их <b>безопасно</b></span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+              <span>Предоставляет пользователю <b>контроль над ними</b></span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+              <span>Позволяет <b>легко удалять</b> их</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card is-rose" style="padding:28px;">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+          </div>
+          <h3 style="font-size:20px; margin-bottom:12px;">Не заплатка после</h3>
+          <p style="font-size:15px; line-height:1.65;">
+            Защита данных не должна добавляться как заплатка после того, как система готова.
+            Это влияет на выбор базы данных, на структуру таблиц, на способы аутентификации,
+            на логирование, на шифрование.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 22. МИФЫ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Мифы</div>
+      <h2 class="head">Пять <span class="accent">заблуждений</span> о 152-ФЗ</h2>
+      <div class="rule"></div>
+
+      <div class="grid g2" style="gap:14px;">
+        <div class="card is-rose" style="padding:20px 22px;">
+          <h3 style="font-size:15px;">Миф 1: только для крупных компаний</h3>
+          <p><strong>Реальность:</strong> закон касается всех операторов, включая самозанятых и ИП.</p>
+        </div>
+        <div class="card is-rose" style="padding:20px 22px;">
+          <h3 style="font-size:15px;">Миф 2: достаточно получить согласие</h3>
+          <p><strong>Реальность:</strong> согласие — только одно из оснований. Нужно соблюдать принципы, безопасность, локализацию.</p>
+        </div>
+        <div class="card is-rose" style="padding:20px 22px;">
+          <h3 style="font-size:15px;">Миф 3: обезличенные данные — не ПДн</h3>
+          <p><strong>Реальность:</strong> если возможна повторная идентификация — это ПДн. Обезличивание должно быть необратимым.</p>
+        </div>
+        <div class="card is-rose" style="padding:20px 22px;">
+          <h3 style="font-size:15px;">Миф 4: штрафы только за утечки</h3>
+          <p><strong>Реальность:</strong> штрафы и за отсутствие уведомления, неправильное согласие, отсутствие политики, нарушение локализации.</p>
+        </div>
+        <div class="card is-rose" style="padding:20px 22px; grid-column: 1 / -1;">
+          <h3 style="font-size:15px;">Миф 5: закон можно игнорировать — проверки редки</h3>
+          <p><strong>Реальность:</strong> Роскомнадзор активно использует автоматизированные системы и проверяет 90% сайтов на нарушения. Количество жалоб от граждан растёт. Надеяться на авось не стоит.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 23. ПОДГОТОВКА К ПРОВЕРКЕ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Подготовка</div>
+      <h2 class="head">Чек-лист к <span class="accent">проверке Роскомнадзора</span></h2>
+      <div class="rule"></div>
+
+      <div class="grid g2" style="gap:14px;">
+        <div class="card is-accent" style="padding:16px 20px;">
+          <p style="font-size:14.5px;"><strong>1.</strong> Зарегистрированы в реестре операторов</p>
+        </div>
+        <div class="card is-sky" style="padding:16px 20px;">
+          <p style="font-size:14.5px;"><strong>2.</strong> Политика обработки актуальна и соответствует требованиям</p>
+        </div>
+        <div class="card is-green" style="padding:16px 20px;">
+          <p style="font-size:14.5px;"><strong>3.</strong> Формы согласия — отдельные, со всеми сведениями</p>
+        </div>
+        <div class="card is-amber" style="padding:16px 20px;">
+          <p style="font-size:14.5px;"><strong>4.</strong> Данные хранятся на территории РФ</p>
+        </div>
+        <div class="card is-rose" style="padding:16px 20px;">
+          <p style="font-size:14.5px;"><strong>5.</strong> Есть ответственный за обработку ПДн</p>
+        </div>
+        <div class="card is-accent" style="padding:16px 20px;">
+          <p style="font-size:14.5px;"><strong>6.</strong> Есть внутренние регламенты и инструкции</p>
+        </div>
+        <div class="card is-sky" style="padding:16px 20px;">
+          <p style="font-size:14.5px;"><strong>7.</strong> Ведутся журналы учёта</p>
+        </div>
+        <div class="card is-green" style="padding:16px 20px;">
+          <p style="font-size:14.5px;"><strong>8.</strong> Есть возможность оперативно уведомить об инциденте</p>
+        </div>
+        <div class="card is-amber" style="padding:16px 20px;">
+          <p style="font-size:14.5px;"><strong>9.</strong> Проведён внутренний аудит безопасности</p>
+        </div>
+        <div class="card is-rose" style="padding:16px 20px;">
+          <p style="font-size:14.5px;"><strong>10.</strong> Сотрудники обучены</p>
+        </div>
+      </div>
+
+      <div class="card is-accent" style="margin-top:20px; padding:18px 24px;">
+        <p style="font-size:15px; color:var(--ink-soft);">
+          Все эти шаги помогут снизить риски и избежать штрафов.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 24. РОЛЬ ТЕСТИРОВЩИКА ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Роль тестировщика</div>
+      <h2 class="head">Что вы должны <span class="accent">уметь</span></h2>
+      <div class="rule"></div>
+
+      <div class="grid g4">
+        <div class="card is-accent">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </div>
+          <h3 style="font-size:15px;">Анализировать требования</h3>
+          <p>Преобразовывать их в тест-кейсы.</p>
+        </div>
+        <div class="card is-sky">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/></svg>
+          </div>
+          <h3 style="font-size:15px;">Проверять минимизацию</h3>
+          <p>Система собирает только необходимые данные.</p>
+        </div>
+        <div class="card is-green">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+          </div>
+          <h3 style="font-size:15px;">Проверять согласие</h3>
+          <p>Оформлено корректно, есть возможность отозвать.</p>
+        </div>
+        <div class="card is-amber">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </div>
+          <h3 style="font-size:15px;">Проверять удаление</h3>
+          <p>Данные удаляются или обезличиваются.</p>
+        </div>
+        <div class="card is-rose">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <h3 style="font-size:15px;">Проверять доступ</h3>
+          <p>Разграничение доступа к данным.</p>
+        </div>
+        <div class="card is-accent">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l4-4 4 4 5-6"/></svg>
+          </div>
+          <h3 style="font-size:15px;">Проверять логи</h3>
+          <p>Логи не содержат чувствительных данных.</p>
+        </div>
+        <div class="card is-sky">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <h3 style="font-size:15px;">Проверять устойчивость</h3>
+          <p>К SQL-инъекциям и другим атакам.</p>
+        </div>
+        <div class="card is-green">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3 style="font-size:15px;">Проверять локализацию</h3>
+          <p>Данные хранятся на территории РФ.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 25. ИТОГ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Итог</div>
+      <h2 class="head">152-ФЗ — <span class="accent">основа регулирования</span></h2>
+      <div class="rule"></div>
+
+      <div class="stack">
+        <div class="stack__col">
+          <h3>Что определяет закон</h3>
+          <div class="meta">Основы</div>
+          <ul>
+            <li>Понятия субъекта и оператора</li>
+            <li>Принципы обработки</li>
+            <li>Права субъекта</li>
+            <li>Обязанности оператора</li>
+          </ul>
+        </div>
+        <div class="stack__col">
+          <h3>Требования</h3>
+          <div class="meta">Механика</div>
+          <ul>
+            <li>К защите данных (ст. 19)</li>
+            <li>К локализации данных</li>
+            <li>К уведомлению об инцидентах</li>
+            <li>К согласию — с 2025 отдельный документ</li>
+          </ul>
+        </div>
+        <div class="stack__col">
+          <h3>Последствия</h3>
+          <div class="meta">2025 – 2026</div>
+          <ul>
+            <li>Ужесточение требований</li>
+            <li>Оборотные штрафы до 500 млн ₽</li>
+            <li>Автоматизированный контроль</li>
+            <li>Compliance-тестирование обязательно</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card is-accent" style="margin-top:24px; padding:24px 28px;">
+        <p style="font-size:16px; line-height:1.6; color:var(--ink-soft);">
+          Для тестировщика это означает, что <strong>compliance-тестирование становится
+          неотъемлемой частью работы</strong>. Умение проверять систему на соответствие
+          закону делает вас более ценным специалистом.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 26. ЗАКЛЮЧЕНИЕ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="center">
+        <div class="eyebrow">Напутствие</div>
+        <h2 class="head" style="max-width:24ch; margin-left:auto; margin-right:auto;">
+          Не просто тестировать — тестировать <span class="accent">осознанно</span>
+        </h2>
+        <div class="rule" style="margin-left:auto; margin-right:auto;"></div>
+
+        <p class="lead" style="max-width:62ch; margin:0 auto 30px;">
+          152-ФЗ — это не просто закон, который нужно знать, чтобы сдать экзамен.
+          Это закон, который определяет, как работает современный бизнес.
+        </p>
+
+        <div class="grid g3" style="max-width: 1000px; margin:0 auto; text-align:left;">
+          <div class="card is-accent">
+            <h3 style="font-size:15px;">Понимаете закон</h3>
+            <p>Помогаете компании избежать штрафов, защитить репутацию и построить доверие с пользователями.</p>
+          </div>
+          <div class="card is-sky">
+            <h3 style="font-size:15px;">Умеете тестировать compliance</h3>
+            <p>Становитесь востребованным специалистом — таких людей не так много.</p>
+          </div>
+          <div class="card is-green">
+            <h3 style="font-size:15px;">Тестируете осознанно</h3>
+            <p>С пониманием контекста, с ответственностью за данные людей.</p>
+          </div>
+        </div>
+
+        <p style="margin-top:40px; font-size:15px; color:var(--muted);">
+          Спасибо за внимание · до следующего занятия
+        </p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="brand">152-ФЗ · <span>Персональные данные</span></div>
+
+<div class="chrome">
+  <div class="counter"><b id="cur">01</b> / <span id="total">26</span></div>
+  <button class="navbtn" id="prev" aria-label="Назад">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <button class="navbtn" id="next" aria-label="Вперёд">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+</div>
+
+<div class="hint" id="hint">
+  <kbd>←</kbd> <kbd>→</kbd> для навигации · <kbd>Space</kbd> вперёд
+</div>
+
+<script>
+  (function () {
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const total = slides.length;
+    const curEl = document.getElementById('cur');
+    const totalEl = document.getElementById('total');
+    const bar = document.getElementById('progressBar');
+    const hint = document.getElementById('hint');
+
+    let index = 0;
+
+    totalEl.textContent = String(total).padStart(2, '0');
+
+    function pad(n) { return String(n).padStart(2, '0'); }
+
+    function go(i) {
+      index = Math.max(0, Math.min(total - 1, i));
+      slides.forEach((s, k) => s.classList.toggle('active', k === index));
+      curEl.textContent = pad(index + 1);
+      bar.style.width = ((index + 1) / total * 100) + '%';
+      if (index > 0) hint.classList.add('hide');
+    }
+
+    function next() { go(index + 1); }
+    function prev() { go(index - 1); }
+
+    document.getElementById('next').addEventListener('click', next);
+    document.getElementById('prev').addEventListener('click', prev);
+
+    document.addEventListener('keydown', (e) => {
+      switch (e.key) {
+        case 'ArrowRight':
+        case 'ArrowDown':
+        case 'PageDown':
+        case ' ':
+          e.preventDefault(); next(); break;
+        case 'ArrowLeft':
+        case 'ArrowUp':
+        case 'PageUp':
+          e.preventDefault(); prev(); break;
+        case 'Home':
+          e.preventDefault(); go(0); break;
+        case 'End':
+          e.preventDefault(); go(total - 1); break;
+      }
+    });
+
+    let wheelLock = false;
+    window.addEventListener('wheel', (e) => {
+      if (wheelLock) return;
+      if (Math.abs(e.deltaY) < 24) return;
+      wheelLock = true;
+      if (e.deltaY > 0) next(); else prev();
+      setTimeout(() => { wheelLock = false; }, 550);
+    }, { passive: true });
+
+    go(0);
+  })();
+</script>
+
+</body>
+</html>
