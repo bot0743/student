@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Архитектура приложений · Безопасность</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-1: #f5f7fb;
+    --bg-2: #eef2f9;
+    --surface: #ffffff;
+    --ink: #0f172a;
+    --ink-soft: #334155;
+    --muted: #64748b;
+    --line: #e2e8f0;
+    --accent: #4f46e5;
+    --accent-2: #0ea5e9;
+    --accent-soft: #eef2ff;
+    --green: #10b981;
+    --amber: #f59e0b;
+    --rose: #e11d48;
+    --shadow-sm: 0 1px 2px rgba(15,23,42,.06), 0 1px 3px rgba(15,23,42,.05);
+    --shadow-md: 0 10px 30px -10px rgba(15,23,42,.18), 0 4px 10px -4px rgba(15,23,42,.08);
+    --radius: 18px;
+    --font: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    --mono: "JetBrains Mono", "SF Mono", "Consolas", "Menlo", monospace;
+  }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    background: var(--bg-1);
+    color: var(--ink);
+    font-family: var(--font);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .deck { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 5vh 7vw 9vh;
+    background:
+      radial-gradient(1200px 600px at 88% -10%, rgba(79,70,229,.09), transparent 60%),
+      radial-gradient(900px 500px at -5% 110%, rgba(14,165,233,.08), transparent 60%),
+      linear-gradient(180deg, var(--bg-1), var(--bg-2));
+    opacity: 0;
+    transform: translateY(18px) scale(.99);
+    transition: opacity .45s cubic-bezier(.22,.61,.36,1),
+                transform .45s cubic-bezier(.22,.61,.36,1);
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .slide.active { opacity: 1; transform: none; pointer-events: auto; }
+
+  .progress { position: fixed; top: 0; left: 0; right: 0; height: 4px; background: rgba(15,23,42,.06); z-index: 60; }
+  .progress__bar { height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition: width .45s cubic-bezier(.22,.61,.36,1); }
+
+  .chrome { position: fixed; bottom: 22px; right: 30px; display: flex; align-items: center; gap: 14px; z-index: 60; }
+
+  .counter {
+    font-size: 13px; font-weight: 600; letter-spacing: .06em; color: var(--muted);
+    background: rgba(255,255,255,.75); backdrop-filter: blur(8px);
+    border: 1px solid var(--line); padding: 8px 14px; border-radius: 999px;
+    font-variant-numeric: tabular-nums; box-shadow: var(--shadow-sm); user-select: none;
+  }
+  .counter b { color: var(--ink); }
+
+  .navbtn {
+    width: 42px; height: 42px; border-radius: 50%;
+    border: 1px solid var(--line);
+    background: rgba(255,255,255,.85); backdrop-filter: blur(8px);
+    color: var(--ink-soft); display: grid; place-items: center; cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: transform .18s ease, background .18s ease, color .18s ease, border-color .18s ease;
+  }
+  .navbtn:hover { background: var(--accent); color: #fff; border-color: var(--accent); transform: translateY(-2px); }
+  .navbtn:active { transform: translateY(0) scale(.96); }
+  .navbtn svg { width: 18px; height: 18px; }
+
+  .brand {
+    position: fixed; bottom: 26px; left: 30px; z-index: 60;
+    font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--muted); font-weight: 600; user-select: none;
+  }
+  .brand span { color: var(--accent); }
+
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-size: 12px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 18px;
+  }
+  .eyebrow::before { content: ""; width: 26px; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent-2)); border-radius: 2px; }
+
+  h1.title { font-size: clamp(40px, 4.6vw, 76px); line-height: 1.04; letter-spacing: -.025em; font-weight: 800; color: var(--ink); }
+  h1.title .grad { background: linear-gradient(100deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+  h2.head { font-size: clamp(28px, 2.9vw, 46px); line-height: 1.1; letter-spacing: -.02em; font-weight: 800; color: var(--ink); margin-bottom: 8px; }
+  h2.head .accent { color: var(--accent); }
+
+  .lead { font-size: clamp(15px, 1.15vw, 19px); line-height: 1.6; color: var(--ink-soft); max-width: 68ch; }
+  .subtitle { font-size: clamp(15px, 1.2vw, 20px); color: var(--muted); line-height: 1.6; max-width: 62ch; }
+
+  .rule { height: 1px; background: linear-gradient(90deg, var(--line), transparent); margin: 22px 0 26px; max-width: 1100px; }
+
+  .slide__inner { width: 100%; max-width: 1240px; margin: 0 auto; }
+  .center { text-align: center; }
+  .center .eyebrow { justify-content: center; }
+  .center .lead, .center .subtitle { margin-left: auto; margin-right: auto; }
+
+  .grid { display: grid; gap: 18px; }
+  .g2 { grid-template-columns: repeat(2, 1fr); }
+  .g3 { grid-template-columns: repeat(3, 1fr); }
+  .g4 { grid-template-columns: repeat(4, 1fr); }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 24px 24px 22px; box-shadow: var(--shadow-sm);
+    position: relative; overflow: hidden;
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: #d7dce8; }
+  .card__num { position: absolute; top: 14px; right: 18px; font-size: 40px; font-weight: 800; color: rgba(79,70,229,.08); line-height: 1; letter-spacing: -.04em; }
+  .card__icon { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); margin-bottom: 14px; }
+  .card__icon svg { width: 22px; height: 22px; }
+  .card h3 { font-size: 19px; font-weight: 700; letter-spacing: -.01em; margin-bottom: 8px; color: var(--ink); }
+  .card p { font-size: 14.5px; line-height: 1.55; color: var(--muted); }
+  .card p + p { margin-top: 8px; }
+  .card p strong { color: var(--ink-soft); font-weight: 600; }
+
+  .card.is-accent { border-top: 3px solid var(--accent); }
+  .card.is-sky    { border-top: 3px solid var(--accent-2); }
+  .card.is-green  { border-top: 3px solid var(--green); }
+  .card.is-amber  { border-top: 3px solid var(--amber); }
+  .card.is-rose   { border-top: 3px solid var(--rose); }
+
+  .card.is-accent .card__icon { background: var(--accent-soft); color: var(--accent); }
+  .card.is-sky .card__icon    { background: #e0f2fe; color: #0284c7; }
+  .card.is-green .card__icon  { background: #d1fae5; color: #059669; }
+  .card.is-amber .card__icon  { background: #fef3c7; color: #d97706; }
+  .card.is-rose .card__icon   { background: #ffe4e6; color: #be123c; }
+
+  .list { list-style: none; display: grid; gap: 12px; }
+  .list li {
+    display: flex; gap: 14px; align-items: flex-start;
+    font-size: 15.5px; line-height: 1.55; color: var(--ink-soft);
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 14px; padding: 15px 18px; box-shadow: var(--shadow-sm);
+  }
+  .list li .dot {
+    flex: 0 0 auto; width: 26px; height: 26px; border-radius: 8px;
+    display: grid; place-items: center; background: var(--accent-soft);
+    color: var(--accent); font-size: 13px; font-weight: 800; margin-top: 1px;
+  }
+  .list li strong { color: var(--ink); font-weight: 700; }
+  .list.compact li { padding: 12px 16px; font-size: 14.5px; }
+
+  .checks { list-style: none; display: grid; gap: 11px; }
+  .checks li { display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5; color: var(--ink-soft); }
+  .checks li svg { flex: 0 0 auto; width: 20px; height: 20px; color: var(--green); margin-top: 2px; }
+  .checks li b { color: var(--ink); font-weight: 700; }
+
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .compare__col { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px 24px; box-shadow: var(--shadow-sm); }
+  .compare__col.win { border: 1.5px solid var(--accent); box-shadow: 0 12px 34px -14px rgba(79,70,229,.35); }
+  .compare__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .compare__head h3 { font-size: 22px; font-weight: 800; letter-spacing: -.01em; }
+  .compare__head .tag {
+    font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+    padding: 5px 10px; border-radius: 999px; background: #f1f5f9; color: var(--muted);
+  }
+  .compare__col.win .compare__head .tag { background: var(--accent-soft); color: var(--accent); }
+  .compare__col ul { list-style: none; display: grid; gap: 10px; }
+  .compare__col li { font-size: 14.5px; line-height: 1.5; color: var(--muted); padding-left: 18px; position: relative; }
+  .compare__col li::before { content: ""; position: absolute; left: 0; top: 8px; width: 7px; height: 7px; border-radius: 2px; background: #cbd5e1; }
+  .compare__col.win li::before { background: var(--accent); }
+  .compare__col li b { color: var(--ink-soft); font-weight: 600; }
+
+  .code {
+    background: #0f172a; border-radius: 16px; padding: 20px 22px;
+    font-family: var(--mono); font-size: 13.5px; line-height: 1.75;
+    color: #e2e8f0; overflow: hidden; box-shadow: var(--shadow-md); border: 1px solid #1e293b;
+  }
+  .code .c-key { color: #c084fc; }
+  .code .c-fn  { color: #7dd3fc; }
+  .code .c-str { color: #86efac; }
+  .code .c-com { color: #64748b; font-style: italic; }
+  .code .c-num { color: #fbbf24; }
+
+  .facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .fact { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 20px 22px; box-shadow: var(--shadow-sm); position: relative; }
+  .fact__year { font-size: 12px; font-weight: 800; letter-spacing: .14em; color: var(--accent); text-transform: uppercase; margin-bottom: 8px; }
+  .fact p { font-size: 14.5px; line-height: 1.55; color: var(--ink-soft); }
+  .fact p b { color: var(--ink); }
+
+  .timeline { position: relative; padding-left: 30px; display: grid; gap: 18px; }
+  .timeline::before { content: ""; position: absolute; left: 8px; top: 8px; bottom: 8px; width: 2px; background: linear-gradient(180deg, var(--accent), var(--accent-2), transparent); border-radius: 2px; }
+  .timeline__item { position: relative; }
+  .timeline__item::before { content: ""; position: absolute; left: -30px; top: 6px; width: 18px; height: 18px; border-radius: 50%; background: #fff; border: 3px solid var(--accent); box-shadow: 0 0 0 4px rgba(79,70,229,.12); }
+  .timeline__item h4 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .timeline__item p { font-size: 14.5px; line-height: 1.55; color: var(--muted); }
+
+  .arch { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: stretch; }
+  .arch__layer { border-radius: var(--radius); padding: 22px 22px 20px; border: 1px solid var(--line); background: var(--surface); box-shadow: var(--shadow-sm); display: flex; flex-direction: column; position: relative; }
+  .arch__layer .step { font-size: 11px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .arch__layer h3 { font-size: 21px; font-weight: 800; margin-bottom: 6px; letter-spacing: -.01em; }
+  .arch__layer p { font-size: 14px; color: var(--muted); line-height: 1.55; margin-bottom: 14px; }
+  .arch__layer .chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: auto; }
+  .chip { font-size: 12px; font-weight: 700; padding: 5px 11px; border-radius: 999px; background: #f1f5f9; color: var(--ink-soft); border: 1px solid var(--line); }
+  .arch__layer.l1 { border-top: 4px solid var(--accent-2); }
+  .arch__layer.l2 { border-top: 4px solid var(--accent); }
+  .arch__layer.l3 { border-top: 4px solid var(--green); }
+  .arch__layer.l1 .chip { background: #e0f2fe; color: #0369a1; border-color: #bae6fd; }
+  .arch__layer.l2 .chip { background: var(--accent-soft); color: #4338ca; border-color: #c7d2fe; }
+  .arch__layer.l3 .chip { background: #d1fae5; color: #047857; border-color: #a7f3d0; }
+
+  .stack { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .stack__col { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow-sm); }
+  .stack__col h3 { font-size: 18px; font-weight: 800; margin-bottom: 4px; }
+  .stack__col .meta { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; color: var(--accent); margin-bottom: 14px; }
+  .stack__col ul { list-style: none; display: grid; gap: 9px; }
+  .stack__col li { font-size: 14.5px; line-height: 1.5; color: var(--muted); padding-left: 16px; position: relative; }
+  .stack__col li::before { content: ""; position: absolute; left: 0; top: 8px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent-2); }
+
+  .title-slide { text-align: left; }
+  .title-slide .badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 8px 16px; border-radius: 999px;
+    background: var(--surface); border: 1px solid var(--line);
+    font-size: 13px; font-weight: 600; color: var(--ink-soft);
+    box-shadow: var(--shadow-sm); margin-bottom: 26px;
+  }
+  .title-slide .badge .pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px rgba(16,185,129,.18); }
+  .title-slide .meta-row { display: flex; gap: 40px; margin-top: 38px; flex-wrap: wrap; }
+  .title-slide .meta-row .k { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin-bottom: 5px; }
+  .title-slide .meta-row .v { font-size: 16px; font-weight: 700; color: var(--ink); }
+
+  .quote { font-size: clamp(20px, 1.9vw, 30px); line-height: 1.45; font-weight: 600; color: var(--ink); max-width: 30ch; }
+  .quote .hl { color: var(--accent); }
+
+  .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 26px; }
+  .stat { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 20px 22px; box-shadow: var(--shadow-sm); }
+  .stat .n { font-size: 32px; font-weight: 800; letter-spacing: -.03em; color: var(--accent); line-height: 1; margin-bottom: 8px; }
+  .stat .l { font-size: 13.5px; color: var(--muted); line-height: 1.5; }
+
+  .pills { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+  .pill { padding: 9px 16px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-size: 14px; font-weight: 600; color: var(--ink-soft); box-shadow: var(--shadow-sm); }
+  .pill.accent { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  .split { display: grid; grid-template-columns: 1.05fr .95fr; gap: 34px; align-items: center; }
+  .split.top { align-items: start; }
+
+  /* network diagram */
+  .net { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; align-items: center; gap: 10px; }
+  .net__zone { background: var(--surface); border: 1px dashed var(--line); border-radius: 14px; padding: 16px; text-align: center; box-shadow: var(--shadow-sm); }
+  .net__zone h4 { font-size: 14px; font-weight: 800; margin-bottom: 4px; }
+  .net__zone p { font-size: 12.5px; color: var(--muted); line-height: 1.4; }
+  .net__zone.internet { border-color: #fca5a5; background: #fef2f2; }
+  .net__zone.dmz { border-color: #bae6fd; background: #f0f9ff; }
+  .net__zone.db { border-color: #a7f3d0; background: #ecfdf5; }
+  .net__arrow { font-size: 20px; color: var(--muted); font-weight: 800; }
+
+  .hint {
+    position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%);
+    font-size: 12px; color: var(--muted); letter-spacing: .04em;
+    background: rgba(255,255,255,.7); backdrop-filter: blur(8px);
+    border: 1px solid var(--line); border-radius: 999px;
+    padding: 7px 16px; z-index: 60; user-select: none; transition: opacity .4s ease;
+  }
+  .hint.hide { opacity: 0; }
+  .hint kbd { font-family: var(--mono); font-size: 11px; background: #f1f5f9; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px; padding: 1px 6px; margin: 0 2px; color: var(--ink-soft); }
+
+  @media (max-width: 1180px) {
+    .slide { padding: 4vh 5vw 8vh; }
+    .g4 { grid-template-columns: repeat(2, 1fr); }
+    .facts { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-height: 760px) {
+    .slide { padding-top: 3.5vh; padding-bottom: 8vh; }
+    .card { padding: 18px 20px; }
+    .list li { padding: 12px 16px; font-size: 14.5px; }
+    .rule { margin: 16px 0 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress"><div class="progress__bar" id="progressBar"></div></div>
+
+<div class="deck" id="deck">
+
+  <!-- ============ 1. TITLE ============ -->
+  <section class="slide title-slide active">
+    <div class="slide__inner">
+      <div class="badge"><span class="pulse"></span> Лекция · Архитектура и безопасность</div>
+      <h1 class="title">Как превратить набор программ<br>в <span class="grad">надёжную систему</span></h1>
+      <p class="subtitle" style="margin-top:22px; max-width:60ch;">
+        Где хранить базу данных, как делать резервные копии, как выстроить
+        эшелонированную оборону — и почему тестировщику это критически важно.
+      </p>
+
+      <div class="meta-row">
+        <div><div class="k">Хранение</div><div class="v">Изоляция БД</div></div>
+        <div><div class="k">Сохранность</div><div class="v">Резервные копии</div></div>
+        <div><div class="k">Сеть</div><div class="v">DMZ · сегментация</div></div>
+        <div><div class="k">Приложение</div><div class="v">Сессии · доступ · логи</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2. ВВЕДЕНИЕ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Введение</div>
+      <h2 class="head">Тема, которая <span class="accent">соединяет всё</span> изученное</h2>
+      <div class="rule"></div>
+
+      <div class="split top">
+        <div>
+          <p class="lead">
+            Мы разобрали стек технологий, Python, Flask, базы данных и фронтенд.
+            Подробно изучили 152-ФЗ и требования к защите персональных данных.
+            Но знания останутся теорией, если не понять, где и как всё это
+            физически существует.
+          </p>
+
+          <ul class="checks" style="margin-top:24px;">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+              <span>Как расположить <b>серверы</b> и где хранить базу данных</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+              <span>Как сделать <b>резервные копии</b>, чтобы данные не потерялись</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+              <span>Как выстроить <b>эшелонированную оборону</b></span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card is-accent" style="padding:28px;">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3 style="font-size:22px;">Для тестировщика</h3>
+          <p style="font-size:15px; margin-top:10px;">
+            Нельзя проверить безопасность системы, если не понимаешь,
+            из каких компонентов она состоит и где находятся её слабые места.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3. ГДЕ ХРАНИТЬ БД ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Хранение данных</div>
+      <h2 class="head">Где хранить <span class="accent">базу данных</span>?</h2>
+      <div class="rule"></div>
+
+      <div class="compare">
+        <div class="compare__col">
+          <div class="compare__head">
+            <h3>Всё на одной машине</h3>
+            <span class="tag">Учебный проект</span>
+          </div>
+          <ul>
+            <li>Flask-приложение и файл SQLite в одной папке</li>
+            <li>Нормально для <b>ноутбука</b> и учебной аудитории</li>
+            <li>Просто, быстро, не требует инфраструктуры</li>
+            <li><b>Но:</b> любая уязвимость в веб-приложении ставит под угрозу всю базу</li>
+          </ul>
+        </div>
+
+        <div class="compare__col win">
+          <div class="compare__head">
+            <h3>Разделение на серверы</h3>
+            <span class="tag">Реальная система</span>
+          </div>
+          <ul>
+            <li>Веб-приложение — на одном узле</li>
+            <li>База данных — на другом</li>
+            <li>Соединение <b>строго контролируется</b></li>
+            <li>Веб-сервер не имеет прямого доступа к файловой системе БД</li>
+            <li>Общение — только через сетевой порт и разрешённые учётные данные</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card is-rose" style="margin-top:24px; padding:22px 26px;">
+        <p style="font-size:15.5px; color:var(--ink-soft); line-height:1.6;">
+          <strong style="color:var(--rose);">Принцип наименьшего привилегированного доступа:</strong>
+          если база и веб-сервер на одной машине, злоумышленник, получивший доступ через дыру
+          в Flask, получает и доступ к данным. Изоляция — первый уровень защиты.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4. ИЗОЛЯЦИЯ + ЛОКАЛИЗАЦИЯ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Хранение данных</div>
+      <h2 class="head">Изоляция и <span class="accent">юрисдикция</span></h2>
+      <div class="rule"></div>
+
+      <div class="split top">
+        <div>
+          <ul class="list compact">
+            <li><span class="dot">1</span><span><strong>Изоляция.</strong> Веб-сервер общается с БД только по сети, через порт, с определёнными учётными данными. Нет прямого доступа к файлам.</span></li>
+            <li><span class="dot">2</span><span><strong>Локализация (152-ФЗ).</strong> Базы с персональными данными российских граждан должны физически находиться на территории РФ.</span></li>
+            <li><span class="dot">3</span><span>Это не юридическая формальность, а <strong>архитектурное ограничение</strong>.</span></li>
+            <li><span class="dot">4</span><span>Для учебного проекта — локально или на учебном сервере, но принцип разделения закладываем в документацию.</span></li>
+          </ul>
+        </div>
+
+        <div class="card is-accent" style="padding:28px;">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          </div>
+          <h3 style="font-size:20px; margin-bottom:12px;">Два вопроса при выборе места</h3>
+          <p style="font-size:15px; line-height:1.6;">
+            Достаточно ли оно <strong>изолировано</strong> от веб-приложения?
+            И находится ли оно в <strong>правильной юрисдикции</strong>?
+          </p>
+          <p style="font-size:14px; line-height:1.6; margin-top:14px; color:var(--muted);">
+            Это покажет, что вы понимаете разницу между «работает на ноутбуке»
+            и «работает в продакшене».
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 5. РЕЗЕРВНОЕ КОПИРОВАНИЕ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Резервное копирование</div>
+      <h2 class="head">Данные — <span class="accent">самый ценный актив</span></h2>
+      <div class="rule"></div>
+
+      <p class="lead" style="margin-bottom:24px;">
+        Код можно переписать, сервер — пересоздать. Но если потеряна база
+        с заказами или учётными записями, бизнес может просто остановиться.
+        Резервное копирование — не «хорошая практика», а обязательное требование.
+      </p>
+
+      <div class="grid g3">
+        <div class="card is-accent">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+          </div>
+          <h3>Полное</h3>
+          <p>Копируется всё целиком. Надёжно, но долго и требует много места.</p>
+        </div>
+        <div class="card is-sky">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l4-4 4 4 5-6"/></svg>
+          </div>
+          <h3>Инкрементное</h3>
+          <p>Только изменения с момента последнего копирования. Быстро, но восстановление сложнее — цепочка копий.</p>
+        </div>
+        <div class="card is-green">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </div>
+          <h3>Дифференциальное</h3>
+          <p>Изменения с момента последнего полного копирования. Компромисс между скоростью и сложностью.</p>
+        </div>
+      </div>
+
+      <div class="card is-rose" style="margin-top:24px; padding:22px 26px;">
+        <p style="font-size:15.5px; color:var(--ink-soft); line-height:1.6;">
+          <strong style="color:var(--rose);">Главное:</strong>
+          резервная копия, которую никто никогда не пробовал восстановить, —
+          это не резервная копия, а просто файл, который занимает место.
+          Вы должны уметь ответить: «Если завтра сервер сгорит, за сколько времени
+          мы восстановим данные и насколько полно?»
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 6. БЭКАП SQLITE ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Резервное копирование · SQLite</div>
+      <h2 class="head">Просто скопировать файл — <span class="accent">не всегда безопасно</span></h2>
+      <div class="rule"></div>
+
+      <div class="split top">
+        <div>
+          <p class="lead">
+            SQLite хранит всю базу в <strong>одном файле</strong>. Это одновременно
+            преимущество и ловушка.
+          </p>
+
+          <div class="grid g2" style="margin-top:22px;">
+            <div class="card is-green">
+              <h3 style="font-size:16px;">Преимущество</h3>
+              <p>Резервная копия — простое копирование файла.</p>
+            </div>
+            <div class="card is-rose">
+              <h3 style="font-size:16px;">Ловушка</h3>
+              <p>Если скопировать файл в момент записи — копия может оказаться повреждённой. «Половина» транзакции.</p>
+            </div>
+          </div>
+
+          <div class="card is-accent" style="margin-top:16px; padding:20px 24px;">
+            <p style="font-size:15px; color:var(--ink-soft);">
+              Для согласованной копии при работающем приложении существуют специальные команды:
+              <strong>.backup</strong> в командной строке или функция <strong>backup</strong> в Python.
+            </p>
+          </div>
+        </div>
+
+        <div class="code">
+<span class="c-com"># согласованная резервная копия SQLite</span>
+<span class="c-key">import</span> sqlite3
+
+src = sqlite3.<span class="c-fn">connect</span>(<span class="c-str">"app.db"</span>)
+dst = sqlite3.<span class="c-fn">connect</span>(<span class="c-str">"backup.db"</span>)
+
+<span class="c-com"># копирует даже при активных записях</span>
+src.<span class="c-fn">backup</span>(dst)
+
+dst.<span class="c-fn">close</span>()
+src.<span class="c-fn">close</span>()
+
+<span class="c-com"># в документации: для реальной системы</span>
+<span class="c-com"># нужен автоматизированный механизм</span>
+<span class="c-com"># с проверкой целостности</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 7. БЭКАП MYSQL ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Резервное копирование · MySQL</div>
+      <h2 class="head">Логический дамп и <span class="accent">репликация</span></h2>
+      <div class="rule"></div>
+
+      <div class="split top">
+        <div>
+          <p class="lead">
+            MySQL — серверная СУБД. Здесь недостаточно скопировать файлы:
+            данные хранятся в нескольких файлах и используются журналы транзакций.
+          </p>
+
+          <ul class="list compact" style="margin-top:22px;">
+            <li><span class="dot">1</span><span><strong>mysqldump</strong> — логическая копия: набор SQL-команд, восстанавливающих базу.</span></li>
+            <li><span class="dot">2</span><span>Дамп можно <strong>сжать, зашифровать и передать по сети</strong>.</span></li>
+            <li><span class="dot">3</span><span>Нюанс: mysqldump может <strong>блокировать таблицы</strong> на время создания дампа.</span></li>
+            <li><span class="dot">4</span><span>Поэтому в реальных системах делают дампы <strong>с реплики</strong>, а не с основного сервера.</span></li>
+          </ul>
+        </div>
+
+        <div class="code">
+<span class="c-com"># логический дамп базы</span>
+mysqldump -u app_user -p \
+  --single-transaction \
+  --routines --triggers \
+  app_db &gt; backup.sql
+
+<span class="c-com"># сжатие и шифрование</span>
+gzip -c backup.sql | \
+  openssl enc -aes-256-cbc \
+  -out backup.sql.gz.enc
+
+<span class="c-com"># восстановление</span>
+gunzip -c backup.sql.gz | \
+  mysql -u app_user -p app_db
+        </div>
+      </div>
+
+      <div class="card is-amber" style="margin-top:20px; padding:18px 24px;">
+        <p style="font-size:15px; color:var(--ink-soft);">
+          <strong style="color:var(--amber);">Архитектурный приём:</strong>
+          разделение нагрузки между записью и чтением — дампы снимаются с реплики,
+          основной сервер продолжает обслуживать пользователей.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 8. БЕЗОПАСНОСТЬ БЭКАПОВ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Резервное копирование · 152-ФЗ</div>
+      <h2 class="head">Копии тоже содержат <span class="accent">персональные данные</span></h2>
+      <div class="rule"></div>
+
+      <div class="grid g4">
+        <div class="card is-rose">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <h3 style="font-size:15px;">Шифрование</h3>
+          <p>Нельзя хранить копии в открытом виде на общедоступном диске.</p>
+        </div>
+        <div class="card is-accent">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          </div>
+          <h3 style="font-size:15px;">Ограничение доступа</h3>
+          <p>Только те, кому это действительно необходимо.</p>
+        </div>
+        <div class="card is-green">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          </div>
+          <h3 style="font-size:15px;">Учёт носителей</h3>
+          <p>Внешние носители должны быть учтены и защищены.</p>
+        </div>
+        <div class="card is-amber">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          </div>
+          <h3 style="font-size:15px;">Политика хранения</h3>
+          <p>Как часто, где, как долго, кто имеет доступ.</p>
+        </div>
+      </div>
+
+      <div class="card is-rose" style="margin-top:24px; padding:22px 26px;">
+        <p style="font-size:15.5px; color:var(--ink-soft); line-height:1.6;">
+          <strong style="color:var(--rose);">Это не мелочи:</strong>
+          утечка резервной копии — это такая же утечка персональных данных,
+          со всеми вытекающими последствиями по 152-ФЗ.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 9. СЕТЕВАЯ АРХИТЕКТУРА ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Безопасность · Сеть</div>
+      <h2 class="head">Сегментация сети и <span class="accent">DMZ</span></h2>
+      <div class="rule"></div>
+
+      <p class="lead" style="margin-bottom:22px;">
+        Если все компоненты в одной плоской сети, любой, кто получил доступ
+        к одному из них, может атаковать остальные. Сеть нужно сегментировать.
+      </p>
+
+      <div class="net">
+        <div class="net__zone internet">
+          <h4>Интернет</h4>
+          <p>Пользователь с браузером</p>
+        </div>
+        <div class="net__arrow">→</div>
+        <div class="net__zone dmz">
+          <h4>DMZ</h4>
+          <p>Веб-сервер Flask + Nginx<br>Доступен из интернета</p>
+        </div>
+        <div class="net__arrow">→</div>
+        <div class="net__zone db">
+          <h4>Внутренняя сеть</h4>
+          <p>Сервер базы данных<br>Недоступен из интернета</p>
+        </div>
+      </div>
+
+      <div class="card is-accent" style="margin-top:24px; padding:22px 26px;">
+        <p style="font-size:15.5px; color:var(--ink-soft); line-height:1.6;">
+          <strong style="color:var(--accent);">Межсетевой экран</strong> между DMZ и внутренней сетью
+          разрешает только строго определённые соединения: например, веб-сервер подключается
+          к базе только по порту MySQL и только с определённого IP. Всё остальное блокируется.
+          Это <strong>принцип эшелонированной обороны</strong>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 10. HTTPS И TLS-ТЕРМИНАЦИЯ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Безопасность · Транспорт</div>
+      <h2 class="head">HTTPS и <span class="accent">TLS-терминация</span> на прокси</h2>
+      <div class="rule"></div>
+
+      <div class="split top">
+        <div>
+          <p class="lead">
+            Пользователь должен подключаться по <strong>HTTPS</strong>, иначе пароль
+            или персональные данные могут быть перехвачены в канале связи.
+          </p>
+
+          <ul class="list compact" style="margin-top:22px;">
+            <li><span class="dot">1</span><span>Можно настроить на уровне Flask, но правильнее — на уровне <strong>обратного прокси</strong> (Nginx).</span></li>
+            <li><span class="dot">2</span><span>Nginx принимает HTTPS, расшифровывает и передаёт Flask обычный HTTP внутри защищённого периметра.</span></li>
+            <li><span class="dot">3</span><span>Это разгружает Flask от шифрования и позволяет <strong>централизованно управлять сертификатами</strong>.</span></li>
+          </ul>
+        </div>
+
+        <div class="code">
+<span class="c-com"># пример: TLS на Nginx</span>
+server {
+  listen <span class="c-num">443</span> ssl;
+  server_name app.example.ru;
+
+  ssl_certificate     /etc/ssl/app.crt;
+  ssl_certificate_key /etc/ssl/app.key;
+
+  location / {
+    proxy_pass http://127.0.0.1:5000;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-Proto https;
+  }
+}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 11. ЗАГОЛОВКИ БЕЗОПАСНОСТИ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Безопасность · Заголовки</div>
+      <h2 class="head">HTTP-заголовки, которые <span class="accent">защищают браузер</span></h2>
+      <div class="rule"></div>
+
+      <div class="grid g3">
+        <div class="card is-accent">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <h3 style="font-size:15px;">Strict-Transport-Security</h3>
+          <p>Заставляет браузер использовать только HTTPS.</p>
+        </div>
+        <div class="card is-sky">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3 style="font-size:15px;">Content-Security-Policy</h3>
+          <p>Ограничивает источники контента, защищает от XSS и подмены.</p>
+        </div>
+        <div class="card is-green">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></svg>
+          </div>
+          <h3 style="font-size:15px;">X-Content-Type-Options</h3>
+          <p>Запрещает браузеру «угадывать» MIME-тип.</p>
+        </div>
+      </div>
+
+      <div class="card is-amber" style="margin-top:24px; padding:22px 26px;">
+        <p style="font-size:15.5px; color:var(--ink-soft); line-height:1.6;">
+          Эти заголовки защищают от <strong>подмены контента</strong> и <strong>кликджекинга</strong>.
+          Для тестировщика проверка этих заголовков — это отдельный набор тест-кейсов.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 12. СЕССИИ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Безопасность · Уровень приложения</div>
+      <h2 class="head">Управление <span class="accent">сессиями</span></h2>
+      <div class="rule"></div>
+
+      <div class="split top">
+        <div>
+          <p class="lead">
+            Flask использует <strong>подписанные cookie</strong> для хранения
+            сессионных данных. Секретный ключ, которым подписываются cookie,
+            должен быть достаточно длинным и случайным.
+          </p>
+
+          <ul class="checks" style="margin-top:22px;">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+              <span>Ключ <b>нельзя</b> хранить в коде или в репозитории</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+              <span>Передаётся через <b>переменные окружения</b></span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+              <span>Изменяется при <b>развёртывании</b></span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card is-rose" style="padding:28px;">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          </div>
+          <h3 style="font-size:20px; margin-bottom:12px;">Если ключ известен злоумышленнику</h3>
+          <p style="font-size:15px; line-height:1.65;">
+            Он сможет <strong>подделать сессию любого пользователя</strong>.
+            Это одна из самых серьёзных уязвимостей. При тестировании проверяйте,
+            что ключ не «зашит» в код и меняется при развёртывании.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 13. РАЗГРАНИЧЕНИЕ ДОСТУПА ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Безопасность · Авторизация</div>
+      <h2 class="head">Ролевая модель и <span class="accent">проверка ограничений</span></h2>
+      <div class="rule"></div>
+
+      <div class="grid g3" style="margin-bottom:22px;">
+        <div class="card is-accent">
+          <h3 style="font-size:16px;">Администратор</h3>
+          <p>Доступ к управлению системой и пользователями.</p>
+        </div>
+        <div class="card is-sky">
+          <h3 style="font-size:16px;">Обычный пользователь</h3>
+          <p>Доступ только к своим данным и функциям.</p>
+        </div>
+        <div class="card is-green">
+          <h3 style="font-size:16px;">Гость</h3>
+          <p>Минимальный доступ, без личных данных.</p>
+        </div>
+      </div>
+
+      <div class="card is-rose" style="padding:24px 28px;">
+        <h3 style="font-size:18px; margin-bottom:12px; color:var(--rose);">Тестирование авторизации</h3>
+        <p style="font-size:15px; line-height:1.65; color:var(--ink-soft);">
+          Важно не только то, что написано в коде, но и то, как это проверяется.
+          Попробуйте обойти ограничения: может ли обычный пользователь получить доступ
+          к админ-панели, изменив URL? Может ли прочитать чужие данные, подставив другой
+          идентификатор в запрос? Это одна из самых частых дыр в веб-приложениях.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 14. ВАЛИДАЦИЯ ВВОДА ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Безопасность · Валидация</div>
+      <h2 class="head">Никогда не доверяйте <span class="accent">данным от пользователя</span></h2>
+      <div class="rule"></div>
+
+      <div class="split top">
+        <div>
+          <p class="lead">
+            Всё, что приходит из формы, из URL, из заголовков, должно быть проверено.
+            Flask и WTForms помогают, но разработчики часто забывают проверять
+            типы данных, длину, формат.
+          </p>
+
+          <div class="grid g2" style="margin-top:22px;">
+            <div class="card is-rose">
+              <h3 style="font-size:15px;">Что может прислать злоумышленник</h3>
+              <p>Строку вместо числа, SQL-код вместо ID, исполняемый файл вместо картинки.</p>
+            </div>
+            <div class="card is-green">
+              <h3 style="font-size:15px;">Правило</h3>
+              <p>Валидация на стороне сервера обязательна, даже если она есть на клиенте.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card is-amber" style="padding:28px;">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+          </div>
+          <h3 style="font-size:20px; margin-bottom:12px;">Клиентскую валидацию легко обойти</h3>
+          <p style="font-size:15px; line-height:1.65;">
+            Она нужна только для удобства пользователя. Все проверки должны
+            дублироваться на сервере — иначе система уязвима.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 15. ЛОГИРОВАНИЕ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Безопасность · Наблюдаемость</div>
+      <h2 class="head">Логирование и <span class="accent">мониторинг</span></h2>
+      <div class="rule"></div>
+
+      <p class="lead" style="margin-bottom:22px;">
+        Безопасность — это не только защита, но и обнаружение.
+        Если что-то случилось, вы должны об этом узнать.
+      </p>
+
+      <div class="grid g3">
+        <div class="card is-accent">
+          <div class="card__num">01</div>
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l4-4 4 4 5-6"/></svg>
+          </div>
+          <h3>Что логировать</h3>
+          <p>Все запросы, ошибки, события аутентификации.</p>
+        </div>
+        <div class="card is-rose">
+          <div class="card__num">02</div>
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          </div>
+          <h3>Чего не должно быть в логах</h3>
+          <p>Паролей, номеров карт, персональных данных в открытом виде.</p>
+        </div>
+        <div class="card is-green">
+          <div class="card__num">03</div>
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3>Защита логов</h3>
+          <p>Их нужно отправлять на отдельный сервер, к которому у приложения нет прав на удаление.</p>
+        </div>
+      </div>
+
+      <div class="card is-accent" style="margin-top:22px; padding:20px 26px;">
+        <p style="font-size:15.5px; color:var(--ink-soft); line-height:1.6;">
+          <strong style="color:var(--accent);">Централизованное логирование:</strong>
+          если злоумышленник проник в систему, он первым делом попытается замести следы —
+          удалить или изменить логи. Сами по себе записи бесполезны, если их никто не читает:
+          системы мониторинга следят за аномалиями — резкий рост ошибок, множественные
+          неудачные попытки входа, необычные запросы.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 16. ИНСТРУМЕНТЫ ТЕСТИРОВАНИЯ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Тестирование безопасности</div>
+      <h2 class="head">Инструменты и <span class="accent">типовые проверки</span></h2>
+      <div class="rule"></div>
+
+      <div class="split top">
+        <div>
+          <p class="lead">
+            Проверка архитектуры — это не только чтение документации, но и практические
+            попытки найти слабые места.
+          </p>
+
+          <div class="pills" style="margin-top:20px;">
+            <span class="pill accent">OWASP ZAP</span>
+            <span class="pill accent">Burp Suite</span>
+            <span class="pill">Анализ запросов</span>
+            <span class="pill">Сканирование</span>
+          </div>
+
+          <ul class="list compact" style="margin-top:22px;">
+            <li><span class="dot">1</span><span><strong>SQL-инъекции</strong> — реакция системы на внедрение SQL-кода.</span></li>
+            <li><span class="dot">2</span><span><strong>XSS</strong> — межсайтовый скриптинг.</span></li>
+            <li><span class="dot">3</span><span><strong>CSRF</strong> — подделка межсайтовых запросов.</span></li>
+            <li><span class="dot">4</span><span><strong>Утечка информации</strong> в сообщениях об ошибках.</span></li>
+          </ul>
+        </div>
+
+        <div class="card is-rose" style="padding:28px;">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          </div>
+          <h3 style="font-size:20px; margin-bottom:12px;">Защита от перебора</h3>
+          <p style="font-size:15px; line-height:1.65;">
+            Если при неверном пароле система пишет «Пользователь с таким email не найден» —
+            это подсказка злоумышленнику. Правильнее: <strong>«Неверный email или пароль»</strong>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 17. ТЕСТ-КЕЙСЫ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Тестирование безопасности</div>
+      <h2 class="head">Не «кнопка работает», а <span class="accent">«система защищена»</span></h2>
+      <div class="rule"></div>
+
+      <div class="grid g2">
+        <div class="card is-rose">
+          <h3 style="font-size:17px; margin-bottom:12px;">Плохой тест-кейс</h3>
+          <p style="font-size:15px; line-height:1.6;">«Проверить, что кнопка работает».</p>
+          <p style="font-size:15px; line-height:1.6; margin-top:8px;">Проверяет только функциональность и ничего не говорит о безопасности.</p>
+        </div>
+        <div class="card is-green">
+          <h3 style="font-size:17px; margin-bottom:12px;">Хороший тест-кейс</h3>
+          <p style="font-size:15px; line-height:1.6;">«Проверить, что система не позволяет внедрить SQL-код в поле поиска».</p>
+          <p style="font-size:15px; line-height:1.6; margin-top:8px;">«Проверить, что сессионная cookie имеет флаг HttpOnly».</p>
+        </div>
+      </div>
+
+      <div class="card is-accent" style="margin-top:24px; padding:22px 26px;">
+        <p style="font-size:15.5px; color:var(--ink-soft); line-height:1.6;">
+          Все эти проверки должны быть частью вашего сквозного проекта.
+          Вы не просто пишете тесты на функциональность — вы проверяете,
+          что система <strong>не нарушает права пользователей</strong>
+          и <strong>не создаёт рисков для бизнеса</strong>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 18. ИТОГ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Итог</div>
+      <h2 class="head">Архитектура — это не про <span class="accent">выбор фреймворка</span></h2>
+      <div class="rule"></div>
+
+      <div class="stack">
+        <div class="stack__col">
+          <h3>Данные</h3>
+          <div class="meta">Хранение</div>
+          <ul>
+            <li>БД изолирована от веб-приложения</li>
+            <li>Правильная юрисдикция (152-ФЗ)</li>
+            <li>Резервные копии регулярны и консистентны</li>
+            <li>Копии проверены на восстановление</li>
+          </ul>
+        </div>
+        <div class="stack__col">
+          <h3>Сеть и транспорт</h3>
+          <div class="meta">Периметр</div>
+          <ul>
+            <li>Сегментация, DMZ</li>
+            <li>Межсетевой экран с белым списком</li>
+            <li>HTTPS и TLS-терминация на прокси</li>
+            <li>Заголовки безопасности</li>
+          </ul>
+        </div>
+        <div class="stack__col">
+          <h3>Приложение</h3>
+          <div class="meta">Код и логи</div>
+          <ul>
+            <li>Секретный ключ вне репозитория</li>
+            <li>Ролевая модель доступа</li>
+            <li>Серверная валидация ввода</li>
+            <li>Логи без чувствительных данных</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card is-accent" style="margin-top:24px; padding:24px 28px;">
+        <p style="font-size:16px; line-height:1.6; color:var(--ink-soft);">
+          В документации сквозного проекта опишите не только таблицы базы данных,
+          но и <strong>где база развёрнута</strong>, <strong>как резервируется</strong>
+          и <strong>какие меры безопасности применены</strong>. На этапе тестирования
+          проверьте, что эти меры действительно работают.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 19. ЗАКЛЮЧЕНИЕ ============ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="center">
+        <div class="eyebrow">Главная мысль</div>
+        <h2 class="head" style="max-width:26ch; margin-left:auto; margin-right:auto;">
+          Разница между <span class="accent">«сделал сайт»</span> и «сделал информационную систему»
+        </h2>
+        <div class="rule" style="margin-left:auto; margin-right:auto;"></div>
+
+        <p class="lead" style="max-width:66ch; margin:0 auto 30px;">
+          Архитектура — это про то, как расположить компоненты, чтобы они были
+          надёжными и безопасными. Для тестировщика это критически важно:
+          нельзя проверить безопасность, не понимая, из чего состоит система
+          и где её слабые места.
+        </p>
+
+        <div class="grid g3" style="max-width:1000px; margin:0 auto; text-align:left;">
+          <div class="card is-accent">
+            <h3 style="font-size:15px;">Изоляция</h3>
+            <p>База отдельно от приложения, правильная юрисдикция.</p>
+          </div>
+          <div class="card is-sky">
+            <h3 style="font-size:15px;">Сохранность</h3>
+            <p>Регулярные, консистентные и проверенные резервные копии.</p>
+          </div>
+          <div class="card is-green">
+            <h3 style="font-size:15px;">Оборона</h3>
+            <p>Сегментация, шифрование, защита кода, сессий и валидации.</p>
+          </div>
+        </div>
+
+        <p style="margin-top:40px; font-size:15px; color:var(--muted);">
+          Спасибо за внимание · до следующего занятия
+        </p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="brand">Архитектура приложений · <span>Безопасность</span></div>
+
+<div class="chrome">
+  <div class="counter"><b id="cur">01</b> / <span id="total">19</span></div>
+  <button class="navbtn" id="prev" aria-label="Назад">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <button class="navbtn" id="next" aria-label="Вперёд">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+</div>
+
+<div class="hint" id="hint">
+  <kbd>←</kbd> <kbd>→</kbd> для навигации · <kbd>Space</kbd> вперёд
+</div>
+
+<script>
+  (function () {
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const total = slides.length;
+    const curEl = document.getElementById('cur');
+    const totalEl = document.getElementById('total');
+    const bar = document.getElementById('progressBar');
+    const hint = document.getElementById('hint');
+
+    let index = 0;
+
+    totalEl.textContent = String(total).padStart(2, '0');
+
+    function pad(n) { return String(n).padStart(2, '0'); }
+
+    function go(i) {
+      index = Math.max(0, Math.min(total - 1, i));
+      slides.forEach((s, k) => s.classList.toggle('active', k === index));
+      curEl.textContent = pad(index + 1);
+      bar.style.width = ((index + 1) / total * 100) + '%';
+      if (index > 0) hint.classList.add('hide');
+    }
+
+    function next() { go(index + 1); }
+    function prev() { go(index - 1); }
+
+    document.getElementById('next').addEventListener('click', next);
+    document.getElementById('prev').addEventListener('click', prev);
+
+    document.addEventListener('keydown', (e) => {
+      switch (e.key) {
+        case 'ArrowRight':
+        case 'ArrowDown':
+        case 'PageDown':
+        case ' ':
+          e.preventDefault(); next(); break;
+        case 'ArrowLeft':
+        case 'ArrowUp':
+        case 'PageUp':
+          e.preventDefault(); prev(); break;
+        case 'Home':
+          e.preventDefault(); go(0); break;
+        case 'End':
+          e.preventDefault(); go(total - 1); break;
+      }
+    });
+
+    let wheelLock = false;
+    window.addEventListener('wheel', (e) => {
+      if (wheelLock) return;
+      if (Math.abs(e.deltaY) < 24) return;
+      wheelLock = true;
+      if (e.deltaY > 0) next(); else prev();
+      setTimeout(() => { wheelLock = false; }, 550);
+    }, { passive: true });
+
+    go(0);
+  })();
+</script>
+
+</body>
+</html>
