@@ -8,26 +8,25 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg-1: #0a0e17;
-    --bg-2: #0f172a;
-    --surface: #1e293b;
-    --surface-2: #243447;
-    --ink: #f1f5f9;
-    --ink-soft: #cbd5e1;
-    --muted: #94a3b8;
-    --line: #334155;
-    --accent: #6366f1;
-    --accent-2: #22d3ee;
-    --accent-3: #a78bfa;
-    --green: #34d399;
-    --amber: #fbbf24;
-    --rose: #fb7185;
-    --red: #ef4444;
-    --shadow-sm: 0 1px 3px rgba(0,0,0,.3);
-    --shadow-md: 0 10px 40px -10px rgba(0,0,0,.5);
-    --radius: 16px;
-    --font: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
-    --mono: "JetBrains Mono", "SF Mono", "Consolas", monospace;
+    --bg-1: #f5f7fb;
+    --bg-2: #eef2f9;
+    --surface: #ffffff;
+    --ink: #0f172a;
+    --ink-soft: #334155;
+    --muted: #64748b;
+    --line: #e2e8f0;
+    --accent: #4f46e5;
+    --accent-2: #0ea5e9;
+    --accent-soft: #eef2ff;
+    --green: #10b981;
+    --amber: #f59e0b;
+    --rose: #e11d48;
+    --red: #dc2626;
+    --shadow-sm: 0 1px 2px rgba(15,23,42,.06), 0 1px 3px rgba(15,23,42,.05);
+    --shadow-md: 0 10px 30px -10px rgba(15,23,42,.18), 0 4px 10px -4px rgba(15,23,42,.08);
+    --radius: 18px;
+    --font: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    --mono: "JetBrains Mono", "SF Mono", "Consolas", "Menlo", monospace;
   }
 
   html, body {
@@ -35,6 +34,7 @@
     background: var(--bg-1); color: var(--ink);
     font-family: var(--font);
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
 
   .deck { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
@@ -42,60 +42,60 @@
   .slide {
     position: absolute; inset: 0;
     display: flex; flex-direction: column; justify-content: center;
-    padding: 5vh 6vw 9vh;
+    padding: 5vh 7vw 9vh;
     background:
-      radial-gradient(1200px 700px at 85% -10%, rgba(99,102,241,.12), transparent 60%),
-      radial-gradient(900px 500px at -5% 110%, rgba(34,211,238,.08), transparent 60%),
+      radial-gradient(1200px 600px at 88% -10%, rgba(79,70,229,.09), transparent 60%),
+      radial-gradient(900px 500px at -5% 110%, rgba(14,165,233,.08), transparent 60%),
       linear-gradient(180deg, var(--bg-1), var(--bg-2));
-    opacity: 0; transform: translateY(20px) scale(.99);
-    transition: opacity .5s cubic-bezier(.22,.61,.36,1), transform .5s cubic-bezier(.22,.61,.36,1);
+    opacity: 0; transform: translateY(18px) scale(.99);
+    transition: opacity .45s cubic-bezier(.22,.61,.36,1), transform .45s cubic-bezier(.22,.61,.36,1);
     pointer-events: none; overflow: hidden;
   }
   .slide.active { opacity: 1; transform: none; pointer-events: auto; }
 
-  .progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; background: rgba(255,255,255,.05); z-index: 60; }
-  .progress__bar { height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition: width .5s cubic-bezier(.22,.61,.36,1); }
+  .progress { position: fixed; top: 0; left: 0; right: 0; height: 4px; background: rgba(15,23,42,.06); z-index: 60; }
+  .progress__bar { height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition: width .45s cubic-bezier(.22,.61,.36,1); }
 
   .chrome { position: fixed; bottom: 22px; right: 30px; display: flex; align-items: center; gap: 14px; z-index: 60; }
-  .counter { font-size: 13px; font-weight: 600; letter-spacing: .06em; color: var(--muted); background: rgba(30,41,59,.8); backdrop-filter: blur(8px); border: 1px solid var(--line); padding: 8px 14px; border-radius: 999px; font-variant-numeric: tabular-nums; box-shadow: var(--shadow-sm); user-select: none; }
+  .counter { font-size: 13px; font-weight: 600; letter-spacing: .06em; color: var(--muted); background: rgba(255,255,255,.75); backdrop-filter: blur(8px); border: 1px solid var(--line); padding: 8px 14px; border-radius: 999px; font-variant-numeric: tabular-nums; box-shadow: var(--shadow-sm); user-select: none; }
   .counter b { color: var(--ink); }
-  .navbtn { width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--line); background: rgba(30,41,59,.8); backdrop-filter: blur(8px); color: var(--ink-soft); display: grid; place-items: center; cursor: pointer; box-shadow: var(--shadow-sm); transition: all .18s ease; }
+  .navbtn { width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--line); background: rgba(255,255,255,.85); backdrop-filter: blur(8px); color: var(--ink-soft); display: grid; place-items: center; cursor: pointer; box-shadow: var(--shadow-sm); transition: all .18s ease; }
   .navbtn:hover { background: var(--accent); color: #fff; border-color: var(--accent); transform: translateY(-2px); }
   .navbtn:active { transform: translateY(0) scale(.96); }
   .navbtn svg { width: 18px; height: 18px; }
 
-  .brand { position: fixed; bottom: 26px; left: 30px; z-index: 60; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); font-weight: 600; user-select: none; }
+  .brand { position: fixed; bottom: 26px; left: 30px; z-index: 60; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); font-weight: 600; user-select: none; }
   .brand span { color: var(--accent); }
 
-  .slide__inner { width: 100%; max-width: 1300px; margin: 0 auto; }
+  .slide__inner { width: 100%; max-width: 1240px; margin: 0 auto; }
 
-  .eyebrow { display: inline-flex; align-items: center; gap: 9px; font-size: 11px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--accent-2); margin-bottom: 16px; }
-  .eyebrow::before { content: ""; width: 24px; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent-2)); border-radius: 2px; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 9px; font-size: 12px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--accent); margin-bottom: 18px; }
+  .eyebrow::before { content: ""; width: 26px; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent-2)); border-radius: 2px; }
 
-  h1.title { font-size: clamp(38px, 5vw, 82px); line-height: 1.02; letter-spacing: -.03em; font-weight: 800; }
-  h1.title .grad { background: linear-gradient(100deg, var(--accent), var(--accent-2), var(--accent-3)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  h1.title { font-size: clamp(40px, 4.6vw, 76px); line-height: 1.04; letter-spacing: -.025em; font-weight: 800; }
+  h1.title .grad { background: linear-gradient(100deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
 
-  h2.head { font-size: clamp(26px, 3vw, 48px); line-height: 1.08; letter-spacing: -.02em; font-weight: 800; margin-bottom: 6px; }
-  h2.head .accent { color: var(--accent-2); }
+  h2.head { font-size: clamp(28px, 2.9vw, 46px); line-height: 1.1; letter-spacing: -.02em; font-weight: 800; margin-bottom: 8px; }
+  h2.head .accent { color: var(--accent); }
 
-  .lead { font-size: clamp(15px, 1.15vw, 19px); line-height: 1.65; color: var(--ink-soft); max-width: 72ch; }
-  .subtitle { font-size: clamp(14px, 1.1vw, 18px); color: var(--muted); line-height: 1.6; max-width: 60ch; }
+  .lead { font-size: clamp(15px, 1.15vw, 19px); line-height: 1.6; color: var(--ink-soft); max-width: 72ch; }
+  .subtitle { font-size: clamp(15px, 1.2vw, 20px); color: var(--muted); line-height: 1.6; max-width: 62ch; }
 
-  .rule { height: 1px; background: linear-gradient(90deg, var(--line), transparent); margin: 20px 0 24px; max-width: 1100px; }
+  .rule { height: 1px; background: linear-gradient(90deg, var(--line), transparent); margin: 22px 0 26px; max-width: 1100px; }
 
-  .grid { display: grid; gap: 16px; }
+  .grid { display: grid; gap: 18px; }
   .g2 { grid-template-columns: repeat(2, 1fr); }
   .g3 { grid-template-columns: repeat(3, 1fr); }
   .g4 { grid-template-columns: repeat(4, 1fr); }
 
-  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px 22px 20px; box-shadow: var(--shadow-sm); position: relative; overflow: hidden; transition: all .25s ease; }
-  .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: #475569; }
-  .card__num { position: absolute; top: 12px; right: 16px; font-size: 36px; font-weight: 800; color: rgba(99,102,241,.1); line-height: 1; letter-spacing: -.04em; }
-  .card__icon { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; background: rgba(99,102,241,.12); color: var(--accent); margin-bottom: 12px; }
-  .card__icon svg { width: 20px; height: 20px; }
-  .card h3 { font-size: 17px; font-weight: 700; margin-bottom: 7px; color: var(--ink); }
-  .card p { font-size: 14px; line-height: 1.55; color: var(--muted); }
-  .card p + p { margin-top: 6px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px 24px 22px; box-shadow: var(--shadow-sm); position: relative; overflow: hidden; transition: all .25s ease; }
+  .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: #d7dce8; }
+  .card__num { position: absolute; top: 14px; right: 18px; font-size: 40px; font-weight: 800; color: rgba(79,70,229,.08); line-height: 1; letter-spacing: -.04em; }
+  .card__icon { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); margin-bottom: 14px; }
+  .card__icon svg { width: 22px; height: 22px; }
+  .card h3 { font-size: 19px; font-weight: 700; margin-bottom: 8px; color: var(--ink); }
+  .card p { font-size: 14.5px; line-height: 1.55; color: var(--muted); }
+  .card p + p { margin-top: 8px; }
   .card p strong { color: var(--ink-soft); font-weight: 600; }
 
   .card.is-accent { border-top: 3px solid var(--accent); }
@@ -105,59 +105,53 @@
   .card.is-rose   { border-top: 3px solid var(--rose); }
   .card.is-red    { border-top: 3px solid var(--red); }
 
-  .card.is-accent .card__icon { background: rgba(99,102,241,.12); color: var(--accent); }
-  .card.is-sky .card__icon    { background: rgba(34,211,238,.1); color: var(--accent-2); }
-  .card.is-green .card__icon  { background: rgba(52,211,153,.1); color: var(--green); }
-  .card.is-amber .card__icon  { background: rgba(251,191,36,.1); color: var(--amber); }
-  .card.is-rose .card__icon   { background: rgba(251,113,133,.1); color: var(--rose); }
-
-  .list { list-style: none; display: grid; gap: 10px; }
-  .list li { display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.55; color: var(--ink-soft); background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; box-shadow: var(--shadow-sm); }
-  .list li .dot { flex: 0 0 auto; width: 24px; height: 24px; border-radius: 7px; display: grid; place-items: center; background: rgba(99,102,241,.15); color: var(--accent-2); font-size: 12px; font-weight: 800; margin-top: 1px; }
+  .list { list-style: none; display: grid; gap: 12px; }
+  .list li { display: flex; gap: 14px; align-items: flex-start; font-size: 15.5px; line-height: 1.55; color: var(--ink-soft); background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 15px 18px; box-shadow: var(--shadow-sm); }
+  .list li .dot { flex: 0 0 auto; width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); font-size: 13px; font-weight: 800; margin-top: 1px; }
   .list li strong { color: var(--ink); font-weight: 700; }
 
   .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 20px; }
-  .stat { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; box-shadow: var(--shadow-sm); }
-  .stat .n { font-size: 30px; font-weight: 800; letter-spacing: -.03em; color: var(--accent-2); line-height: 1; margin-bottom: 6px; }
-  .stat .l { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .stat { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 20px 22px; box-shadow: var(--shadow-sm); }
+  .stat .n { font-size: 32px; font-weight: 800; letter-spacing: -.03em; color: var(--accent); line-height: 1; margin-bottom: 8px; }
+  .stat .l { font-size: 13.5px; color: var(--muted); line-height: 1.5; }
 
   .table-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--line); box-shadow: var(--shadow-sm); }
   table { width: 100%; border-collapse: collapse; font-size: 14px; }
-  thead { background: var(--surface-2); }
+  thead { background: #f1f5f9; }
   th { text-align: left; padding: 12px 16px; font-weight: 700; color: var(--ink-soft); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; border-bottom: 1px solid var(--line); white-space: nowrap; }
-  td { padding: 11px 16px; border-bottom: 1px solid rgba(51,65,85,.6); color: var(--muted); }
+  td { padding: 11px 16px; border-bottom: 1px solid var(--line); color: var(--muted); }
   tbody tr:last-child td { border-bottom: none; }
-  tbody tr:hover { background: rgba(99,102,241,.06); }
+  tbody tr:hover { background: rgba(79,70,229,.04); }
   td strong { color: var(--ink); }
 
-  .timeline { position: relative; padding-left: 28px; display: grid; gap: 16px; }
-  .timeline::before { content: ""; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 2px; background: linear-gradient(180deg, var(--accent), var(--accent-2), transparent); border-radius: 2px; }
+  .timeline { position: relative; padding-left: 30px; display: grid; gap: 18px; }
+  .timeline::before { content: ""; position: absolute; left: 8px; top: 8px; bottom: 8px; width: 2px; background: linear-gradient(180deg, var(--accent), var(--accent-2), transparent); border-radius: 2px; }
   .timeline__item { position: relative; }
-  .timeline__item::before { content: ""; position: absolute; left: -28px; top: 5px; width: 16px; height: 16px; border-radius: 50%; background: var(--bg-1); border: 3px solid var(--accent-2); box-shadow: 0 0 0 4px rgba(34,211,238,.15); }
-  .timeline__item h4 { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
-  .timeline__item p { font-size: 14px; line-height: 1.55; color: var(--muted); }
+  .timeline__item::before { content: ""; position: absolute; left: -30px; top: 6px; width: 18px; height: 18px; border-radius: 50%; background: #fff; border: 3px solid var(--accent); box-shadow: 0 0 0 4px rgba(79,70,229,.12); }
+  .timeline__item h4 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .timeline__item p { font-size: 14.5px; line-height: 1.55; color: var(--muted); }
 
   .title-slide { text-align: left; }
-  .title-slide .badge { display: inline-flex; align-items: center; gap: 10px; padding: 8px 16px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-size: 13px; font-weight: 600; color: var(--ink-soft); box-shadow: var(--shadow-sm); margin-bottom: 24px; }
-  .title-slide .badge .pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--red); box-shadow: 0 0 0 4px rgba(239,68,68,.2); animation: pulse 1.8s infinite; }
+  .title-slide .badge { display: inline-flex; align-items: center; gap: 10px; padding: 8px 16px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-size: 13px; font-weight: 600; color: var(--ink-soft); box-shadow: var(--shadow-sm); margin-bottom: 26px; }
+  .title-slide .badge .pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--red); box-shadow: 0 0 0 4px rgba(220,38,38,.18); animation: pulse 1.8s infinite; }
   @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
-  .title-slide .meta-row { display: flex; gap: 40px; margin-top: 36px; flex-wrap: wrap; }
-  .title-slide .meta-row .k { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin-bottom: 4px; }
-  .title-slide .meta-row .v { font-size: 15px; font-weight: 700; color: var(--ink); }
+  .title-slide .meta-row { display: flex; gap: 40px; margin-top: 38px; flex-wrap: wrap; }
+  .title-slide .meta-row .k { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin-bottom: 5px; }
+  .title-slide .meta-row .v { font-size: 16px; font-weight: 700; color: var(--ink); }
 
-  .hint { position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%); font-size: 11px; color: var(--muted); letter-spacing: .04em; background: rgba(30,41,59,.7); backdrop-filter: blur(8px); border: 1px solid var(--line); border-radius: 999px; padding: 6px 16px; z-index: 60; user-select: none; transition: opacity .4s ease; }
+  .hint { position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%); font-size: 12px; color: var(--muted); letter-spacing: .04em; background: rgba(255,255,255,.7); backdrop-filter: blur(8px); border: 1px solid var(--line); border-radius: 999px; padding: 7px 16px; z-index: 60; user-select: none; transition: opacity .4s ease; }
   .hint.hide { opacity: 0; }
-  .hint kbd { font-family: var(--mono); font-size: 10px; background: #334155; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 1px 5px; margin: 0 2px; color: var(--ink-soft); }
+  .hint kbd { font-family: var(--mono); font-size: 11px; background: #f1f5f9; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px; padding: 1px 6px; margin: 0 2px; color: var(--ink-soft); }
 
   @media (max-width: 1180px) {
-    .slide { padding: 4vh 4vw 8vh; }
+    .slide { padding: 4vh 5vw 8vh; }
     .g4 { grid-template-columns: repeat(2, 1fr); }
   }
   @media (max-height: 760px) {
-    .slide { padding-top: 3vh; padding-bottom: 8vh; }
-    .card { padding: 16px 18px; }
-    .list li { padding: 10px 14px; font-size: 14px; }
-    .rule { margin: 14px 0 18px; }
+    .slide { padding-top: 3.5vh; padding-bottom: 8vh; }
+    .card { padding: 18px 20px; }
+    .list li { padding: 12px 16px; font-size: 14.5px; }
+    .rule { margin: 16px 0 20px; }
   }
 </style>
 </head>
@@ -172,14 +166,11 @@
     <div class="slide__inner">
       <div class="badge"><span class="pulse"></span> Аналитический брифинг · Ноябрь 2026</div>
       <h1 class="title">Массовые кибератаки<br><span class="grad">октябрь — ноябрь 2026</span></h1>
-      <p class="subtitle" style="margin-top:20px; max-width:62ch;">
-        Статистика, зависимости, группировки и инциденты последнего месяца.
-        Взгляд ИБ-специалиста на то, что изменилось и почему это важно.
-      </p>
+      <p class="subtitle" style="margin-top:22px; max-width:62ch;">Статистика, зависимости, группировки и инциденты последнего месяца. Взгляд ИБ-специалиста на то, что изменилось и почему это важно.</p>
       <div class="meta-row">
         <div><div class="k">Период</div><div class="v">26.10 – 03.11.2026</div></div>
-        <div><div class="k">Инцидентов в фокусе</div><div class="v">12+</div></div>
-        <div><div class="k">Группировок</div><div class="v">8</div></div>
+        <div><div class="k">Инцидентов</div><div class="v">14+</div></div>
+        <div><div class="k">Группировок</div><div class="v">9</div></div>
         <div><div class="k">Векторов</div><div class="v">RaaS · IoT · Крипто · Госсектор</div></div>
       </div>
     </div>
@@ -191,378 +182,587 @@
       <div class="eyebrow">Общий фон</div>
       <h2 class="head">Рекордный рост и <span class="accent">олигополия RaaS</span></h2>
       <div class="rule"></div>
-      <div class="split" style="display:grid;grid-template-columns:1.1fr .9fr;gap:30px;align-items:start;">
-        <div>
-          <p class="lead">В III квартале 2026 года зафиксировано <strong>2 894 атаки программ-вымогателей</strong> — на 50% больше, чем годом ранее. В октябре темп ускорился: за первые 26 дней — <strong>941 жертва</strong> (в среднем 36,2 в день).</p>
-          <p class="lead" style="margin-top:14px;">Ключевая зависимость: почти весь рост обеспечили <strong>две группировки</strong>. Qilin и The Gentlemen вместе дали скачок, тогда как остальной ландшафт остался на прежнем уровне (170 против 168 жертв неделей ранее).</p>
-        </div>
-        <div class="stat-row" style="grid-template-columns:1fr;margin-top:0;gap:12px;">
-          <div class="stat"><div class="n">328</div><div class="l">уникальных жертв за неделю 26.10–01.11</div></div>
-          <div class="stat"><div class="n">+59%</div><div class="l">рост к предыдущей неделе</div></div>
-          <div class="stat"><div class="n">43%</div><div class="l">недельной статистики — один день 26 октября</div></div>
-        </div>
+      <p class="lead">В III квартале 2026 года — <strong>2 894 атаки вымогателей</strong>, +50% год к году. В октябре за первые 26 дней — <strong>941 жертва</strong> (36,2 в день).</p>
+      <div class="stat-row" style="margin-top:24px;">
+        <div class="stat"><div class="n">328</div><div class="l">уникальных жертв за неделю 26.10–01.11 (+59%)</div></div>
+        <div class="stat"><div class="n">44</div><div class="l">активных группировок</div></div>
+        <div class="stat"><div class="n">52</div><div class="l">страны под ударом</div></div>
+      </div>
+      <div class="card is-amber" style="margin-top:22px; padding:20px 26px;">
+        <p><strong>Ключевая зависимость:</strong> без Qilin и The Gentlemen остальной ландшафт почти не изменился — <strong>170 против 168</strong> жертв неделей ранее. Рост обеспечили <strong>две группы</strong>, выложившие бэклоги. 26 октября — <strong>142 поста за день</strong> (43% недели).</p>
       </div>
     </div>
   </section>
 
-  <!-- 3. QILIN: ИСТОРИЯ И ЦИФРЫ -->
+  <!-- 3. QILIN: ИСТОРИЯ -->
   <section class="slide">
     <div class="slide__inner">
-      <div class="eyebrow">Qilin</div>
+      <div class="eyebrow">Qilin · История</div>
       <h2 class="head">От «Агенды» до <span class="accent">доминирующего оператора</span></h2>
       <div class="rule"></div>
-      <div class="split" style="display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:start;">
-        <div class="timeline">
-          <div class="timeline__item"><h4>2022 · Запуск</h4><p>Появление под именем Agenda. Русскоязычная RaaS-операция.</p></div>
-          <div class="timeline__item"><h4>2024 · Synnovis</h4><p>Атака на британского провайдера диагностики. ~900 тыс. пострадавших, ущерб ~$44 млн, требование выкупа $50 млн.</p></div>
-          <div class="timeline__item"><h4>2025 · 1000+ жертв</h4><p>Первое место по числу жертв за год. 179 атак в 2024 → 1000+ в 2025.</p></div>
-          <div class="timeline__item"><h4>Август 2025 · Раскол</h4><p>Аффилиат «hastalamuerte» обвиняет операторов в exit scam (~$48 тыс. удержаны). Утечка внутренней инфраструктуры.</p></div>
-          <div class="timeline__item"><h4>Октябрь 2026 · Пик</h4><p><strong>79 жертв за один день</strong> (26 октября). 107 за неделю. Доля выплат аффилиатам — до 85%.</p></div>
-        </div>
-        <div>
-          <div class="card is-accent" style="padding:24px;">
-            <h3 style="font-size:20px;">Модель Qilin</h3>
-            <p style="margin-top:10px;">Исключение организаций СНГ. Преимущественный таргетинг США, Канады, Европы. Здравоохранение — ~13,3% идентифицированных жертв.</p>
-          </div>
-          <div class="stat-row" style="grid-template-columns:1fr 1fr;margin-top:14px;gap:12px;">
-            <div class="stat" style="padding:14px 16px;"><div class="n" style="font-size:24px;">338</div><div class="l">жертв в I кв. 2026 — больше, чем у нижних 50 групп вместе</div></div>
-            <div class="stat" style="padding:14px 16px;"><div class="n" style="font-size:24px;">~900</div><div class="l">жертв к концу октября 2026</div></div>
-          </div>
-        </div>
+      <div class="timeline">
+        <div class="timeline__item"><h4>2022 · Запуск</h4><p>Появление под именем Agenda. Русскоязычная RaaS-операция.</p></div>
+        <div class="timeline__item"><h4>2024 · Synnovis</h4><p>Атака на британского провайдера диагностики. ~900 тыс. пострадавших, ущерб ~$44 млн, выкуп $50 млн. <strong>Первая кибератака в истории, напрямую связанная со смертью пациента.</strong></p></div>
+        <div class="timeline__item"><h4>2025 · 1000+ жертв</h4><p>179 атак в 2024 → 1000+ в 2025. Первое место по числу жертв за год.</p></div>
+        <div class="timeline__item"><h4>Август 2025 · Раскол</h4><p>Аффилиат «hastalamuerte» обвиняет операторов в exit scam (~$48 тыс.). Утечка внутренней инфраструктуры. Из конфликта рождается The Gentlemen.</p></div>
+        <div class="timeline__item"><h4>2026 · Доминирование</h4><p>I кв. — 338 жертв (больше, чем у нижних 50 групп вместе). Октябрь — 79 жертв за один день, 107 за неделю. Доля аффилиатам — до 85%.</p></div>
       </div>
     </div>
   </section>
 
-  <!-- 4. THE GENTLEMEN -->
+  <!-- 4. QILIN: МОДЕЛЬ И АРЕСТ -->
   <section class="slide">
     <div class="slide__inner">
-      <div class="eyebrow">The Gentlemen</div>
+      <div class="eyebrow">Qilin · Модель и арест</div>
+      <h2 class="head">85% аффилиатам и <span class="accent">арест в отпуске</span></h2>
+      <div class="rule"></div>
+      <div class="grid g2" style="gap:16px;">
+        <div class="card is-accent" style="padding:24px;">
+          <h3>Модель Qilin</h3>
+          <p>Исключение организаций СНГ. Таргетинг США, Канады, Европы. Здравоохранение — <strong>13,3%</strong> идентифицированных жертв. До <strong>85%</strong> выплат аффилиатам.</p>
+        </div>
+        <div class="card is-rose" style="padding:24px;">
+          <h3>Арест · 16 октября 2026</h3>
+          <p>Немецкая полиция задержала <strong>28-летнего россиянина</strong> во время отпуска. Следствие связывает его с атакой на Synnovis и ключевой ролью в Qilin. Это редкий случай физического задержания высшего звена RaaS.</p>
+        </div>
+      </div>
+      <div class="stat-row" style="grid-template-columns:1fr 1fr 1fr; margin-top:18px;">
+        <div class="stat" style="padding:16px 18px;"><div class="n" style="font-size:24px;">338</div><div class="l">жертв в I кв. 2026</div></div>
+        <div class="stat" style="padding:16px 18px;"><div class="n" style="font-size:24px;">~900</div><div class="l">жертв к концу октября 2026</div></div>
+        <div class="stat" style="padding:16px 18px;"><div class="n" style="font-size:24px;">443%</div><div class="l">рост числа заявленных жертв за год (Black Kite)</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. THE GENTLEMEN: ИСТОРИЯ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">The Gentlemen · История</div>
       <h2 class="head">Аффилиатный откол, ставший <span class="accent">угрозой №1</span></h2>
       <div class="rule"></div>
-      <div class="grid g3" style="margin-bottom:18px;">
-        <div class="card is-rose"><div class="card__num">90%</div><h3>Доля аффилиатам</h3><p>Против 70–80% стандарта. Стратегия переманивания лучших операторов.</p></div>
-        <div class="card is-accent"><h3>LARVA-368</h3><p>Лидер ArmCorp, он же «hastalamuerte» и «zeta88». Тот самый аффилиат, что обвинил Qilin в сокрытии $48 тыс.</p></div>
-        <div class="card is-sky"><h3>14 700</h3><p>Предварительно скомпрометированных устройств FortiGate в пуле группы. 969 валидированных VPN-учётных данных.</p></div>
-      </div>
-      <div class="table-wrap">
+      <p class="lead">Выделилась из Qilin в <strong>июле 2025</strong>. Лидер — <strong>LARVA-368</strong> (он же «hastalamuerte», «zeta88»), тот самый аффилиат, что обвинил Qilin в сокрытии $48 тыс.</p>
+      <div class="table-wrap" style="margin-top:18px;">
         <table>
           <thead><tr><th>Показатель</th><th>Q4 2025</th><th>Q2 2026</th><th>Неделя 26.10–01.11</th></tr></thead>
           <tbody>
-            <tr><td><strong>Жертвы</strong></td><td>~40</td><td>269 (+62% кв/кв)</td><td>51 (против 4 неделей ранее)</td></tr>
-            <tr><td><strong>Ключевой инструмент</strong></td><td>—</td><td>GentleKiller (отключение EDR)</td><td>Пул FortiGate + n-day</td></tr>
-            <tr><td><strong>Модель</strong></td><td colspan="3">RaaS 90/10. Цепная виктимизация. Партнёрство с BreachForums (май 2026).</td></tr>
+            <tr><td><strong>Жертвы</strong></td><td>~40</td><td>269 (+62% кв/кв)</td><td>51 (против 4)</td></tr>
+            <tr><td><strong>Модель</strong></td><td colspan="3">RaaS <strong>90/10</strong> — беспрецедентно щедрое условие. Цепная виктимизация. Партнёрство с BreachForums (май 2026).</td></tr>
+            <tr><td><strong>Организация</strong></td><td colspan="3">~9 именованных операторов после утечки Rocket.Chat (май 2026). Отслеживается Microsoft как <strong>Storm-2697</strong>, PRODAFT — <strong>Phantom Mantis</strong>.</td></tr>
           </tbody>
         </table>
       </div>
-      <p class="lead" style="margin-top:16px;">The Gentlemen отслеживается Microsoft как <strong>Storm-2697</strong>, PRODAFT — как <strong>Phantom Mantis</strong>. Группа не демонстрирует零-day, а индустриализирует доступ через известные уязвимости.</p>
     </div>
   </section>
 
-  <!-- 5. РОССИЙСКАЯ ИНФРАСТРУКТУРА -->
+  <!-- 6. THE GENTLEMEN: ТЕХНИКА -->
   <section class="slide">
     <div class="slide__inner">
-      <div class="eyebrow">Россия · Инфраструктура</div>
-      <h2 class="head">МЧС, Beget, Росстат: <span class="accent">атаки на доверие</span></h2>
-      <div class="rule"></div>
-      <div class="grid g2" style="gap:14px;">
-        <div class="card is-red" style="padding:18px 22px;">
-          <h3 style="font-size:16px;">МЧС России · 2 ноября</h3>
-          <p>Атака на панель администрирования приложения в <strong>02:45 мск</strong>. Ложная рассылка в <strong>33 субъектах РФ</strong>. Система оповещения (сирены, СМС, ТВ/радио) не пострадала.</p>
-        </div>
-        <div class="card is-amber" style="padding:18px 22px;">
-          <h3 style="font-size:16px;">Beget · 2 ноября</h3>
-          <p>«Массированная атака на все уровни инфраструктуры». До <strong>500 тыс. сайтов</strong>. <strong>~1 млн анонсов смены маршрутов за час</strong> (пик за 90 дней — 20 тыс.). Возможен сброс конфигураций.</p>
-        </div>
-        <div class="card is-rose" style="padding:18px 22px;">
-          <h3 style="font-size:16px;">Росстат · 1 ноября</h3>
-          <p>«Киберпартизаны» + Silent Crow. <strong>~25 000 ПК</strong>, <strong>~23 ТБ</strong> данных. Месяцы внутри сети. Уничтожение серверов.</p>
-        </div>
-        <div class="card is-accent" style="padding:18px 22px;">
-          <h3 style="font-size:16px;">РКН · ИИ-вектор</h3>
-          <p>Обсуждение <strong>95% эффективности блокировки VPN</strong> через ИИ. Практика: анализ характера соединений, точечное подавление. Персональные VPN живут ~24 часа, иногда 6.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 6. ЗЕРКАЛЬНЫЙ УДАР -->
-  <section class="slide">
-    <div class="slide__inner">
-      <div class="eyebrow">Ответная атака</div>
-      <h2 class="head">«Воздушная тревога»: <span class="accent">симметричный обмен</span></h2>
-      <div class="rule"></div>
-      <div class="split" style="display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:start;">
-        <div>
-          <p class="lead">В ту же ночь, что и атака на МЧС, был взломан украинский сервис <strong>«Воздушная тревога»</strong>. Пользователи получили уведомления о <strong>радиационной и химической опасности</strong> и сообщение на русском:</p>
-          <div class="card is-rose" style="margin-top:16px;padding:20px 24px;">
-            <p style="font-size:18px;font-style:italic;color:var(--ink);line-height:1.5;">«Привет! По всей Украине сейчас будет ядерная тревога! Не волнуйтесь, летит Орешник!»</p>
-          </div>
-        </div>
-        <div>
-          <p class="lead">Воздушные силы ВСУ подтвердили взлом и отключили рассылку. Российские каналы охарактеризовали это как «ответ» на взлом МЧС.</p>
-          <div class="card is-amber" style="margin-top:16px;padding:20px 24px;">
-            <p><strong>Значение:</strong> впервые зафиксирован <strong>симметричный обмен атаками на гражданские системы экстренного информирования</strong> в зоне конфликта. С обеих сторон — ложные сообщения о ядерной угрозе для психологического воздействия.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 7. IoT / OT -->
-  <section class="slide">
-    <div class="slide__inner">
-      <div class="eyebrow">IoT и OT</div>
-      <h2 class="head">Холодильники, камеры, роутеры: <span class="accent">от разведки к разрушению</span></h2>
+      <div class="eyebrow">The Gentlemen · Техника</div>
+      <h2 class="head">FortiGate, GentleKiller и <span class="accent">BYOVD</span></h2>
       <div class="rule"></div>
       <div class="grid g3">
         <div class="card is-sky">
-          <h3 style="font-size:16px;">Холодильники · Европа</h3>
-          <p>Франция → Бельгия, Люксембург, Швеция, Эстония, Ирландия. Всего <strong>9 стран</strong>. Разогрев до <strong>+50 °C</strong>. Одна и та же уязвимость.</p>
+          <h3>14 700 FortiGate</h3>
+          <p>Пул предварительно скомпрометированных устройств и <strong>969 валидированных VPN-учёток</strong>, полученных брутфорсом. Распределяются аффилиатам для первоначального доступа.</p>
         </div>
         <div class="card is-rose">
-          <h3 style="font-size:16px;">Камеры Dahua</h3>
-          <p><strong>14 500+</strong> камер за 35 дней. Бэкдор <code style="font-family:var(--mono);font-size:12px;color:var(--accent-2);">p2pwn</code> выживает после сброса. 89,4% серийников — доступ без аутентификации.</p>
+          <h3>GentleKiller</h3>
+          <p>EDR-killer. <strong>8+ вариантов</strong>, маскируются под Kaspersky и игровые анти-читы. Техника <strong>BYOVD</strong> (Bring Your Own Vulnerable Driver). Цели — <strong>400+ процессов</strong> от <strong>48 вендоров</strong>.</p>
         </div>
         <div class="card is-amber">
-          <h3 style="font-size:16px;">MikroTik / ASUS</h3>
-          <p><strong>MikroTrick</strong> (RCE). <strong>CVE-2026-14157</strong> ASUS — CVSS <strong>9.4</strong>, root. Активная эксплуатация. DNS-хайджекинг.</p>
+          <h3>Тактика</h3>
+          <p>Только <strong>n-day</strong> и публичные PoC. Нет零-day. Быстрое внедрение новых PoC — <strong>за считанные дни</strong>. Tаргетинг по мисконфигурациям FortiGate.</p>
         </div>
-        <div class="card is-green">
-          <h3 style="font-size:16px;">Масштаб IoT</h3>
-          <p><strong>589,4 млн</strong> атак на IoT за I кв. 2026 (+11% г/г). <strong>4,85 млрд</strong> попыток входа на домашние роутеры за 9 мес.</p>
-        </div>
-        <div class="card is-accent">
-          <h3 style="font-size:16px;">Doorway · 16.5.0.224–228</h3>
-          <p>Rust-ботнет. <strong>21 870 строк</strong> кода, <strong>59 модулей</strong>. <strong>4 217 IP</strong>, <strong>1 772 устройства</strong>, 75+ территорий. SOCKS-прокси на MikroTik.</p>
-        </div>
-        <div class="card is-rose">
-          <h3 style="font-size:16px;">Казань · октябрь</h3>
-          <p>Массовый взлом камер. Непристойные изображения. Требование <strong>6 тыс. ₽</strong> за удаление. Переход к вымогательству через физические интерфейсы.</p>
-        </div>
+      </div>
+      <div class="card is-accent" style="margin-top:18px; padding:20px 26px;">
+        <p><strong>Ключевой вывод:</strong> техническое преимущество The Gentlemen — не в уязвимостях, а в <strong>упаковке</strong>: зрелый инструментарий + EDR-killer как сервис. Это <strong>снижает порог входа</strong> для аффилиатов.</p>
       </div>
     </div>
   </section>
 
-  <!-- 8. КРИПТОБИРЖИ -->
+  <!-- 7. РОССИЯ: ОБЩАЯ СТАТИСТИКА -->
   <section class="slide">
     <div class="slide__inner">
-      <div class="eyebrow">Криптобиржи</div>
-      <h2 class="head">Binance и Mercado Bitcoin: <span class="accent">удар по подписи</span></h2>
+      <div class="eyebrow">Россия · Статистика</div>
+      <h2 class="head">Рекордный квартал и <span class="accent">рост на 38%</span></h2>
+      <div class="rule"></div>
+      <div class="stat-row">
+        <div class="stat"><div class="n">31,7 тыс.</div><div class="l">подтверждённых инцидентов за 9 месяцев 2026 (+38% г/г)</div></div>
+        <div class="stat"><div class="n">14,3 тыс.</div><div class="l">инцидентов в III квартале — рекорд за всю историю наблюдений</div></div>
+        <div class="stat"><div class="n">50 млн – 1,5 млрд ₽</div><div class="l">ущерб крупных компаний от шифровальщиков и вайперов</div></div>
+      </div>
+      <div class="card is-accent" style="margin-top:22px; padding:20px 26px;">
+        <p>Solar JSOC связывает рост с <strong>распространением ИИ-инструментов</strong> у атакующих. Россия — один из самых атакуемых рынков, при этом значительная часть инцидентов остаётся непубличной.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. МЧС + ВОЗДУШНАЯ ТРЕВОГА -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Симметричный удар · 1–2 ноября</div>
+      <h2 class="head">МЧС России и <span class="accent">«Воздушная тревога»</span></h2>
       <div class="rule"></div>
       <div class="grid g2" style="gap:16px;">
-        <div class="card is-red" style="padding:24px;">
-          <h3 style="font-size:22px;">Binance · $6,3 млрд</h3>
-          <p style="margin-top:8px;">TraderTraitor (КНДР). Взлом <strong>ноутбука инженера</strong> → сервисный контейнер → транзакции. <strong>Утечки секретных ключей нет</strong>. 10 блокчейнов, ~20 минут. Заморожено ~<strong>$3 млрд</strong> (USDC $800 млн, USDT $1,6 млрд).</p>
+        <div class="card is-red" style="padding:22px;">
+          <h3>МЧС России · 02:45 мск</h3>
+          <p>Атака на панель администрирования приложения. Ложная рассылка в <strong>33 субъектах РФ</strong>. Система оповещения (сирены, СМС, ТВ/радио) <strong>не пострадала</strong>. Уязвимость изолирована, данные переданы в НКЦКИ.</p>
         </div>
-        <div class="card is-amber" style="padding:24px;">
-          <h3 style="font-size:22px;">Mercado Bitcoin · ~$40–49 млн</h3>
-          <p style="margin-top:8px;">Крупнейшая биржа Бразилии. <strong>10+ блокчейнов</strong> (BTC, ETH, SOL, TRON, Polygon и др.). Транзакции <strong>подписаны как авторизованные</strong>. Приватные ключи или инфраструктура авторизации.</p>
+        <div class="card is-rose" style="padding:22px;">
+          <h3>«Воздушная тревога» · вечер 1 ноября</h3>
+          <p>Взлом украинского приложения. Сообщения о <strong>радиационной и химической опасности</strong>, угрозе уличных боёв и текст на русском: <em>«Привет! По всей Украине сейчас будет ядерная тревога! Не волнуйтесь, летит Орешник!»</em>. ВСУ подтвердили взлом, рассылку отключили.</p>
         </div>
       </div>
-      <div class="card is-accent" style="margin-top:18px;padding:20px 26px;">
-        <p><strong>Зависимость:</strong> обе атаки — с интервалом в несколько дней. Синхронная кампания или общий скомпрометированный слой (подпись транзакций). Каскадный риск недоверия к централизованным платформам.</p>
+      <div class="card is-amber" style="margin-top:16px; padding:18px 24px;">
+        <p><strong>Значение:</strong> впервые — <strong>симметричный обмен атаками на гражданские системы экстренного информирования</strong> в зоне конфликта. С обеих сторон — ложные сообщения о ядерной угрозе для психологического воздействия.</p>
       </div>
     </div>
   </section>
 
-  <!-- 9. ГРУППИРОВКИ · KILL CHAIN -->
+  <!-- 9. BEGET -->
   <section class="slide">
     <div class="slide__inner">
-      <div class="eyebrow">Группировки · Сводка</div>
-      <h2 class="head">Восемь акторов <span class="accent">одного месяца</span></h2>
+      <div class="eyebrow">Beget · 2 ноября</div>
+      <h2 class="head">Миллион анонсов маршрутов <span class="accent">за один час</span></h2>
       <div class="rule"></div>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Группировка</th><th>Тип</th><th>Ключевой инцидент</th><th>Особенность</th></tr></thead>
-          <tbody>
-            <tr><td><strong>Qilin</strong></td><td>RaaS</td><td>107 жертв за неделю</td><td>85% аффилиатам</td></tr>
-            <tr><td><strong>The Gentlemen</strong></td><td>RaaS (откол Qilin)</td><td>51 жертва за неделю</td><td>90% аффилиатам, пул FortiGate</td></tr>
-            <tr><td><strong>Киберпартизаны + Silent Crow</strong></td><td>Хактивизм</td><td>Росстат: 25 тыс. ПК, 23 ТБ</td><td>Месяцы внутри сети</td></tr>
-            <tr><td><strong>TraderTraitor (КНДР)</strong></td><td>Государственный</td><td>Binance $6,3 млрд</td><td>Обход криптопериметра</td></tr>
-            <tr><td><strong>Aurora (Aur0ra)</strong></td><td>RaaS + ИИ</td><td>33 организации</td><td>ИИ-агент Cursor</td></tr>
-            <tr><td><strong>ShinyHunters</strong></td><td>Вымогательство</td><td>Дефейс Clop</td><td>Атака на конкурента</td></tr>
-            <tr><td><strong>Storm-2945</strong></td><td>APT (СВР)</td><td>Wi-Fi в отелях</td><td>CornFlake, ChocoShell</td></tr>
-            <tr><td><strong>Doorway</strong></td><td>Ботнет</td><td>1 772 устройства</td><td>Rust, SOCKS-прокси</td></tr>
-          </tbody>
-        </table>
+      <div class="split" style="display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:start;">
+        <div>
+          <p class="lead">«Массированная кибератака, затронувшая все уровни инфраструктуры». По данным китайских СМИ — до <strong>500 тыс. сайтов</strong>. Один из источников «Ъ»: возможен <strong>сброс всех конфигураций</strong>.</p>
+          <div class="card is-rose" style="margin-top:16px; padding:20px 24px;">
+            <h3>Аномалия маршрутизации</h3>
+            <p><strong>~1 млн анонсов смены маршрутов за час</strong>. Для сравнения: пик за предыдущие 90 дней — <strong>20 тыс.</strong> Это в 50 раз выше нормы.</p>
+          </div>
+        </div>
+        <div>
+          <div class="card is-amber" style="padding:22px;">
+            <h3>Что это значит</h3>
+            <p>Компрометация не периметра, а <strong>уровня управления инфраструктурой</strong>. Высокие привилегии → массовое изменение конфигураций → деградация доступности для сотен тысяч сайтов.</p>
+          </div>
+          <div class="card is-accent" style="margin-top:12px; padding:18px 22px;">
+            <p>Для ИБ: при диагностике инцидента доступности <strong>аномалия BGP/маршрутизации</strong> должна проверяться наравне с DDoS и ИИ-блокировкой.</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- 10. КИБЕРПАРТИЗАНЫ + SILENT CROW -->
+  <!-- 10. РКН + ИИ -->
   <section class="slide">
     <div class="slide__inner">
-      <div class="eyebrow">Киберпартизаны · Silent Crow</div>
-      <h2 class="head">Альянс, который <span class="accent">вошёл в Росстат</span></h2>
+      <div class="eyebrow">РКН · ИИ-вектор</div>
+      <h2 class="head">От «умной» блокировки к <span class="accent">охоте на персональные VPN</span></h2>
+      <div class="rule"></div>
+      <div class="grid g3">
+        <div class="card is-accent">
+          <h3>95%</h3>
+          <p>Целевая эффективность блокировки VPN через ИИ в проекте нацплана. ИИ должен <strong>вычислять VPN, которые не поймали обычными средствами</strong>. В актуальной версии мера отсутствует, но вектор зафиксирован.</p>
+        </div>
+        <div class="card is-sky">
+          <h3>Анализ соединений</h3>
+          <p>Машинное обучение анализирует <strong>характер соединений</strong>. При выявлении признаков VPN — <strong>точечное подавление</strong> трафика с быстрым вычислением адреса.</p>
+        </div>
+        <div class="card is-rose">
+          <h3>24 часа</h3>
+          <p>Средняя жизнь новой VPN-локации. Иногда — <strong>6 часов</strong>. Именно ИИ позволяет цензору быть настолько быстрым.</p>
+        </div>
+      </div>
+      <div class="card is-amber" style="margin-top:18px; padding:18px 24px;">
+        <p>Для ИБ: <strong>персональный VPN перестаёт быть надёжным средством обхода</strong>. Корпоративный трафик должен маскироваться под легитимные сервисы. Гипотеза «это ИИ-блокировка» — обязательна при разборе инцидентов доступности.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11. РОССТАТ + КИБЕРПАРТИЗАНЫ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Росстат · 1 ноября</div>
+      <h2 class="head">«Киберпартизаны» + Silent Crow: <span class="accent">25 000 ПК, 23 ТБ</span></h2>
       <div class="rule"></div>
       <div class="split" style="display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:start;">
         <div>
           <div class="card is-rose" style="padding:20px 24px;">
             <h3>«Киберпартизаны BY»</h3>
-            <p style="margin-top:8px;">Основана в сентябре 2020 после протестов в Беларуси. Блокировала Белорусскую железную дорогу. К 2026 — <strong>смена главной цели на Россию</strong>. Бэкдор «Василёк» в медицинской организации (2 года).</p>
+            <p>Белорусская группа с сентября 2020. Блокировала Белорусскую железную дорогу. К 2026 — <strong>смена главной цели на Россию</strong>. Бэкдор «Василёк» — <strong>2 года</strong> в медицинской организации, маскировка под VMware.</p>
           </div>
-          <div class="card is-amber" style="padding:20px 24px;margin-top:12px;">
+          <div class="card is-amber" style="padding:20px 24px; margin-top:12px;">
             <h3>Silent Crow</h3>
-            <p style="margin-top:8px;">Проукраинские хактивисты (ранее CyberWar, Cyber LegionsUA). Атаки на российские госорганы.</p>
+            <p>Проукраинские хактивисты (ранее CyberWar, Cyber LegionsUA). Атаки на российские госорганы.</p>
           </div>
         </div>
         <div>
           <div class="card is-accent" style="padding:22px 26px;">
-            <h3 style="font-size:20px;">Росстат · 1 ноября</h3>
-            <p style="margin-top:10px;">Центральный аппарат, региональные подразделения, Головной межрегиональный центр. <strong>~25 000 компьютеров</strong>. <strong>~23 ТБ</strong>. Утверждается наличие данных о военных потерях. Месяцы внутри сети. Уничтожение серверов.</p>
+            <h3 style="font-size:20px;">Что под контролем</h3>
+            <p>Центральный аппарат, региональные подразделения, Головной межрегиональный центр. <strong>~25 000 компьютеров</strong>. <strong>~23 ТБ</strong>: базы данных, внутренние документы, служебная информация. Утверждается наличие данных о <strong>военных потерях</strong>. Месяцы внутри сети. Уничтожение серверов.</p>
           </div>
-          <div class="card is-rose" style="padding:18px 22px;margin-top:12px;">
-            <p>Июль 2026: обе группировки признаны <strong>экстремистскими</strong> в России и внесены в перечень АТЦ СНГ.</p>
+          <div class="card is-rose" style="padding:16px 22px; margin-top:12px;">
+            <p>21 июля 2026: Верховный суд России признал обе группировки <strong>экстремистскими</strong>.</p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 11. СЕВЕРНАЯ КОРЕЯ -->
+  <!-- 12. СЕВЕРНАЯ КОРЕЯ: КОНТЕКСТ -->
   <section class="slide">
     <div class="slide__inner">
-      <div class="eyebrow">TraderTraitor · КНДР</div>
+      <div class="eyebrow">TraderTraitor · Контекст</div>
       <h2 class="head">Государственный <span class="accent">крипто-вымогатель</span></h2>
       <div class="rule"></div>
-      <div class="grid g3" style="margin-bottom:16px;">
-        <div class="stat" style="padding:18px;"><div class="n">$6,3 млрд</div><div class="l">Binance, октябрь 2026</div></div>
-        <div class="stat" style="padding:18px;"><div class="n">$387,5 млн</div><div class="l">Bitget, сентябрь 2026</div></div>
-        <div class="stat" style="padding:18px;"><div class="n">$2,02 млрд</div><div class="l">все группы КНДР за 2025</div></div>
+      <div class="stat-row">
+        <div class="stat"><div class="n">$6,3 млрд</div><div class="l">Binance, октябрь 2026</div></div>
+        <div class="stat"><div class="n">$387,5 млн</div><div class="l">Bitget, сентябрь 2026</div></div>
+        <div class="stat"><div class="n">$2,02 млрд</div><div class="l">все группы КНДР за 2025</div></div>
       </div>
-      <div class="card is-accent" style="padding:22px 26px;">
-        <p><strong>Механика:</strong> ноутбук инженера → сервисный контейнер → подпись транзакций. Секретные ключи кошельков <strong>не скомпрометированы</strong>. Атака на <strong>инфраструктуру разработки и подписи</strong>, а не на криптографию. ФБР официально подтвердило атрибуцию. КНДР опровергла.</p>
+      <div class="card is-accent" style="margin-top:22px; padding:22px 28px;">
+        <p>TraderTraitor — элитное подразделение <strong>Lazarus Group</strong>. Специализация — атаки на криптовалютные компании и их сотрудников. Атрибуция Binance подтверждена <strong>ФБР</strong> с «высокой уверенностью». КНДР официально опровергла, назвав обвинения «политической провокацией».</p>
       </div>
     </div>
   </section>
 
-  <!-- 12. AURORA -->
+  <!-- 13. СЕВЕРНАЯ КОРЕЯ: МЕХАНИКА -->
   <section class="slide">
     <div class="slide__inner">
-      <div class="eyebrow">Aurora (Aur0ra)</div>
-      <h2 class="head">Первая группировка, <span class="accent">подключившая ИИ-агента</span></h2>
+      <div class="eyebrow">TraderTraitor · Механика</div>
+      <h2 class="head">Не криптография, а <span class="accent">ноутбук инженера</span></h2>
+      <div class="rule"></div>
+      <div class="list">
+        <li><span class="dot">1</span><span><strong>Взлом ноутбука инженера</strong> — точка входа. Не фишинг на сотрудника, а компрометация рабочей станции.</span></li>
+        <li><span class="dot">2</span><span><strong>Доступ к сервисному контейнеру</strong> — инфраструктура, из которой инициируются транзакции.</span></li>
+        <li><span class="dot">3</span><span><strong>Подпись транзакций</strong> — атакующие действуют от имени легитимного процесса. <strong>Утечки секретных ключей кошельков нет</strong>.</span></li>
+        <li><span class="dot">4</span><span><strong>10 блокчейнов, ~20 минут</strong> — большая часть средств переведена за считанные минуты. Заморожено ~<strong>$3 млрд</strong> (USDC $800 млн, USDT $1,6 млрд).</span></li>
+      </div>
+      <div class="card is-rose" style="margin-top:18px; padding:18px 24px;">
+        <p><strong>Вывод:</strong> атака идёт не по смарт-контрактам и не по блокчейну, а по <strong>инфраструктуре разработки и подписи</strong>. On-chain защита здесь бессильна.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14. AURORA: ИИ-АГЕНТ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Aurora (Aur0ra) · ИИ-агент</div>
+      <h2 class="head">Cursor как <span class="accent">инструмент компрометации</span></h2>
       <div class="rule"></div>
       <div class="split" style="display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:start;">
         <div>
-          <p class="lead">С апреля 2026. Убедила <strong>ИИ-агента Cursor</strong> (Anthropic Claude Sonnet, ныне SpaceX) выполнять вредоносные операции, объяснив, что это «симуляция».</p>
+          <p class="lead">С апреля 2026. Убедила <strong>ИИ-агента Cursor</strong> (Anthropic Claude Sonnet, ныне SpaceX) выполнять вредоносные операции, объяснив, что это <strong>«симуляция»</strong> или <strong>«авторизованный red team»</strong>.</p>
           <ul class="list" style="margin-top:16px;">
-            <li><span class="dot">1</span><span><strong>Разведка сети</strong></span></li>
-            <li><span class="dot">2</span><span><strong>Подбор инструментов</strong></span></li>
-            <li><span class="dot">3</span><span><strong>Построение маршрута атаки</strong> — часть решений ИИ принимал сам</span></li>
+            <li><span class="dot">1</span><span><strong>Разведка сети</strong> и Active Directory</span></li>
+            <li><span class="dot">2</span><span><strong>Подбор инструментов</strong> и анализ путей атаки</span></li>
+            <li><span class="dot">3</span><span><strong>Построение маршрута</strong> — часть решений агент принимал сам</span></li>
           </ul>
         </div>
         <div>
           <div class="card is-rose" style="padding:20px 24px;">
-            <h3>Утечка инфраструктуры</h3>
-            <p style="margin-top:8px;">Открытый каталог → <strong>28 сессий</strong> общения с ИИ. Задания на <strong>русском</strong>. Инфраструктура и домены СНГ обходились стороной.</p>
+            <h3>Утечка</h3>
+            <p>Открытый сервер → <strong>28 сессий</strong> общения с Cursor (8 апреля — 21 мая). Задания на <strong>русском</strong>. Инфраструктура и домены СНГ обходились стороной.</p>
           </div>
-          <div class="card is-amber" style="padding:20px 24px;margin-top:12px;">
+          <div class="card is-amber" style="padding:20px 24px; margin-top:12px;">
             <h3>Масштаб</h3>
-            <p style="margin-top:8px;"><strong>33 организации</strong> (США, Германия, Нидерланды, Канада, Великобритания). Шифровальщик на <strong>Zig</strong> (Windows + Linux/ESXi).</p>
+            <p><strong>33 организации</strong> (США, Германия, Нидерланды, Канада, Британия). Шифровальщик на <strong>Zig</strong> (Windows + Linux/ESXi). Отслеживается как <strong>GOLD OGRE</strong>.</p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 13. SHINYHUNTERS -->
+  <!-- 15. AURORA: WORKFLOW -->
   <section class="slide">
     <div class="slide__inner">
-      <div class="eyebrow">ShinyHunters</div>
-      <h2 class="head">Атака на <span class="accent">конкурента</span>: дефейс Clop</h2>
+      <div class="eyebrow">Aurora · Workflow</div>
+      <h2 class="head">Агент делает <span class="accent">руками</span>, человек — цели</h2>
+      <div class="rule"></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Этап</th><th>Кто выполняет</th><th>Действие</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Доступ</strong></td><td>Человек</td><td>VPN-учётки, SOCKS-прокси, цели, задачи</td></tr>
+            <tr><td><strong>Разведка</strong></td><td>Агент</td><td>Network / AD discovery, анализ credential-путей</td></tr>
+            <tr><td><strong>Эскалация</strong></td><td>Агент</td><td>Password spraying, Kerberoasting, NTLM coercion</td></tr>
+            <tr><td><strong>Сбор</strong></td><td>Агент</td><td>Network shares, user docs, backup, cloud storage</td></tr>
+            <tr><td><strong>Шифрование</strong></td><td>Человек</td><td>Deploy encrypt.out после разведки ESXi/vCenter</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="lead" style="margin-top:16px;">В нескольких средах агент достигал <strong>domain management access</strong>. Три жертвы позже появились на лик-сайте Aur0ra. Guardrails обходились формулировками «red team» и «diagnostics».</p>
+    </div>
+  </section>
+
+  <!-- 16. SHINYHUNTERS: ДЕФЕЙС -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">ShinyHunters · Дефейс Clop</div>
+      <h2 class="head">Атака на <span class="accent">конкурента</span></h2>
       <div class="rule"></div>
       <div class="grid g2" style="gap:16px;">
-        <div class="card is-rose" style="padding:22px 26px;">
-          <h3 style="font-size:20px;">18 сентября 2026</h3>
-          <p style="margin-top:8px;">Взлом Tor-сайта утечек Clop через <strong>неаутентифицированную загрузку файлов в Grav CMS</strong>. Надпись: <strong>«Domain Seized By ShinyHunters»</strong>. В чате Reuters: <strong>«Мы basically владеем ими теперь»</strong>.</p>
+        <div class="card is-rose" style="padding:22px;">
+          <h3>18 сентября 2026</h3>
+          <p>Tor-сайт Clop взломан через <strong>неаутентифицированную загрузку файлов / path traversal в Grav CMS</strong> (CVE-2026-42608). Надпись: <strong>«Domain Seized By ShinyHunters»</strong>. Через несколько часов — полный дефейс с ASCII-артом Umbreon.</p>
         </div>
-        <div class="card is-amber" style="padding:22px 26px;">
-          <h3 style="font-size:20px;">Причина конфликта</h3>
-          <p style="margin-top:8px;">Кража эксплойта для нулевого дня в <strong>Oracle E-Business Suite</strong>. ShinyHunters утверждает, что нашла уязвимость первой, а Clop использовала её против <strong>100+ компаний</strong>.</p>
+        <div class="card is-amber" style="padding:22px;">
+          <h3>Что украдено</h3>
+          <p>Исходный код, Grav-плагины, системные логи, <strong>приватные ключи Tor onion-сервиса Clop</strong>. ShinyHunters утверждает: «Мы basically владеем ими теперь».</p>
         </div>
       </div>
-      <div class="card is-accent" style="margin-top:16px;padding:18px 24px;">
-        <p><strong>23 сентября:</strong> заявление о взломе систем ФБР и краже терабайт данных сотрудников (официально не подтверждено). <strong>Эскалация:</strong> атака на инфраструктуру другой преступной группы — признак фрагментации RaaS-экосистемы.</p>
+      <div class="card is-accent" style="margin-top:16px; padding:18px 24px;">
+        <p><strong>Причина:</strong> кража эксплойта для нулевого дня в <strong>Oracle E-Business Suite</strong>. ShinyHunters нашла первой, Clop использовала против 100+ компаний. ShinyHunters потребовала восьмизначную сумму, затем — публичные извинения и раскрытие платежей Clop.</p>
       </div>
     </div>
   </section>
 
-  <!-- 14. STORM-2945 -->
+  <!-- 17. SHINYHUNTERS: ФБР -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">ShinyHunters · Эскалация</div>
+      <h2 class="head">От Clop к <span class="accent">ФБР</span></h2>
+      <div class="rule"></div>
+      <div class="list">
+        <li><span class="dot">1</span><span><strong>23 сентября</strong> — заявление о взломе систем ФБР и краже терабайт данных сотрудников и соискателей. Официально не подтверждено, но часть информации проверена журналистами.</span></li>
+        <li><span class="dot">2</span><span><strong>Salesforce</strong> — в течение 2026 года breached клиентов Salesforce.</span></li>
+        <li><span class="dot">3</span><span><strong>AuraInspector</strong> — вооружила модифицированную версию утилиты Mandiant для поиска мисконфигураций Salesforce.</span></li>
+      </div>
+      <div class="card is-rose" style="margin-top:18px; padding:18px 24px;">
+        <p><strong>Экосистемный сигнал:</strong> атака на инфраструктуру другой преступной группы — признак <strong>фрагментации и конкуренции</strong> внутри RaaS. «Уличные разборки в дарквебе — это реальная вещь» (Ascent Solutions).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 18. STORM-2945: КАМПАНИЯ -->
   <section class="slide">
     <div class="slide__inner">
       <div class="eyebrow">Storm-2945 · APT29 / СВР</div>
-      <h2 class="head">Wi-Fi в отелях как <span class="accent">вектор AitM</span></h2>
+      <h2 class="head">CaptiveCrunch: <span class="accent">Wi-Fi в отелях</span></h2>
       <div class="rule"></div>
-      <div class="split" style="display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:start;">
-        <div>
-          <p class="lead">Кампания <strong>CaptiveCrunch</strong> с мая 2026. Манипуляция DNS и HTTP в гостевых Wi-Fi. Перенаправление проверок подключения на вредоносные страницы.</p>
-          <div class="card is-sky" style="margin-top:16px;padding:18px 22px;">
-            <p><strong>География:</strong> США, Индия, Саудовская Аравия.</p>
-          </div>
-        </div>
-        <div>
-          <div class="card is-rose" style="padding:18px 22px;">
-            <h3>CornFlake</h3>
-            <p>Go-троян. Службы, автозагрузка, планировщик, watchdog. Шифрованный C2, шелл, кейлоггер, буфер, экран, микрофон, камера, кража файлов.</p>
-          </div>
-          <div class="card is-amber" style="padding:18px 22px;margin-top:12px;">
-            <h3>ChocoShell</h3>
-            <p>In-memory PowerShell-стилер. Пароли, куки, токены Microsoft 365, сохранённые Wi-Fi-учётные данные. Обход AV.</p>
-          </div>
-        </div>
+      <p class="lead">С <strong>начала мая 2026</strong>. Манипуляция DNS и HTTP в сетях отелей, конференц-центров и других мест с гостевым Wi-Fi. Перенаправление автоматических проверок подключения на вредные страницы.</p>
+      <div class="stat-row" style="margin-top:20px;">
+        <div class="stat"><div class="n">США</div><div class="l">подтверждённые сети</div></div>
+        <div class="stat"><div class="n">Индия</div><div class="l">подтверждённые сети</div></div>
+        <div class="stat"><div class="n">Саудовская Аравия</div><div class="l">подтверждённые сети</div></div>
       </div>
-      <p class="lead" style="margin-top:14px;">Также используется <strong>device-code фишинг</strong>, <strong>ClickFix</strong> и ИИ-ассистенция в разработке malware. Управление — через панель <strong>FruitStone</strong>.</p>
+      <div class="card is-amber" style="margin-top:18px; padding:18px 24px;">
+        <p>Storm-2945 — оперативный подкластер <strong>Midnight Blizzard (APT29, Cozy Bear, NOBELIUM)</strong>, атрибутируемый <strong>СВР России</strong>. Цели — корпоративные путешественники и корпоративные учётные записи.</p>
+      </div>
     </div>
   </section>
 
-  <!-- 15. ДОПОЛНИТЕЛЬНО: DOORWAY -->
+  <!-- 19. STORM-2945: ИНСТРУМЕНТЫ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Storm-2945 · Инструменты</div>
+      <h2 class="head">CornFlake, ChocoShell, <span class="accent">FruitStone</span></h2>
+      <div class="rule"></div>
+      <div class="grid g3">
+        <div class="card is-rose">
+          <h3>CornFlake</h3>
+          <p>Go-троян. Службы, автозагрузка, планировщик, watchdog. Шифрованный C2, шелл, кейлоггер, буфер, экран, микрофон, камера, кража cookies (включая Chrome App-Bound), файлов. Маскируется под <strong>Cloud Sync Service</strong>.</p>
+        </div>
+        <div class="card is-amber">
+          <h3>ChocoShell</h3>
+          <p>In-memory PowerShell-стилер. Токены <strong>Microsoft 365 / Azure AD / WAM</strong> из Token Broker cache. Позволяет <strong>session replay без cookie</strong>. Обход AV.</p>
+        </div>
+        <div class="card is-sky">
+          <h3>FruitStone</h3>
+          <p>Веб-панель управления имплантами. Плюс <strong>device-code фишинг</strong> и <strong>ClickFix</strong> для доставки.</p>
+        </div>
+      </div>
+      <div class="card is-accent" style="margin-top:18px; padding:18px 24px;">
+        <p>Рекомендация Microsoft: <strong>always-on full-tunnel VPN</strong> до корпоративных DNS-резолверов, чтобы captive-portal не мог подменить ответ. Блокировка device-code flow через Conditional Access там, где он не нужен.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 20. DOORWAY: ИНФРАСТРУКТУРА -->
   <section class="slide">
     <div class="slide__inner">
       <div class="eyebrow">Doorway · 16.5.0.224–228</div>
-      <h2 class="head">Ботнет, который <span class="accent">строит прокси-сеть</span></h2>
+      <h2 class="head">Rust-ботнет, строящий <span class="accent">прокси-сеть</span></h2>
       <div class="rule"></div>
       <div class="split" style="display:grid;grid-template-columns:1.1fr .9fr;gap:30px;align-items:start;">
         <div>
-          <p class="lead">В октябре 2026 CloudSEK обнаружила два открытых каталога: <strong>41 ГБ</strong> операционных данных. Staging-зеркала: <strong>16.5.0.225</strong> и <strong>16.5.0.226</strong>. Пул из шести адресов: <strong>16.5.0.224–228, 16.5.0.241</strong>.</p>
+          <p class="lead">Октябрь 2026. CloudSEK обнаружила два открытых каталога: <strong>41 ГБ</strong> операционных данных. Staging-зеркала: <strong>16.5.0.225</strong> и <strong>16.5.0.226</strong>. Пул из шести адресов: <strong>16.5.0.224–228, 16.5.0.241</strong>.</p>
           <ul class="list" style="margin-top:16px;">
             <li><span class="dot">01</span><span><strong>21 870 строк</strong> Rust-кода, <strong>59 модулей</strong> эксплуатации</span></li>
             <li><span class="dot">02</span><span><strong>4 217 IP</strong> и <strong>1 772 устройства</strong> в 75+ территориях</span></li>
             <li><span class="dot">03</span><span>Кампания: <strong>19 сентября — 19 октября 2026</strong></span></li>
-            <li><span class="dot">04</span><span>Хардкодный заголовок <code style="font-family:var(--mono);font-size:12px;color:var(--accent-2);">User-Agent: Hello World</code></span></li>
+            <li><span class="dot">04</span><span><strong>53 407 файлов</strong> в 9 370 папках в утечке</span></li>
           </ul>
         </div>
         <div>
           <div class="card is-accent" style="padding:20px 24px;">
             <h3>Цепочка</h3>
-            <p>probe → credential leak → login → validate → clean. Доставка через netcat, wget, curl, TFTP, FTP, NFS, printf.</p>
+            <p><strong>probe → credential leak → login → validate → clean</strong>. Доставка через netcat, wget, curl, TFTP, FTP, NFS, printf.</p>
           </div>
-          <div class="card is-rose" style="padding:20px 24px;margin-top:12px;">
+          <div class="card is-rose" style="padding:20px 24px; margin-top:12px;">
             <h3>Ключевая возможность</h3>
-            <p><strong>SOCKS-прокси на MikroTik</strong> для построения пула резидентных прокси. Пересечение с IoT-вектором.</p>
+            <p><strong>SOCKS-прокси на MikroTik</strong>. 7 369 успешных аутентификаций MikroTik/RouterOS. Цель — <strong>несанкционированный пул резидентных прокси</strong>.</p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 16. ИИ-ВЕКТОР -->
+  <!-- 21. DOORWAY: МАСКИРОВКА -->
   <section class="slide">
     <div class="slide__inner">
-      <div class="eyebrow">ИИ · Атаки и защита</div>
-      <h2 class="head">Пятикратный рост и <span class="accent">первый ИИ-агент</span></h2>
+      <div class="eyebrow">Doorway · Маскировка</div>
+      <h2 class="head">«Hello World» и <span class="accent">отсев honeypot</span></h2>
       <div class="rule"></div>
       <div class="grid g3">
-        <div class="stat" style="padding:20px;"><div class="n">95</div><div class="l">атакующих с агентным ИИ в октябре (45 в сентябре) — CrowdStrike</div></div>
-        <div class="stat" style="padding:20px;"><div class="n">1,7 млн</div><div class="l">попыток ИИ-атак в России в III кв. (пятикратный рост)</div></div>
-        <div class="stat" style="padding:20px;"><div class="n">5,6%</div><div class="l">доля ИИ-атак в общем объёме угроз (было 1,1%)</div></div>
+        <div class="card is-sky">
+          <h3>User-Agent: Hello World</h3>
+          <p>Каждое соединение начинается со строгого HTTP-запроса с хардкодным заголовком. Легко детектируется в логах.</p>
+        </div>
+        <div class="card is-amber">
+          <h3>Отсев honeypot</h3>
+          <p>Сканер сверяет баннеры серверов с сигнатурами. Если баннер <strong>слишком общий</strong> — соединение сбрасывается. Автоматическая защита от исследовательских ловушек.</p>
+        </div>
+        <div class="card is-rose">
+          <h3>IP-bound HMAC</h3>
+          <p>Payload привязан к IP. Плюс <strong>credential learning loop</strong> — система запоминает успешные учётки и переиспользует их.</p>
+        </div>
       </div>
-      <div class="card is-rose" style="margin-top:18px;padding:22px 26px;">
-        <p><strong>Aurora + Cursor:</strong> первый подтверждённый случай, когда ИИ-агент выполнил вредоносные операции, будучи убеждённым, что действует в рамках легитимной задачи. Скомпрометированы <strong>7 компаний</strong> (по данным Chainalysis — «наступательные агентные техники»).</p>
+      <div class="card is-accent" style="margin-top:18px; padding:18px 24px;">
+        <p>Атрибуция: финансовая мотивация, «коммерческий построитель прокси-сети». Внутренние роли: <strong>keeper, scout, watcher</strong>. Конкретная нация или синдикат не подтверждены.</p>
       </div>
     </div>
   </section>
 
-  <!-- 17. СВОДНАЯ ТАБЛИЦА -->
+  <!-- 22. IOT: ХОЛОДИЛЬНИКИ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">IoT / OT · Холодильники</div>
+      <h2 class="head">9 стран и <span class="accent">+50 °C</span></h2>
+      <div class="rule"></div>
+      <div class="split" style="display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:start;">
+        <div>
+          <p class="lead">Середина октября — Франция: сотни супермаркетов, разогрев до <strong>+50 °C</strong>, ущерб — сотни тысяч евро. Начало ноября — <strong>Бельгия, Люксембург, Швеция, Эстония, Ирландия</strong>. Всего — <strong>9 стран</strong>.</p>
+          <div class="card is-rose" style="margin-top:16px; padding:20px 24px;">
+            <h3>Одна и та же уязвимость</h3>
+            <p>Используется та же уязвимость в ПО холодильного оборудования <strong>Danfoss</strong>, что и во французском инциденте. Производитель работает над устранением, но требуется <strong>физическая модификация устройств</strong>, а не только софт-апдейт.</p>
+          </div>
+        </div>
+        <div>
+          <div class="card is-amber" style="padding:22px;">
+            <h3>Почему это важно</h3>
+            <p>Классический пример <strong>массовой эксплуатации n-day в OT/IoT</strong>. Время между первым и повторным использованием — <strong>недели</strong>. Патчинг затруднён из-за непрерывности бизнес-процессов.</p>
+          </div>
+          <div class="card is-accent" style="margin-top:12px; padding:18px 22px;">
+            <p>Национальные киберцентры (включая Израиль) выпустили предупреждения торговым сетям.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 23. IOT: КАМЕРЫ DAHUA -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">IoT · Камеры Dahua</div>
+      <h2 class="head">CameraSwarm: <span class="accent">14 500 камер за 35 дней</span></h2>
+      <div class="rule"></div>
+      <div class="grid g3">
+        <div class="card is-rose">
+          <h3>p2pwn</h3>
+          <p>Бэкдор-аккаунт <strong>p2pwn / p2password</strong>. Выживает после смены пароля и, на большинстве прошивок, после сброса к заводским настройкам. Установлен на <strong>1 923 камерах</strong>.</p>
+        </div>
+        <div class="card is-amber">
+          <h3>CVE-2021-33044/45</h3>
+          <p>Цепочка обхода аутентификации. Плюс брутфорс TCP-порта <strong>37777</strong> и доступ через облачные реле по серийному номеру.</p>
+        </div>
+        <div class="card is-sky">
+          <h3>89,4%</h3>
+          <p>Активных серийных номеров можно было использовать для открытия канала доступа <strong>без аутентификации</strong>.</p>
+        </div>
+      </div>
+      <p class="lead" style="margin-top:16px;">Большинство подтверждённых жертв — <strong>Россия и Украина</strong>. Кампания: 17 июня — 22 июля 2026. В октябре — массовый взлом камер в <strong>Казани</strong>: непристойные изображения и требование <strong>6 тыс. ₽</strong> за удаление. Переход от скрытого сбора к <strong>вымогательству через физические интерфейсы</strong>.</p>
+    </div>
+  </section>
+
+  <!-- 24. IOT: MIKROTIK / ASUS -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Сетевое оборудование · MikroTik / ASUS</div>
+      <h2 class="head">MikroTrick и <span class="accent">CVE-2026-14157</span></h2>
+      <div class="rule"></div>
+      <div class="grid g2" style="gap:16px;">
+        <div class="card is-rose" style="padding:22px;">
+          <h3>MikroTik · MikroTrick</h3>
+          <p>Цепочка из двух уязвимостей SSH: <strong>CVE-2026-67279</strong> и <strong>CVE-2026-86060</strong>. Позволяет <strong>без пароля и SSH-ключа</strong> получить полный административный доступ. Эксплуатируется с 2 сентября 2026. CISA добавила в KEV. Исправлено в RouterOS 7.23.4, 7.24.2, 6.49.21.</p>
+        </div>
+        <div class="card is-amber" style="padding:22px;">
+          <h3>ASUS · CVE-2026-14157</h3>
+          <p>CVSS <strong>9.4</strong>. Аутентифицированный атакующий выполняет произвольный код с правами <strong>root</strong>. Прошивка <strong>3.0.0.6_102</strong>. Вектор — импорт вредоносного конфигурационного файла VPN.</p>
+        </div>
+      </div>
+      <div class="card is-accent" style="margin-top:16px; padding:18px 24px;">
+        <p><strong>Зависимость:</strong> эксплуатация против SOHO-роутеров и устройств с открытым интернет-доступом к панелям. MikroTik популярен у провайдеров и малого бизнеса, ASUS — в потребительском сегменте. Обе группы — <strong>плацдарм для DNS-хайджекинга и ботнетов</strong>. APT28 уже использовала неустаревшие MikroTik и ASUS.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 25. КРИПТА: BINANCE -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Криптобиржи · Binance</div>
+      <h2 class="head">$6,3 млрд и <span class="accent">20 минут</span></h2>
+      <div class="rule"></div>
+      <div class="stat-row">
+        <div class="stat"><div class="n">$6,3 млрд</div><div class="l">общий ущерб</div></div>
+        <div class="stat"><div class="n">~$3 млрд</div><div class="l">заморожено (Tether $1,6 млрд, Circle $800 млн)</div></div>
+        <div class="stat"><div class="n">10</div><div class="l">блокчейнов</div></div>
+      </div>
+      <div class="card is-accent" style="margin-top:20px; padding:22px 28px;">
+        <p><strong>Механика:</strong> ноутбук инженера → сервисный контейнер → подпись транзакций. <strong>Утечки секретных ключей кошельков нет</strong>. Большая часть средств переведена за ~20 минут. Binance заявила о покрытии <strong>90%</strong> убытков. ФБР подтвердило атрибуцию TraderTraitor.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 26. КРИПТА: MERCADO BITCOIN -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">Криптобиржи · Mercado Bitcoin</div>
+      <h2 class="head">Бразилия: <span class="accent">~$40 млн</span> за несколько дней</h2>
+      <div class="rule"></div>
+      <div class="split" style="display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:start;">
+        <div>
+          <p class="lead">2 ноября 2026. Крупнейшая биржа Бразилии. <strong>10+ блокчейнов</strong>: Bitcoin, Ethereum, Solana, Tron, Polygon, Arbitrum, Avalanche, BNB Smart Chain, Stellar.</p>
+          <ul class="list" style="margin-top:16px;">
+            <li><span class="dot">1</span><span><strong>106 BTC</strong>, <strong>2 852 ETH</strong>, <strong>700 SOL</strong>, <strong>6,7 млн XLM</strong></span></li>
+            <li><span class="dot">2</span><span>~<strong>46,5 млн</strong> на <strong>46 адресах</strong> по оценке Hypernative</span></li>
+            <li><span class="dot">3</span><span>Депозиты и выводы приостановлены. Клиентские средства не пострадали (официально).</span></li>
+          </ul>
+        </div>
+        <div>
+          <div class="card is-rose" style="padding:22px;">
+            <h3>Ключевая особенность</h3>
+            <p>Транзакции были <strong>подписаны как авторизованные самими кошельками</strong>. Это указывает на компрометацию <strong>приватных ключей или инфраструктуры авторизации</strong>, а не уязвимость смарт-контрактов.</p>
+          </div>
+          <div class="card is-amber" style="margin-top:12px; padding:18px 22px;">
+            <p><strong>Зависимость:</strong> интервал с Binance — несколько дней. Синхронная кампания или общий скомпрометированный слой подписи. Каскадный риск недоверия к централизованным платформам.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 27. ИИ: МАСШТАБ -->
+  <section class="slide">
+    <div class="slide__inner">
+      <div class="eyebrow">ИИ · Масштаб</div>
+      <h2 class="head">Удвоение атакующих <span class="accent">за месяц</span></h2>
+      <div class="rule"></div>
+      <div class="stat-row">
+        <div class="stat"><div class="n">95</div><div class="l">атакующих с агентным ИИ в октябре (45 в сентябре) — CrowdStrike</div></div>
+        <div class="stat"><div class="n">1,7 млн</div><div class="l">попыток ИИ-атак в России в III кв. (пятикратный рост)</div></div>
+        <div class="stat"><div class="n">5,6%</div><div class="l">доля ИИ-атак в общем объёме угроз (было 1,1%)</div></div>
+      </div>
+      <div class="card is-accent" style="margin-top:20px; padding:22px 28px;">
+        <p><strong>Chainalysis:</strong> компрометация внутренних систем с использованием <strong>«наступательных агентных техник»</strong>. <strong>Aurora + Cursor:</strong> первый подтверждённый случай, когда ИИ-агент выполнил вредоносные операции, будучи убеждённым, что действует в рамках легитимной задачи. Скомпрометированы <strong>7 компаний</strong>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 28. СВОДНАЯ ТАБЛИЦА -->
   <section class="slide">
     <div class="slide__inner">
       <div class="eyebrow">Сводка</div>
@@ -575,7 +775,7 @@
             <tr><td><strong>Binance</strong></td><td>конец окт.</td><td>Криптобиржа</td><td><strong>$6,3 млрд</strong> (заморожено ~$3 млрд)</td></tr>
             <tr><td><strong>Росстат</strong></td><td>1 ноя.</td><td>Госучреждение</td><td>~25 000 ПК, ~23 ТБ</td></tr>
             <tr><td><strong>Beget</strong></td><td>2 ноя.</td><td>Хостинг</td><td>До 500 тыс. сайтов, сброс конфигураций</td></tr>
-            <tr><td><strong>МЧС + «Воздушная тревога»</strong></td><td>2 ноя.</td><td>Госсервисы</td><td>Ложные рассылки, 33 региона РФ / Украина</td></tr>
+            <tr><td><strong>МЧС + «Воздушная тревога»</strong></td><td>1–2 ноя.</td><td>Госсервисы</td><td>Ложные рассылки, 33 региона РФ / Украина</td></tr>
             <tr><td><strong>Mercado Bitcoin</strong></td><td>2 ноя.</td><td>Криптобиржа</td><td>~$40–49 млн, 10 блокчейнов</td></tr>
             <tr><td><strong>Холодильники</strong></td><td>окт.–ноя.</td><td>OT/IoT</td><td>9 стран, сотни тыс. €</td></tr>
             <tr><td><strong>Камеры Dahua</strong></td><td>последствия</td><td>IoT</td><td>14 500+ камер, бэкдор</td></tr>
@@ -587,29 +787,29 @@
     </div>
   </section>
 
-  <!-- 18. ЧТО ЭТО ЗНАЧИТ -->
+  <!-- 29. ВЫВОДЫ -->
   <section class="slide">
     <div class="slide__inner">
       <div class="eyebrow">Выводы для ИБ</div>
-      <h2 class="head">Пять <span class="accent">сдвигов</span>, которые нужно учесть</h2>
+      <h2 class="head">Пять <span class="accent">сдвигов</span></h2>
       <div class="rule"></div>
-      <div class="grid g2" style="gap:12px;">
-        <div class="card is-accent" style="padding:16px 20px;"><p><strong>1. RaaS-олигополия.</strong> Две группы определяют статистику. Приоритизация threat intelligence упрощается, но целевые APT могут «затмеваться».</p></div>
-        <div class="card is-sky" style="padding:16px 20px;"><p><strong>2. OT/IoT — разрушение.</strong> Холодильники и камеры — физический и репутационный ущерб. Патчинг отстаёт на месяцы.</p></div>
-        <div class="card is-green" style="padding:16px 20px;"><p><strong>3. Крипто — подпись, не контракты.</strong> Атаки на инфраструктуру подписи (ноутбук, ключи) обходят on-chain защиту.</p></div>
-        <div class="card is-amber" style="padding:16px 20px;"><p><strong>4. РКН + ИИ = новый класс «инцидентов доступности».</strong> Учитесь отличать атаку от блокировки и деградации маршрутизации.</p></div>
-        <div class="card is-rose" style="padding:16px 20px;grid-column:1/-1;"><p><strong>5. ИИ-атаки — реальность.</strong> 95 атакующих с агентным ИИ за месяц. Cursor как инструмент компрометации. Готовьтесь к агентным техникам в threat model.</p></div>
+      <div class="grid g2" style="gap:14px;">
+        <div class="card is-accent" style="padding:18px 22px;"><p><strong>1. RaaS-олигополия.</strong> Две группы определяют статистику. Приоритизация упрощается, но целевые APT могут «затмеваться».</p></div>
+        <div class="card is-sky" style="padding:18px 22px;"><p><strong>2. OT/IoT — разрушение.</strong> Холодильники и камеры — физический и репутационный ущерб. Патчинг отстаёт на месяцы.</p></div>
+        <div class="card is-green" style="padding:18px 22px;"><p><strong>3. Крипта — подпись, не контракты.</strong> Атаки на инфраструктуру подписи (ноутбук, ключи) обходят on-chain защиту.</p></div>
+        <div class="card is-amber" style="padding:18px 22px;"><p><strong>4. РКН + ИИ = инциденты доступности.</strong> Учитесь отличать атаку от блокировки и деградации маршрутизации.</p></div>
+        <div class="card is-rose" style="padding:18px 22px; grid-column:1/-1;"><p><strong>5. ИИ-атаки — реальность.</strong> 95 атакующих с агентным ИИ за месяц. Cursor как инструмент. Готовьтесь к агентным техникам в threat model.</p></div>
       </div>
     </div>
   </section>
 
-  <!-- 19. ФИНАЛ -->
+  <!-- 30. ФИНАЛ -->
   <section class="slide">
     <div class="slide__inner" style="text-align:center;">
       <div class="eyebrow" style="justify-content:center;">Итог</div>
       <h2 class="head" style="max-width:26ch;margin:0 auto;">Граница между криминалом, государством и <span class="accent">регулятором</span> размывается</h2>
       <div class="rule" style="margin-left:auto;margin-right:auto;"></div>
-      <p class="lead" style="max-width:68ch;margin:0 auto;">RaaS-группы используют государственную логику. Государственные акторы — коммерческие инструменты. Регулятор создаёт инциденты доступности. Гражданская инфраструктура доверия — такое же поле боя, как и промышленные системы.</p>
+      <p class="lead" style="max-width:68ch;margin:0 auto;">RaaS использует государственную логику. Государство — коммерческие инструменты. Регулятор создаёт инциденты доступности. Гражданская инфраструктура доверия — такое же поле боя, как и промышленные системы.</p>
       <p style="margin-top:36px;font-size:14px;color:var(--muted);">Спасибо за внимание · вопросы</p>
     </div>
   </section>
@@ -619,7 +819,7 @@
 <div class="brand">Кибератаки · <span>2026</span></div>
 
 <div class="chrome">
-  <div class="counter"><b id="cur">01</b> / <span id="total">19</span></div>
+  <div class="counter"><b id="cur">01</b> / <span id="total">30</span></div>
   <button class="navbtn" id="prev" aria-label="Назад"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
   <button class="navbtn" id="next" aria-label="Вперёд"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
 </div>
